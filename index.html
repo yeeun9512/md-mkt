@@ -562,47 +562,73 @@ tr:hover td{background:var(--surface2)}
   <!-- ════ 보고서 ════ -->
   <div class="panel" id="p-report">
     <div class="page-hd" style="margin-bottom:0">
-      <div><div class="page-title">주간 보고서</div><div class="page-sub">엑셀 업로드 → AI 자동 분석 → 보고서 완성</div></div>
+      <div><div class="page-title">주간 보고서</div><div class="page-sub">RD 파일 업로드하면 자동으로 분석 후 보고서 완성!</div></div>
     </div>
     <div class="ai-panel-inner">
-      <div class="notice">매주 금요일, 엑셀 파일을 올리면 AI가 매출 + 마케팅 채널 성과를 분석해 보고서를 완성해드려요.</div>
+      <div class="notice">📊 라운즈 RD 엑셀 파일 업로드 → 주차 자동 감지 → 매출·광고비·브랜드 분석 → AI 보고서 완성!</div>
       <div class="card" id="rpt-up">
-        <div class="card-lbl">데이터 업로드</div>
-        <div class="dropzone" id="dz" ondragover="dz_over(event)" ondragleave="dz_leave()" ondrop="dz_drop(event)">
-          <input type="file" accept=".xlsx,.xls,.csv" onchange="load_xlsx(this.files[0])">
-          <div class="dz-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="14" height="12" rx="2"/><path d="M7 5V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/><line x1="10" y1="9" x2="10" y2="14"/><polyline points="7.5 11.5 10 9 12.5 11.5"/></svg></div>
-          <div class="dz-title">엑셀 파일을 올려주세요</div>
-          <div class="dz-sub">.xlsx · .xls · .csv — 클릭하거나 드래그하세요</div>
-        </div>
-      </div>
-      <div class="card" id="rpt-prev" style="display:none">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <div class="card-lbl" style="margin:0">파일 미리보기</div>
-          <button class="btn btn-sm" onclick="reset_xlsx()">다시 업로드</button>
-        </div>
-        <div class="file-pill"><div class="file-pill-name" id="xlsx-name"></div></div>
-        <div class="sheet-tabs" id="sheet-tabs"></div>
-        <div class="tbl-outer"><div id="preview-tbl"></div></div>
-      </div>
-      <div class="card" id="rpt-cfg" style="display:none">
-        <div class="card-lbl">보고서 설정</div>
-        <div class="g2">
-          <div class="field"><label class="flbl">보고 기간</label><input type="text" id="rpt-period" placeholder="예: 2025년 4월 2주차"></div>
-          <div class="field"><label class="flbl">보고 대상</label><select id="rpt-to"><option>팀장</option><option>본부장</option><option>대표</option><option>팀 내부</option></select></div>
-        </div>
-        <div class="field">
-          <label class="flbl" style="margin-bottom:8px">포함 항목</label>
-          <div class="chips" id="rpt-items">
-            <button class="chip on" onclick="tog(this)">매출 실적</button>
-            <button class="chip on" onclick="tog(this)">전주 대비 분석</button>
-            <button class="chip on" onclick="tog(this)">마케팅 채널 성과</button>
-            <button class="chip on" onclick="tog(this)">베스트 상품</button>
-            <button class="chip" onclick="tog(this)">이슈 및 특이사항</button>
-            <button class="chip" onclick="tog(this)">다음 주 계획</button>
+        <div class="card-lbl">파일 업로드</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">① 주문 파일 (ORDER)</div>
+            <div class="dropzone" id="dz" style="padding:20px 12px" ondragover="dz_over(event)" ondragleave="dz_leave()" ondrop="dz_drop(event)">
+              <input type="file" accept=".xls,.xlsx" onchange="load_rd(this.files[0])">
+              <div class="dz-icon" style="width:32px;height:32px;margin-bottom:8px"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="14" height="12" rx="2"/><line x1="10" y1="9" x2="10" y2="14"/><polyline points="7.5 11.5 10 9 12.5 11.5"/></svg></div>
+              <div class="dz-title" style="font-size:13px">order_list.xls</div>
+              <div class="dz-sub" style="font-size:11px">주문 내역 파일</div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">② 광고비 파일 (선택)</div>
+            <div class="dropzone" id="dz-ad" style="padding:20px 12px" ondragover="dz_over2(event)" ondragleave="dz_leave2()" ondrop="dz_drop2(event)">
+              <input type="file" accept=".csv" onchange="load_rd_ad(this.files[0])">
+              <div class="dz-icon" style="width:32px;height:32px;margin-bottom:8px"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="14" height="12" rx="2"/><line x1="10" y1="9" x2="10" y2="14"/><polyline points="7.5 11.5 10 9 12.5 11.5"/></svg></div>
+              <div class="dz-title" style="font-size:13px">daily_report.csv</div>
+              <div class="dz-sub" style="font-size:11px">네이버 광고 리포트</div>
+            </div>
           </div>
         </div>
-        <div class="field"><label class="flbl">추가 메모 (선택)</label><textarea id="rpt-memo" rows="2" placeholder="신상품 출시 예정, 특정 채널 이슈 등 AI에게 전달할 내용"></textarea></div>
-        <div class="btn-row"><button class="btn btn-primary" id="rpt-btn" onclick="gen_report()">보고서 생성</button></div>
+        <div id="upload-status" style="margin-top:10px;font-size:12px;color:var(--muted)"></div>
+      </div>
+      <div class="card" id="rpt-parsed" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div class="card-lbl" style="margin:0">자동 분석 결과</div>
+          <button class="btn btn-sm" onclick="reset_rd()">다시 업로드</button>
+        </div>
+        <div class="file-pill"><div class="file-pill-name" id="rd-fname"></div></div>
+        <div class="field" style="margin-bottom:14px">
+          <label class="flbl">보고 주차 선택</label>
+          <select id="rpt-week-sel" onchange="update_week_summary()"></select>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px">
+          <div class="stat-card"><div class="stat-lbl">매출</div><div class="stat-val c-blue" id="kpi-rev" style="font-size:18px">-</div></div>
+          <div class="stat-card"><div class="stat-lbl">전주 대비</div><div class="stat-val" id="kpi-rev-diff" style="font-size:18px">-</div></div>
+          <div class="stat-card"><div class="stat-lbl">판매량</div><div class="stat-val" id="kpi-qty" style="font-size:18px">-</div></div>
+          <div class="stat-card"><div class="stat-lbl">이익</div><div class="stat-val c-green" id="kpi-profit" style="font-size:18px">-</div></div>
+          <div class="stat-card"><div class="stat-lbl">광고비</div><div class="stat-val c-amber" id="kpi-ad" style="font-size:18px">-</div></div>
+          <div class="stat-card"><div class="stat-lbl">ROAS</div><div class="stat-val" id="kpi-roas" style="font-size:18px">-</div></div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div class="card-lbl" style="margin-bottom:10px">카테고리별 브랜드 매출 순위</div>
+          <div style="display:flex;gap:6px;margin-bottom:10px;border-bottom:1px solid var(--border)">
+            <button class="tab-btn on" id="cat-tab-all"    onclick="set_cat_tab('all')"    style="padding:6px 12px;font-size:12px">전체 TOP10</button>
+            <button class="tab-btn"    id="cat-tab-glasses" onclick="set_cat_tab('GLASSES')" style="padding:6px 12px;font-size:12px">안경 TOP10</button>
+            <button class="tab-btn"    id="cat-tab-sun"     onclick="set_cat_tab('SUNGLASSES')" style="padding:6px 12px;font-size:12px">선글라스 TOP10</button>
+            <button class="tab-btn"    id="cat-tab-acc"     onclick="set_cat_tab('ACCESSORY')" style="padding:6px 12px;font-size:12px">악세서리</button>
+          </div>
+          <div id="brand-top10" style="font-size:13px"></div>
+        </div>
+        <div class="g2">
+          <div class="field"><label class="flbl">보고 대상</label>
+            <select id="rpt-to"><option>팀장</option><option>본부장</option><option>대표</option><option>팀 내부</option></select>
+          </div>
+          <div class="field"><label class="flbl">추가 메모 (선택)</label>
+            <input type="text" id="rpt-memo" placeholder="특이사항, 이슈 등">
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="rpt-btn" onclick="gen_report()">AI 보고서 자동 생성</button>
+        </div>
       </div>
       <div class="card" id="rpt-res" style="display:none">
         <div class="result-hd">
@@ -1097,7 +1123,10 @@ function update_settings_status() {
 let xlsx_sheets = {}, xlsx_cur = '';
 function dz_over(e) { e.preventDefault(); document.getElementById('dz').classList.add('drag'); }
 function dz_leave() { document.getElementById('dz').classList.remove('drag'); }
-function dz_drop(e) { e.preventDefault(); dz_leave(); load_xlsx(e.dataTransfer.files[0]); }
+function dz_drop(e) { e.preventDefault(); dz_leave(); load_rd(e.dataTransfer.files[0]); }
+function dz_over2(e) { e.preventDefault(); document.getElementById('dz-ad').classList.add('drag'); }
+function dz_leave2() { document.getElementById('dz-ad').classList.remove('drag'); }
+function dz_drop2(e) { e.preventDefault(); dz_leave2(); load_rd_ad(e.dataTransfer.files[0]); }
 function load_xlsx(file) {
   if (!file) return;
   const r = new FileReader();
@@ -1153,21 +1182,221 @@ function set_btn(id, loading, label) {
   if (loading) { b.disabled = true; b.innerHTML = `<span class="spin"></span> ${label}`; }
   else b.disabled = false;
 }
+/* ══ RD 파일 파싱 ══ */
+let rd_data = {}; // { week: { revenue, qty, profit, adCost, brands: [{brand, revenue, qty, profit}] } }
+let rd_weeks = [];
+
+function load_rd(file) {
+  if (!file) return;
+  document.getElementById('rd-fname').textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+    parse_rd(wb);
+    document.getElementById('rpt-up').style.display = 'none';
+    document.getElementById('rpt-parsed').style.display = 'block';
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function parse_rd(wb) {
+  rd_data = {};
+  // RD_CMS 파싱 (매출/이익/판매량)
+  const cms = wb.Sheets['RD_CMS'];
+  if (cms) {
+    const rows = XLSX.utils.sheet_to_json(cms, { header: 1 });
+    rows.slice(1).forEach(row => {
+      const week = row[24]; // Y열
+      const cat  = row[20]; // U열 대분류명
+      const brand = row[22]; // W열
+      const qty = Number(row[25]) || 0; // Z열
+      const revenue = Number(row[27]) || 0; // AB열
+      const profit = Number(row[33]) || 0; // AH열
+      if (!week) return;
+      if (!rd_data[week]) rd_data[week] = { revenue: 0, qty: 0, profit: 0, adCost: 0, brands: {}, cat_brands: {} };
+      rd_data[week].revenue += revenue;
+      rd_data[week].qty += qty;
+      rd_data[week].profit += profit;
+      if (brand) {
+        if (!rd_data[week].brands[brand]) rd_data[week].brands[brand] = { revenue: 0, qty: 0, profit: 0 };
+        rd_data[week].brands[brand].revenue += revenue;
+        rd_data[week].brands[brand].qty += qty;
+        rd_data[week].brands[brand].profit += profit;
+      }
+      if (cat && brand) {
+        if (!rd_data[week].cat_brands[cat]) rd_data[week].cat_brands[cat] = {};
+        if (!rd_data[week].cat_brands[cat][brand]) rd_data[week].cat_brands[cat][brand] = { revenue: 0, qty: 0, profit: 0 };
+        rd_data[week].cat_brands[cat][brand].revenue += revenue;
+        rd_data[week].cat_brands[cat][brand].qty += qty;
+        rd_data[week].cat_brands[cat][brand].profit += profit;
+      }
+    });
+  }
+  // RD_광고비 파싱
+  const ad = wb.Sheets['RD_광고비'];
+  if (ad) {
+    const rows = XLSX.utils.sheet_to_json(ad, { header: 1 });
+    rows.slice(1).forEach(row => {
+      const week = row[10]; // K열
+      const cost = Number(row[6]) || 0; // G열 VAT미포함
+      if (week && cost) {
+        if (!rd_data[week]) rd_data[week] = { revenue: 0, qty: 0, profit: 0, adCost: 0, brands: {} };
+        rd_data[week].adCost += cost;
+      }
+    });
+  }
+  // 주차 정렬
+  rd_weeks = Object.keys(rd_data).sort((a, b) => a.localeCompare(b));
+  // 주차 셀렉트 업데이트
+  const sel = document.getElementById('rpt-week-sel');
+  sel.innerHTML = rd_weeks.map(w => `<option value="${w}">${w}</option>`).join('');
+  // 최신 주차 선택
+  if (rd_weeks.length > 0) sel.value = rd_weeks[rd_weeks.length - 1];
+  update_week_summary();
+}
+
+let cur_cat_tab = 'all';
+
+function set_cat_tab(cat) {
+  cur_cat_tab = cat;
+  ['all','glasses','sun','acc'].forEach(t => {
+    const el = document.getElementById('cat-tab-' + t);
+    if (el) el.classList.remove('on');
+  });
+  const map = {all:'all', GLASSES:'glasses', SUNGLASSES:'sun', ACCESSORY:'acc'};
+  const tabEl = document.getElementById('cat-tab-' + (map[cat]||cat));
+  if (tabEl) tabEl.classList.add('on');
+  render_brand_top10();
+}
+
+function render_brand_top10() {
+  const week = document.getElementById('rpt-week-sel').value;
+  const d = rd_data[week];
+  if (!d) return;
+  const fmt = n => n >= 1e8 ? (n/1e8).toFixed(1)+'억' : n >= 1e4 ? Math.round(n/1e4)+'만' : n.toLocaleString();
+
+  let brands;
+  if (cur_cat_tab === 'all') {
+    brands = Object.entries(d.brands);
+  } else {
+    brands = Object.entries(d.cat_brands?.[cur_cat_tab] || {});
+  }
+  brands = brands.sort((a,b) => b[1].revenue - a[1].revenue).slice(0,10);
+  const total = (cur_cat_tab === 'all' ? d.revenue : brands.reduce((s,[,v])=>s+v.revenue,0)) || 1;
+
+  document.getElementById('brand-top10').innerHTML = brands.length === 0
+    ? '<div style="color:var(--muted);font-size:12px;padding:12px 0">데이터 없음</div>'
+    : brands.map(([name, v], i) => {
+      const pct = (v.revenue / total * 100).toFixed(1);
+      const profitRate = v.revenue > 0 ? (v.profit / v.revenue * 100).toFixed(1) : '-';
+      return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);min-width:18px">${i+1}</span>
+        <span style="flex:1;font-weight:600;font-size:13px">${name}</span>
+        <span style="font-size:11px;color:var(--muted)">${Math.round(v.qty)}개</span>
+        <span style="font-size:12px;color:var(--ink2);min-width:60px;text-align:right">${fmt(v.revenue)}원</span>
+        <span style="font-size:11px;color:${profitRate > 30 ? 'var(--green)' : profitRate < 10 ? 'var(--red)' : 'var(--amber)'};min-width:36px;text-align:right">이익 ${profitRate}%</span>
+        <span style="font-size:10px;font-weight:700;color:var(--accent);min-width:32px;text-align:right">${pct}%</span>
+      </div>`;
+    }).join('');
+}
+
+function update_week_summary() {
+  const week = document.getElementById('rpt-week-sel').value;
+  const d = rd_data[week];
+  if (!d) return;
+  const prevIdx = rd_weeks.indexOf(week) - 1;
+  const prev = prevIdx >= 0 ? rd_data[rd_weeks[prevIdx]] : null;
+
+  const fmt = n => n >= 1e8 ? (n/1e8).toFixed(1)+'억' : n >= 1e4 ? Math.round(n/1e4)+'만' : n.toLocaleString();
+  const diff = (cur, pre) => pre && pre > 0 ? ((cur-pre)/pre*100).toFixed(1) : '-';
+
+  document.getElementById('kpi-rev').textContent = fmt(d.revenue) + '원';
+  const rd = diff(d.revenue, prev?.revenue);
+  const rdEl = document.getElementById('kpi-rev-diff');
+  rdEl.textContent = rd !== '-' ? (Number(rd) > 0 ? '+' : '') + rd + '%' : '-';
+  rdEl.style.color = Number(rd) > 0 ? 'var(--green)' : Number(rd) < 0 ? 'var(--red)' : '';
+  document.getElementById('kpi-qty').textContent = Math.round(d.qty) + '개';
+  document.getElementById('kpi-profit').textContent = fmt(d.profit) + '원';
+  document.getElementById('kpi-ad').textContent = fmt(d.adCost) + '원';
+  const roas = d.adCost > 0 ? (d.revenue / d.adCost).toFixed(1) : '-';
+  document.getElementById('kpi-roas').textContent = roas !== '-' ? roas : '-';
+
+  render_brand_top10();
+}
+
+function reset_rd() {
+  rd_data = {}; rd_weeks = [];
+  pending_files = { order: null, ad: null };
+  document.getElementById('rpt-up').style.display = 'block';
+  document.getElementById('rpt-parsed').style.display = 'none';
+  document.getElementById('rpt-res').style.display = 'none';
+}
+
 async function gen_report() {
-  set_btn('rpt-btn', true, '분석 중...');
-  let data = '';
-  Object.entries(xlsx_sheets).forEach(([n, rows]) => { data += `\n[시트: ${n}]\n`; rows.slice(0, 60).forEach(r => data += r.join('\t') + '\n'); });
-  const period = document.getElementById('rpt-period').value || '이번 주';
+  const week = document.getElementById('rpt-week-sel').value;
+  const d = rd_data[week];
+  if (!d) { alert('파일을 먼저 업로드해주세요.'); return; }
+  set_btn('rpt-btn', true, '보고서 생성 중...');
+
+  const prevIdx = rd_weeks.indexOf(week) - 1;
+  const prev = prevIdx >= 0 ? rd_data[rd_weeks[prevIdx]] : null;
+  const prevWeek = prevIdx >= 0 ? rd_weeks[prevIdx] : null;
+
+  const fmt = n => Math.round(n).toLocaleString();
+  const pct = (cur, pre) => pre && pre > 0 ? ((cur-pre)/pre*100).toFixed(1) + '%' : '-';
+  const roas = d.adCost > 0 ? (d.revenue / d.adCost).toFixed(1) : '-';
+
+  const brands_str = Object.entries(d.brands)
+    .sort((a, b) => b[1].revenue - a[1].revenue)
+    .slice(0, 10)
+    .map(([name, v]) => `${name}: 매출 ${fmt(v.revenue)}원 / ${Math.round(v.qty)}개 / 이익 ${fmt(v.profit)}원`)
+    .join('
+');
+
   const to = document.getElementById('rpt-to').value;
-  const items = active_chips('rpt-items');
   const memo = document.getElementById('rpt-memo').value;
+
+  const prompt = `라운즈 온라인 MD·마케팅 담당자입니다. 아래 데이터를 바탕으로 ${to}에게 보고할 주간 실적 보고서를 작성해주세요.
+
+📅 보고 주차: ${week}${prevWeek ? ` (전주: ${prevWeek})` : ''}
+
+📊 핵심 지표:
+- 매출: ${fmt(d.revenue)}원 (전주 대비: ${pct(d.revenue, prev?.revenue)})
+- 판매량: ${Math.round(d.qty)}개 (전주 대비: ${pct(d.qty, prev?.qty)})
+- 이익: ${fmt(d.profit)}원 (전주 대비: ${pct(d.profit, prev?.profit)})
+- 광고비: ${fmt(d.adCost)}원 (전주 대비: ${pct(d.adCost, prev?.adCost)})
+- ROAS: ${roas}
+${prev ? `
+📊 전주 지표:
+- 전주 매출: ${fmt(prev.revenue)}원
+- 전주 이익: ${fmt(prev.profit)}원
+- 전주 광고비: ${fmt(prev.adCost)}원` : ''}
+
+🏷️ 브랜드별 실적 TOP 10:
+${brands_str}
+
+${memo ? `📝 추가 메모: ${memo}` : ''}
+
+보고서 형식:
+- 섹션별 이모지 구분
+- 핵심 수치 명확히 표기
+- 전주 대비 증감 분석 및 원인 추측
+- 주목할 브랜드 인사이트
+- 광고 효율(ROAS) 코멘트
+- 다음 주 제언
+- 간결하고 실용적인 실무 문체`;
+
   try {
-    const out = await claude(`온라인 쇼핑몰 MD·마케팅 담당자입니다. 아래 데이터를 바탕으로 ${to}에게 보고할 주간 실적 보고서를 작성해주세요.\n보고 기간: ${period} / 포함 항목: ${items}${memo ? ` / 추가 메모: ${memo}` : ''}\n\n엑셀 데이터:\n${data}\n\n형식: 섹션별 이모지 구분, 핵심 수치 강조, 전주 대비 분석, 인사이트 및 개선 제안 포함. 간결하고 실용적인 실무 문체.`);
+    const out = await claude(prompt);
     document.getElementById('rpt-out').textContent = out;
     document.getElementById('rpt-res').style.display = 'block';
     document.getElementById('rpt-res').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  } catch (e) { document.getElementById('rpt-out').textContent = '오류: ' + e.message; document.getElementById('rpt-res').style.display = 'block'; }
-  set_btn('rpt-btn', false); document.getElementById('rpt-btn').textContent = '보고서 생성';
+  } catch (e) {
+    document.getElementById('rpt-out').textContent = '오류: ' + e.message;
+    document.getElementById('rpt-res').style.display = 'block';
+  }
+  set_btn('rpt-btn', false);
+  document.getElementById('rpt-btn').textContent = 'AI 보고서 자동 생성';
 }
 async function gen_copy() {
   set_btn('cp-btn', true, '생성 중...');
@@ -1235,20 +1464,49 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') close_modal(
 update_sync_indicator();
 render_tasks();
 
-// 샘플 데이터 (첫 실행시)
-if (!DB.tasks.length) {
-  const t = new Date().toISOString().slice(0, 10);
-  const t1 = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
-  const t2 = new Date(Date.now() + 2 * 86400000).toISOString().slice(0, 10);
-  DB.tasks = [
-    { id: 1, title: '메인 배너 이미지 교체', cat: 'site', priority: 'urgent', date: t, memo: '3종 업데이트', done: false },
-    { id: 2, title: '고객 문의 처리', cat: 'cs', priority: 'urgent', date: t, memo: '처리 7건', done: false },
-    { id: 3, title: '인스타 게시물 예약 등록', cat: 'mkt', priority: 'high', date: t, memo: '', done: false },
-    { id: 4, title: '신상품 상세페이지 작성', cat: 'product', priority: 'high', date: t1, memo: '', done: false },
-    { id: 5, title: '주간 매출 리포트 작성', cat: 'report', priority: 'normal', date: t2, memo: '경주 데이터 분석', done: false },
-  ];
-  save_local(); render_tasks();
-}
+// 페이지 열 때 자동으로 구글 시트에서 불러오기
+(async function init() {
+  set_sync_ui('syncing');
+  try {
+    const r = await fetch(APPS_SCRIPT_URL + '?action=get');
+    if (!r.ok) throw new Error('서버 오류');
+    const d = await r.json();
+    if (!d.ok) throw new Error('불러오기 실패');
+    const tasks = (d.tasks || [])
+      .filter(t => t.title)
+      .map(t => ({
+        id: Number(t.id) || Date.now(),
+        title: t.title || '',
+        cat: t.cat || 'mkt',
+        priority: t.priority || 'normal',
+        date: t.date || '',
+        memo: t.memo || '',
+        done: t.done === 'TRUE' || t.done === true || t.done === '1',
+      }));
+    if (tasks.length > 0) {
+      DB.tasks = tasks;
+      save_local();
+      render_tasks();
+    }
+    set_sync_ui('ok');
+  } catch(e) {
+    // 구글 시트 연결 실패시 로컬 데이터 사용
+    set_sync_ui('error');
+    if (!DB.tasks.length) {
+      const t = new Date().toISOString().slice(0,10);
+      const t1 = new Date(Date.now()+86400000).toISOString().slice(0,10);
+      const t2 = new Date(Date.now()+2*86400000).toISOString().slice(0,10);
+      DB.tasks = [
+        {id:1,title:'메인 배너 이미지 교체',cat:'site',priority:'urgent',date:t,memo:'3종 업데이트',done:false},
+        {id:2,title:'고객 문의 처리',cat:'cs',priority:'urgent',date:t,memo:'처리 7건',done:false},
+        {id:3,title:'인스타 게시물 예약 등록',cat:'mkt',priority:'high',date:t,memo:'',done:false},
+        {id:4,title:'신상품 상세페이지 작성',cat:'product',priority:'high',date:t1,memo:'',done:false},
+        {id:5,title:'주간 매출 리포트 작성',cat:'report',priority:'normal',date:t2,memo:'경주 데이터 분석',done:false},
+      ];
+      save_local(); render_tasks();
+    }
+  }
+})();
 </script>
 </body>
 </html>
