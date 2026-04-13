@@ -4,1000 +4,866 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>에옹_MD</title>
-<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#F5F6FA;
-  --surface:#FFFFFF;
-  --surface2:#F0F1F5;
-  --surface3:#E8E9EF;
-  --border:#E4E6EE;
-  --border2:#D0D3E0;
-  --ink:#1A1C2E;
-  --ink2:#4A4D65;
-  --muted:#8A8DA8;
-  --hint:#B8BAC8;
-  --accent:#5B5FE8;
-  --accent-bg:#EEF0FF;
-  --accent-light:#F4F5FF;
-  --green:#16A34A;
-  --green-bg:#DCFCE7;
-  --amber:#D97706;
-  --amber-bg:#FEF3C7;
-  --red:#DC2626;
-  --red-bg:#FEE2E2;
-  --blue:#2563EB;
-  --blue-bg:#DBEAFE;
-  --pink:#DB2777;
-  --pink-bg:#FCE7F3;
-  --teal:#0D9488;
-  --teal-bg:#CCFBF1;
-  --purple:#7C3AED;
-  --purple-bg:#EDE9FE;
-  --r4:4px;--r6:6px;--r8:8px;--r10:10px;--r12:12px;--r16:16px;--r20:20px;
-  --shadow-sm:0 1px 2px rgba(26,28,46,.06);
-  --shadow:0 1px 4px rgba(26,28,46,.08),0 4px 16px rgba(26,28,46,.06);
+  --bg:#F5F6FA;--surface:#fff;--s2:#F0F1F7;--s3:#E8E9F0;
+  --border:#E2E4EE;--border2:#CDD0E0;
+  --ink:#1A1C2E;--ink2:#4A4D65;--muted:#8A8DA8;--hint:#C0C2D0;
+  --accent:#5B5FE8;--accent-bg:#EEEFFE;
+  --green:#16A34A;--green-bg:#DCFCE7;
+  --amber:#D97706;--amber-bg:#FEF3C7;
+  --red:#DC2626;--red-bg:#FEE2E2;
+  --blue:#2563EB;--blue-bg:#DBEAFE;
+  --pink:#DB2777;--pink-bg:#FCE7F3;
+  --teal:#0D9488;--teal-bg:#CCFBF1;
+  --purple:#7C3AED;--purple-bg:#EDE9FE;
+  --r6:6px;--r8:8px;--r10:10px;--r12:12px;--r16:16px;
 }
+body{font-family:'Pretendard',-apple-system,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
 
-body{font-family:'Pretendard',-apple-system,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5;min-height:100vh}
+/* ── LAYOUT ── */
+.wrap{display:flex;min-height:100vh}
+.sidebar{width:56px;background:var(--ink);display:flex;flex-direction:column;align-items:center;padding:14px 0 20px;gap:2px;position:sticky;top:0;height:100vh;flex-shrink:0}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
 
-/* ══ LAYOUT ══ */
-.app{display:flex;min-height:100vh}
-
-/* ══ SIDEBAR ══ */
-.sidebar{
-  width:60px;flex-shrink:0;
-  background:var(--surface);
-  border-right:1px solid var(--border);
-  display:flex;flex-direction:column;align-items:center;
-  padding:16px 0 20px;gap:2px;
-  position:sticky;top:0;height:100vh;
-  box-shadow:var(--shadow-sm);
-}
-.s-logo{
-  width:34px;height:34px;border-radius:var(--r10);
-  background:var(--accent);
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:20px;flex-shrink:0;
-}
-.s-btn{
-  width:40px;height:40px;border-radius:var(--r10);
-  border:none;background:none;color:var(--muted);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:all .15s;position:relative;
-}
-.s-btn:hover{background:var(--surface2);color:var(--ink2)}
-.s-btn.on{background:var(--accent-bg);color:var(--accent)}
-.s-tip{
-  position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);
-  background:var(--ink);color:#fff;
-  border-radius:var(--r6);padding:5px 10px;
-  font-size:12px;font-weight:500;white-space:nowrap;
-  pointer-events:none;opacity:0;transition:opacity .15s;z-index:500;
-}
+/* ── SIDEBAR ── */
+.s-logo{width:34px;height:34px;border-radius:var(--r10);background:var(--accent);display:flex;align-items:center;justify-content:center;margin-bottom:18px;flex-shrink:0}
+.s-btn{width:40px;height:40px;border-radius:var(--r10);border:none;background:none;color:rgba(255,255,255,.4);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;position:relative;flex-shrink:0}
+.s-btn:hover{background:rgba(255,255,255,.08);color:rgba(255,255,255,.8)}
+.s-btn.on{background:rgba(91,95,232,.25);color:#fff}
+.s-tip{position:absolute;left:50px;top:50%;transform:translateY(-50%);background:var(--ink);color:#fff;border-radius:var(--r6);padding:4px 10px;font-size:12px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;z-index:999;border:1px solid rgba(255,255,255,.15)}
 .s-btn:hover .s-tip{opacity:1}
-.s-divider{width:28px;height:1px;background:var(--border);margin:8px 0}
-.sb-footer{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:2px}
+.s-divider{width:24px;height:1px;background:rgba(255,255,255,.08);margin:6px 0}
+.s-bottom{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:2px}
 
-/* ══ MAIN ══ */
-.main{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden}
-.panel{display:none;flex-direction:column;height:100vh;overflow:hidden}
+/* ── PANELS ── */
+.panel{display:none;flex:1;flex-direction:column;overflow:hidden}
 .panel.on{display:flex}
 
-/* ══ PAGE HEADER ══ */
-.page-hd{
-  padding:24px 28px 0;flex-shrink:0;
-  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
-}
-.page-hd-left{}
-.page-title{font-size:20px;font-weight:700;color:var(--ink);margin-bottom:2px}
-.page-sub{font-size:13px;color:var(--muted)}
-.add-btn{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:9px 18px;border-radius:var(--r10);
-  background:var(--accent);color:#fff;border:none;
-  font-size:13px;font-weight:600;font-family:inherit;
-  cursor:pointer;white-space:nowrap;flex-shrink:0;
-  transition:all .15s;box-shadow:0 2px 8px rgba(91,95,232,.3);
-}
-.add-btn:hover{background:#4a4ed4}
-.add-btn:active{transform:scale(.98)}
+/* ── PAGE HEADER ── */
+.ph{padding:22px 28px 0;flex-shrink:0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ph-left .pt{font-size:20px;font-weight:700;color:var(--ink)}
+.ph-left .ps{font-size:13px;color:var(--muted);margin-top:2px}
+.scroll-area{flex:1;overflow-y:auto;padding:16px 28px 32px}
 
-/* ══ STAT CARDS ══ */
-.stat-grid{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:12px;padding:16px 28px 0;flex-shrink:0;
-}
-.stat-card{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--r12);padding:16px 18px;
-  box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
-}
-.stat-blob{
-  position:absolute;right:-12px;bottom:-12px;
-  width:64px;height:64px;border-radius:50%;opacity:.12;
-}
-.stat-lbl{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:5px}
-.stat-val{font-size:28px;font-weight:700;line-height:1}
-.c-blue{color:var(--blue)}.c-red{color:var(--red)}.c-amber{color:var(--amber)}.c-green{color:var(--green)}
-.b-blue{background:var(--blue)}.b-red{background:var(--red)}.b-amber{background:var(--amber)}.b-green{background:var(--green)}
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r12);padding:20px;margin-bottom:14px}
+.card-lbl{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
 
-/* ══ TOOLBAR ══ */
-.toolbar{
-  display:flex;align-items:center;gap:10px;
-  padding:14px 28px 0;flex-shrink:0;flex-wrap:wrap;
-}
+/* ── KPI GRID ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--r10);padding:14px 16px;position:relative;overflow:hidden}
+.kpi-blob{position:absolute;right:-10px;bottom:-10px;width:56px;height:56px;border-radius:50%;opacity:.12}
+.kpi-lbl{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px}
+.kpi-val{font-size:22px;font-weight:700;line-height:1}
+.kpi-diff{font-size:11px;font-weight:600;margin-top:4px}
+.c-blue{color:var(--blue)}.c-green{color:var(--green)}.c-amber{color:var(--amber)}.c-red{color:var(--red)}.c-purple{color:var(--purple)}
+.b-blue{background:var(--blue)}.b-green{background:var(--green)}.b-amber{background:var(--amber)}.b-red{background:var(--red)}.b-purple{background:var(--purple)}
+
+/* ── STAT ROWS ── */
+.stat-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.stat-row:last-child{border-bottom:none}
+.stat-rank{font-size:11px;font-weight:700;color:var(--muted);min-width:18px}
+.stat-name{flex:1;font-weight:600}
+.stat-qty{font-size:11px;color:var(--muted)}
+.stat-rev{font-size:12px;color:var(--ink2);min-width:70px;text-align:right}
+.stat-pct{font-size:10px;font-weight:700;color:var(--accent);min-width:34px;text-align:right}
+.stat-profit{font-size:11px;min-width:48px;text-align:right}
+
+/* ── TABS ── */
+.tab-row{display:flex;gap:0;border-bottom:1.5px solid var(--border);margin-bottom:14px}
+.tab-btn{padding:8px 14px;font-size:13px;font-weight:500;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:inherit;transition:all .15s;margin-bottom:-1.5px;white-space:nowrap}
+.tab-btn:hover{color:var(--ink2)}
+.tab-btn.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
+
+/* ── TASK UI ── */
+.toolbar{display:flex;align-items:center;gap:10px;padding:14px 28px 0;flex-shrink:0;flex-wrap:wrap}
 .search-wrap{flex:1;min-width:160px;position:relative}
-.search-wrap input{
-  width:100%;
-  background:var(--surface);border:1.5px solid var(--border);
-  border-radius:var(--r8);
-  padding:8px 12px 8px 34px;
-  color:var(--ink);font-size:13px;font-family:inherit;outline:none;
-  transition:border-color .15s;
-  box-shadow:var(--shadow-sm);
-}
+.search-wrap input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r8);padding:8px 12px 8px 34px;color:var(--ink);font-size:13px;font-family:inherit;outline:none;transition:border-color .15s}
 .search-wrap input::placeholder{color:var(--muted)}
 .search-wrap input:focus{border-color:var(--accent)}
 .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.add-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 18px;border-radius:var(--r8);background:var(--accent);color:#fff;border:none;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.add-btn:hover{background:#4a4ed4}
+.add-btn:active{transform:scale(.98)}
 
-/* ══ FILTER ROW ══ */
-.filter-row{
-  display:flex;align-items:center;gap:6px;
-  padding:10px 28px 0;flex-shrink:0;
-  overflow-x:auto;scrollbar-width:none;
-}
+.filter-row{display:flex;align-items:center;gap:6px;padding:10px 28px 0;flex-shrink:0;overflow-x:auto;scrollbar-width:none}
 .filter-row::-webkit-scrollbar{display:none}
-.fchip{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:5px 13px;border-radius:var(--r20);
-  font-size:12.5px;font-weight:500;
-  border:1.5px solid var(--border);
-  background:var(--surface);color:var(--muted);
-  cursor:pointer;font-family:inherit;white-space:nowrap;
-  transition:all .15s;box-shadow:var(--shadow-sm);
-}
-.fchip:hover{color:var(--ink);border-color:var(--border2)}
+.fchip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s}
+.fchip:hover{border-color:var(--border2);color:var(--ink)}
 .fchip.on{color:#fff;border-color:transparent}
-.fchip-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.fdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 
-/* ══ TABS ══ */
-.tab-row{
-  display:flex;align-items:center;
-  padding:10px 28px 0;flex-shrink:0;
-  gap:0;border-bottom:1.5px solid var(--border);
-  margin-top:4px;
-}
-.tab-btn{
-  padding:8px 16px;font-size:13px;font-weight:500;
-  color:var(--muted);background:none;border:none;
-  border-bottom:2px solid transparent;
-  cursor:pointer;font-family:inherit;
-  transition:all .15s;
-  display:flex;align-items:center;gap:6px;
-  margin-bottom:-1.5px;
-}
-.tab-btn:hover{color:var(--ink2)}
-.tab-btn.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
-.tab-cnt{font-size:11px;font-weight:700;padding:1px 6px;border-radius:10px;background:var(--surface2)}
-.tab-btn.on .tab-cnt{background:var(--accent-bg);color:var(--accent)}
+.task-tabs-row{display:flex;padding:8px 28px 0;flex-shrink:0;gap:0;border-bottom:1px solid var(--border)}
+.ttab{padding:8px 14px;font-size:13px;font-weight:500;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:inherit;transition:all .15s;margin-bottom:-1px;display:flex;align-items:center;gap:6px}
+.ttab:hover{color:var(--ink2)}
+.ttab.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
+.ttab-cnt{font-size:11px;font-weight:700;padding:1px 6px;border-radius:10px;background:var(--s2)}
+.ttab.on .ttab-cnt{background:var(--accent-bg);color:var(--accent)}
 
-/* ══ TASK LIST ══ */
 .task-list{flex:1;overflow-y:auto;padding:8px 28px 32px}
-.task-item{
-  display:flex;align-items:center;gap:12px;
-  background:var(--surface);border:1.5px solid var(--border);
-  border-radius:var(--r12);padding:14px 16px;
-  margin-top:8px;
-  transition:all .15s;
-  box-shadow:var(--shadow-sm);
-}
-.task-item:hover{border-color:var(--border2);box-shadow:var(--shadow)}
-.task-item.done-item{opacity:.55}
-.task-cb{
-  width:18px;height:18px;border-radius:5px;
-  border:2px solid var(--border2);background:var(--surface);
-  appearance:none;cursor:pointer;flex-shrink:0;
-  transition:all .15s;position:relative;
-}
+.task-item{display:flex;align-items:center;gap:12px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r12);padding:12px 14px;margin-top:8px;transition:all .15s}
+.task-item:hover{border-color:var(--border2)}
+.task-item.done-item{opacity:.5}
+.task-cb{width:18px;height:18px;border-radius:5px;border:2px solid var(--border2);background:var(--surface);appearance:none;cursor:pointer;flex-shrink:0;transition:all .15s;position:relative}
 .task-cb:checked{background:var(--green);border-color:var(--green)}
-.task-cb:checked::after{
-  content:'';position:absolute;
-  top:2px;left:5px;width:4px;height:8px;
-  border:2px solid #fff;border-top:none;border-left:none;
-  transform:rotate(45deg);
-}
+.task-cb:checked::after{content:'';position:absolute;top:2px;left:5px;width:4px;height:8px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg)}
 .task-body{flex:1;min-width:0}
-.task-title{font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:5px;line-height:1.35}
+.task-title{font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:5px}
 .done-item .task-title{text-decoration:line-through;color:var(--muted)}
 .task-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.meta-piece{display:flex;align-items:center;gap:3px;font-size:11.5px;color:var(--muted);font-weight:500}
 .task-tags{display:flex;align-items:center;gap:5px;flex-wrap:wrap;flex-shrink:0}
-.tag{
-  display:inline-flex;align-items:center;gap:4px;
-  padding:3px 9px;border-radius:var(--r6);
-  font-size:11.5px;font-weight:700;line-height:1.3;
-}
-.tag-dot{width:5px;height:5px;border-radius:50%}
-.task-acts{display:flex;gap:4px;flex-shrink:0;opacity:0;transition:opacity .15s}
+.tag{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700}
+.tag-dot{width:4px;height:4px;border-radius:50%}
+.meta-txt{display:flex;align-items:center;gap:3px;font-size:11.5px;color:var(--muted);font-weight:500}
+.task-acts{display:flex;gap:4px;opacity:0;transition:opacity .15s;flex-shrink:0}
 .task-item:hover .task-acts{opacity:1}
-.act-btn{
-  width:30px;height:30px;border-radius:var(--r8);
-  border:1.5px solid var(--border);background:var(--surface2);
-  color:var(--muted);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .15s;
-}
-.act-btn:hover{background:var(--surface);border-color:var(--border2);color:var(--ink)}
-.act-btn.del-btn:hover{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+.act-btn{width:28px;height:28px;border-radius:var(--r6);border:1px solid var(--border);background:var(--s2);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.act-btn:hover{background:var(--surface);color:var(--ink);border-color:var(--border2)}
+.act-del:hover{background:var(--red-bg);border-color:var(--red);color:var(--red)}
 
-/* ══ EMPTY ══ */
-.empty{
-  text-align:center;padding:52px 20px;color:var(--muted);
-}
-.empty-icon{
-  width:52px;height:52px;background:var(--surface2);
-  border:1.5px solid var(--border);border-radius:var(--r16);
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto 14px;color:var(--hint);
-}
-.empty-title{font-size:14px;font-weight:700;color:var(--ink2);margin-bottom:4px}
-.empty-sub{font-size:12.5px}
+/* ── DROPZONE ── */
+.dropzone{border:2px dashed var(--border2);border-radius:var(--r12);padding:28px 16px;text-align:center;cursor:pointer;position:relative;transition:all .15s}
+.dropzone:hover,.dropzone.drag{border-color:var(--accent);background:var(--accent-bg)}
+.dropzone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.dz-icon{width:38px;height:38px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r10);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;color:var(--muted)}
+.dz-title{font-size:14px;font-weight:700;margin-bottom:3px}
+.dz-sub{font-size:11.5px;color:var(--muted)}
 
-/* ══ MODAL ══ */
-.overlay{
-  position:fixed;inset:0;background:rgba(26,28,46,.35);
-  backdrop-filter:blur(4px);
-  z-index:400;display:flex;align-items:center;justify-content:center;padding:20px;
-  opacity:0;pointer-events:none;transition:opacity .2s;
-}
-.overlay.show{opacity:1;pointer-events:all}
-.modal{
-  background:var(--surface);border:1.5px solid var(--border);
-  border-radius:var(--r16);padding:26px;
-  width:100%;max-width:460px;max-height:90vh;overflow-y:auto;
-  box-shadow:0 20px 60px rgba(26,28,46,.18);
-  transform:translateY(10px);transition:transform .2s;
-}
-.overlay.show .modal{transform:translateY(0)}
-.modal-hd{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:20px;
-}
-.modal-title{font-size:16px;font-weight:700}
-.modal-close{
-  background:var(--surface2);border:1.5px solid var(--border);
-  border-radius:var(--r6);color:var(--muted);cursor:pointer;
-  width:28px;height:28px;display:flex;align-items:center;justify-content:center;
-  transition:all .15s;font-size:16px;line-height:1;
-}
-.modal-close:hover{background:var(--red-bg);border-color:var(--red);color:var(--red)}
-
-/* ══ FORM ══ */
+/* ── FORM ── */
 .flbl{display:block;font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:5px}
-input[type=text],input[type=date],textarea,select{
-  width:100%;padding:9px 12px;
-  border:1.5px solid var(--border);border-radius:var(--r8);
-  font-size:13px;font-family:inherit;
-  background:var(--surface);color:var(--ink);
-  outline:none;transition:border-color .15s;appearance:none;
-}
+input[type=text],input[type=date],textarea,select{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--r8);font-size:13px;font-family:inherit;background:var(--surface);color:var(--ink);outline:none;transition:border-color .15s;appearance:none}
 input:focus,textarea:focus,select:focus{border-color:var(--accent)}
 input::placeholder,textarea::placeholder{color:var(--muted)}
 textarea{resize:vertical}
-.field{margin-bottom:14px}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.field{margin-bottom:12px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 
-/* ══ MODAL CHIPS ══ */
-.mchips{display:flex;flex-wrap:wrap;gap:6px}
-.mchip{
-  padding:5px 12px;border-radius:var(--r20);
-  font-size:12px;font-weight:700;
-  border:1.5px solid var(--border);
-  background:var(--surface2);color:var(--muted);
-  cursor:pointer;font-family:inherit;transition:all .15s;
-}
-.mchip:hover{color:var(--ink2);border-color:var(--border2)}
-.mchip.on{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
-
-/* ══ BUTTONS ══ */
-.btn{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:9px 18px;border-radius:var(--r8);
-  font-size:13px;font-weight:600;font-family:inherit;
-  cursor:pointer;border:1.5px solid var(--border);
-  background:var(--surface2);color:var(--ink);
-  transition:all .15s;
-}
-.btn:hover{background:var(--surface3)}
-.btn:active{transform:scale(.98)}
-.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(91,95,232,.25)}
-.btn-primary:hover{background:#4a4ed4}
-.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.btn-sm{padding:6px 13px;font-size:12px}
-.btn-row{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
-
-/* ══ SETUP BANNER ══ */
-.setup-banner{
-  background:linear-gradient(135deg,#EEF0FF 0%,#F0F5FF 100%);
-  border:1.5px solid #C7CBFF;border-radius:var(--r12);
-  padding:18px 20px;margin-bottom:16px;
-}
-.setup-banner-title{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px}
-.setup-banner-sub{font-size:12.5px;color:#5052A0;line-height:1.6}
-.setup-steps{margin-top:12px;display:flex;flex-direction:column;gap:8px}
-.setup-step{display:flex;align-items:flex-start;gap:10px;font-size:12.5px;color:var(--ink2)}
-.step-num{
-  width:20px;height:20px;border-radius:50%;
-  background:var(--accent);color:#fff;
-  font-size:11px;font-weight:700;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-}
-.setup-input-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
-.setup-input-row input{flex:1;min-width:120px}
-
-/* ══ AI PANELS ══ */
-.ai-panel-inner{flex:1;overflow-y:auto;padding:16px 28px 32px}
-.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r12);padding:20px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
-.card-lbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
-.chip{padding:5px 13px;border-radius:var(--r20);font-size:12.5px;font-weight:600;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;font-family:inherit;transition:all .15s}
+/* ── CHIPS ── */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chip{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;border:1.5px solid var(--border);background:var(--s2);color:var(--muted);cursor:pointer;font-family:inherit;transition:all .15s}
 .chip:hover{color:var(--ink)}
 .chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 
-/* DROPZONE */
-.dropzone{border:2px dashed var(--border2);border-radius:var(--r12);padding:32px 20px;text-align:center;cursor:pointer;position:relative;transition:all .15s}
-.dropzone:hover,.dropzone.drag{border-color:var(--accent);background:var(--accent-light)}
-.dropzone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.dz-icon{width:42px;height:42px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r10);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;color:var(--muted)}
-.dz-title{font-size:14px;font-weight:700;margin-bottom:4px}
-.dz-sub{font-size:12px;color:var(--muted)}
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r8);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;border:1.5px solid var(--border);background:var(--s2);color:var(--ink);transition:all .15s}
+.btn:hover{background:var(--s3)}
+.btn:active{transform:scale(.98)}
+.btn-p{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-p:hover{background:#4a4ed4}
+.btn-p:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-row{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
 
-/* TABLE */
-.tbl-outer{overflow-x:auto;border:1.5px solid var(--border);border-radius:var(--r8)}
-table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:300px}
-th{background:var(--surface2);padding:8px 12px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);border-bottom:1.5px solid var(--border);white-space:nowrap}
-td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--ink)}
-tr:last-child td{border-bottom:none}
-tr:hover td{background:var(--surface2)}
+/* ── MODAL ── */
+.overlay{position:fixed;inset:0;background:rgba(26,28,46,.4);backdrop-filter:blur(3px);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.show{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r16);padding:24px;width:100%;max-width:460px;max-height:90vh;overflow-y:auto;transform:translateY(10px);transition:transform .2s}
+.overlay.show .modal{transform:translateY(0)}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.modal-title{font-size:15px;font-weight:700}
+.modal-x{background:var(--s2);border:1px solid var(--border);border-radius:var(--r6);color:var(--muted);cursor:pointer;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1;transition:all .15s}
+.modal-x:hover{background:var(--red-bg);color:var(--red);border-color:var(--red)}
 
-/* RESULT */
+.mchips{display:flex;flex-wrap:wrap;gap:5px}
+.mchip{padding:5px 11px;border-radius:20px;font-size:12px;font-weight:700;border:1.5px solid var(--border);background:var(--s2);color:var(--muted);cursor:pointer;font-family:inherit;transition:all .15s}
+.mchip:hover{color:var(--ink)}
+.mchip.on{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
+
+/* ── RESULT ── */
 .result-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.result-lbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.result-box{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r8);padding:16px;font-size:13px;line-height:1.85;color:var(--ink);white-space:pre-wrap;max-height:480px;overflow-y:auto}
+.result-lbl{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.result-box{background:var(--s2);border:1px solid var(--border);border-radius:var(--r8);padding:16px;font-size:13px;line-height:1.85;color:var(--ink);white-space:pre-wrap;max-height:500px;overflow-y:auto}
 
-/* SHEET TABS */
-.sheet-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-.stab{padding:4px 11px;border-radius:var(--r20);font-size:11.5px;font-weight:600;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;font-family:inherit;transition:all .13s}
-.stab:hover{color:var(--ink)}
-.stab.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+/* ── NOTICE ── */
+.notice{background:var(--blue-bg);border:1px solid #BFDBFE;border-radius:var(--r8);padding:10px 14px;font-size:12.5px;color:var(--blue);margin-bottom:14px}
 
-/* FILE PILL */
-.file-pill{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r8);padding:8px 12px;font-size:13px;margin-bottom:10px}
-.file-pill-name{flex:1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* ── SYNC BAR ── */
+.sync-bar{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:5px 10px;border-radius:var(--r6);background:var(--s2);border:1px solid var(--border);flex-shrink:0}
+.sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sdot-ok{background:var(--green)}.sdot-err{background:var(--red)}.sdot-wait{background:var(--amber)}
 
-/* NOTICE */
-.notice{background:var(--blue-bg);border:1.5px solid #BFDBFE;border-radius:var(--r8);padding:10px 14px;font-size:12.5px;color:var(--blue);margin-bottom:14px;line-height:1.6}
-
-/* SPINNER */
-.spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .6s linear infinite}
+/* ── SPINNER ── */
+.spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:sp .6s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 
-/* SYNC INDICATOR */
-.sync-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.sync-ok{background:var(--green)}.sync-err{background:var(--red)}.sync-wait{background:var(--amber)}
-.sync-bar{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:6px 10px;border-radius:var(--r6);background:var(--surface2);border:1px solid var(--border)}
+/* ── IMAGE GRID ── */
+.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}
+.img-thumb{position:relative;aspect-ratio:1;border-radius:var(--r8);overflow:hidden;border:1px solid var(--border);background:var(--s2)}
+.img-thumb img{width:100%;height:100%;object-fit:cover}
+.img-thumb-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(26,28,46,.7);color:#fff;font-size:10px;padding:3px 5px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap}
+.img-dl{position:absolute;top:4px;right:4px;background:rgba(255,255,255,.9);border:none;border-radius:4px;padding:3px 6px;font-size:10px;font-weight:700;cursor:pointer;color:var(--accent)}
 
-/* MOBILE */
-.mob-header{display:none}
-@media(max-width:680px){
-  .app{flex-direction:column}
+/* ── BRAND SEARCH (multi) ── */
+.brand-search-wrap{position:relative;margin-bottom:12px}
+.brand-search-input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r8);padding:8px 12px 8px 34px;color:var(--ink);font-size:13px;font-family:inherit;outline:none;transition:border-color .15s}
+.brand-search-input:focus{border-color:var(--accent)}
+.brand-search-input::placeholder{color:var(--muted)}
+.brand-tags-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.brand-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;background:var(--accent-bg);color:var(--accent);font-size:12px;font-weight:700;cursor:pointer}
+.brand-tag:hover{background:#dfe0fd}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:48px 20px;color:var(--muted)}
+.empty-icon{width:48px;height:48px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r12);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:var(--hint)}
+.empty-title{font-size:14px;font-weight:700;color:var(--ink2);margin-bottom:4px}
+
+/* ── MOBILE ── */
+.mob-hd{display:none}
+@media(max-width:660px){
+  .wrap{flex-direction:column}
   .sidebar{display:none}
-  .mob-header{display:block;background:var(--surface);border-bottom:1.5px solid var(--border)}
-  .mob-brand{font-size:15px;font-weight:700;padding:14px 16px 4px;display:block;color:var(--ink)}
-  .mob-tabs{display:flex;overflow-x:auto;scrollbar-width:none;padding:0 8px}
+  .mob-hd{display:block;background:var(--ink)}
+  .mob-brand{font-size:14px;font-weight:700;color:#fff;padding:12px 14px 4px;display:block}
+  .mob-tabs{display:flex;overflow-x:auto;scrollbar-width:none;padding:0 6px}
   .mob-tabs::-webkit-scrollbar{display:none}
-  .mob-tab{padding:10px 14px;font-size:13px;font-weight:600;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .13s}
-  .mob-tab.on{color:var(--accent);border-bottom-color:var(--accent)}
-  .stat-grid{grid-template-columns:1fr 1fr;padding:0 16px}
-  .page-hd,.toolbar,.filter-row,.tab-row,.task-list,.ai-panel-inner{padding-left:14px!important;padding-right:14px!important}
+  .mtab{padding:10px 12px;font-size:12.5px;font-weight:600;color:rgba(255,255,255,.4);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .13s}
+  .mtab.on{color:#fff;border-bottom-color:rgba(255,255,255,.6)}
+  .scroll-area,.toolbar,.filter-row,.task-tabs-row,.task-list{padding-left:14px!important;padding-right:14px!important}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .ph{padding:16px 14px 0}
+  .g2{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
-<div class="app">
+<div class="wrap">
 
-<!-- ══ SIDEBAR ══ -->
+<!-- ── SIDEBAR ── -->
 <aside class="sidebar">
   <div class="s-logo">
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="2.2"><path d="M3 9h12M3 5h8M3 13h10"/></svg>
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="2.2"><path d="M2 9h14M2 5h9M2 13h11"/></svg>
   </div>
-  <button class="s-btn on" data-panel="tasks" onclick="go(this)">
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><polyline points="3 4 6 7 11 2"/><line x1="14" y1="4.5" x2="16.5" y2="4.5"/><polyline points="3 10 6 13 11 8"/><line x1="14" y1="10.5" x2="16.5" y2="10.5"/></svg>
-    <span class="s-tip">할 일 & 일정</span>
+  <button class="s-btn on" data-p="dash" onclick="nav(this)">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="2" width="6" height="6" rx="1.5"/><rect x="10" y="2" width="6" height="6" rx="1.5"/><rect x="2" y="10" width="6" height="6" rx="1.5"/><rect x="10" y="10" width="6" height="6" rx="1.5"/></svg>
+    <span class="s-tip">대시보드 (보고서)</span>
   </button>
-  <button class="s-btn" data-panel="report" onclick="go(this)">
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2.5" y="2.5" width="13" height="13" rx="2"/><line x1="5.5" y1="6.5" x2="12.5" y2="6.5"/><line x1="5.5" y1="9.5" x2="10" y2="9.5"/><line x1="5.5" y1="12.5" x2="8" y2="12.5"/></svg>
-    <span class="s-tip">주간 보고서</span>
+  <button class="s-btn" data-p="tasks" onclick="nav(this)">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><polyline points="3 4.5 6 7.5 11 2.5"/><line x1="14" y1="5" x2="17" y2="5"/><polyline points="3 11 6 14 11 9"/><line x1="14" y1="11.5" x2="17" y2="11.5"/></svg>
+    <span class="s-tip">할 일 관리</span>
   </button>
-  <button class="s-btn" data-panel="copy" onclick="go(this)">
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 5h12M3 8.5h12M3 12h7"/><circle cx="14.5" cy="13.5" r="3"/><line x1="14.5" y1="12" x2="14.5" y2="15"/><line x1="13" y1="13.5" x2="16" y2="13.5"/></svg>
+  <button class="s-btn" data-p="copy" onclick="nav(this)">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 5h12M3 8.5h12M3 12h7"/><circle cx="15" cy="14" r="2.5"/><line x1="15" y1="12.8" x2="15" y2="15.2"/><line x1="13.8" y1="14" x2="16.2" y2="14"/></svg>
     <span class="s-tip">카피라이팅</span>
   </button>
-  <button class="s-btn" data-panel="plan" onclick="go(this)">
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2.5" y="3.5" width="13" height="11" rx="2"/><line x1="5.5" y1="7.5" x2="12.5" y2="7.5"/><line x1="5.5" y1="10.5" x2="9.5" y2="10.5"/></svg>
+  <button class="s-btn" data-p="plan" onclick="nav(this)">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="3" width="14" height="12" rx="2"/><line x1="5" y1="7.5" x2="13" y2="7.5"/><line x1="5" y1="11" x2="10" y2="11"/></svg>
     <span class="s-tip">상품 기획</span>
   </button>
   <div class="s-divider"></div>
-  <button class="s-btn" data-panel="settings" onclick="go(this)">
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="9" r="2.5"/><path d="M9 2.5v1.2M9 14.3v1.2M2.5 9h1.2M14.3 9h1.2M4.3 4.3l.85.85M12.85 12.85l.85.85M4.3 13.7l.85-.85M12.85 5.15l.85-.85"/></svg>
-    <span class="s-tip">구글 시트 설정</span>
+  <button class="s-btn" data-p="image" onclick="nav(this)">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="2" width="14" height="14" rx="2"/><circle cx="7" cy="7" r="1.5"/><polyline points="2 12 6 8 9 11 12 8 16 12"/></svg>
+    <span class="s-tip">이미지 860×860</span>
   </button>
-  <div class="sb-footer">
-    <button class="s-btn" onclick="export_data()" title="JSON 내보내기">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2v8M5.5 7.5L8 10l2.5-2.5"/><path d="M3 12.5h10"/></svg>
-      <span class="s-tip">JSON 내보내기</span>
+  <button class="s-btn" data-p="promo" onclick="nav(this)">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="3" width="14" height="12" rx="2"/><line x1="5" y1="7" x2="13" y2="7"/><line x1="5" y1="10.5" x2="10" y2="10.5"/><circle cx="13" cy="10.5" r="2.5"/><line x1="13" y1="9.5" x2="13" y2="11.5"/><line x1="12" y1="10.5" x2="14" y2="10.5"/></svg>
+    <span class="s-tip">기획전 퍼블</span>
+  </button>
+  <div class="s-bottom">
+    <button class="s-btn" onclick="export_data()">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7.5 2v7M5 7l2.5 2.5L10 7"/><path d="M2.5 11.5h10"/></svg>
+      <span class="s-tip">데이터 내보내기</span>
     </button>
     <button class="s-btn" onclick="document.getElementById('import-f').click()">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 14V6M5.5 8.5L8 6l2.5 2.5"/><path d="M3 3.5h10"/></svg>
-      <span class="s-tip">JSON 불러오기</span>
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7.5 13V6M5 8.5L7.5 6 10 8.5"/><path d="M2.5 3.5h10"/></svg>
+      <span class="s-tip">데이터 불러오기</span>
     </button>
     <input type="file" id="import-f" accept=".json" style="display:none" onchange="import_data(this)">
   </div>
 </aside>
 
-<!-- ══ MOBILE HEADER ══ -->
-<div class="mob-header">
+<!-- ── MOBILE HEADER ── -->
+<div class="mob-hd">
   <span class="mob-brand">에옹_MD</span>
   <div class="mob-tabs">
-    <button class="mob-tab on" data-panel="tasks" onclick="go(this)">할 일</button>
-    <button class="mob-tab" data-panel="report" onclick="go(this)">보고서</button>
-    <button class="mob-tab" data-panel="copy" onclick="go(this)">카피</button>
-    <button class="mob-tab" data-panel="plan" onclick="go(this)">기획</button>
-    <button class="mob-tab" data-panel="settings" onclick="go(this)">설정</button>
+    <button class="mtab on" data-p="dash" onclick="nav(this)">대시보드</button>
+    <button class="mtab" data-p="tasks" onclick="nav(this)">할 일</button>
+    <button class="mtab" data-p="copy" onclick="nav(this)">카피</button>
+    <button class="mtab" data-p="plan" onclick="nav(this)">기획</button>
+    <button class="mtab" data-p="image" onclick="nav(this)">이미지</button>
+    <button class="mtab" data-p="promo" onclick="nav(this)">기획전</button>
   </div>
 </div>
 
-<!-- ══ MAIN ══ -->
 <div class="main">
 
-  <!-- ════ 할 일 & 일정 ════ -->
-  <div class="panel on" id="p-tasks">
-    <div class="page-hd">
-      <div class="page-hd-left">
-        <div class="page-title">할 일 &amp; 일정 관리</div>
-        <div class="page-sub" id="today-label"></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <div class="sync-bar" id="sync-indicator">
-          <span class="sync-dot sync-wait"></span>
-          <span id="sync-text">로컬 저장</span>
-        </div>
-        <button class="add-btn" onclick="open_modal()">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
-          + 할 일 추가
-        </button>
-      </div>
+<!-- ════════════════════════════
+  PANEL: 대시보드 (보고서)
+════════════════════════════ -->
+<div class="panel on" id="p-dash">
+  <div class="ph">
+    <div class="ph-left">
+      <div class="pt">대시보드</div>
+      <div class="ps" id="dash-period">RD 파일을 업로드하면 이번 주 실적이 자동으로 표시돼요</div>
     </div>
-
-    <div class="stat-grid">
-      <div class="stat-card">
-        <div class="stat-lbl">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="1" width="10" height="10" rx="2"/></svg>
-          오늘 할 일
-        </div>
-        <div class="stat-val c-blue" id="st-total">0</div>
-        <div class="stat-blob b-blue"></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-lbl">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 2v4l2.5 2.5"/><circle cx="6" cy="6" r="4.5"/></svg>
-          긴급
-        </div>
-        <div class="stat-val c-red" id="st-urgent">0</div>
-        <div class="stat-blob b-red"></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-lbl">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3v3.5h2.5"/><circle cx="6" cy="6" r="4.5"/></svg>
-          기한 초과
-        </div>
-        <div class="stat-val c-amber" id="st-overdue">0</div>
-        <div class="stat-blob b-amber"></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-lbl">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 6l3 3 5-6"/></svg>
-          오늘 완료
-        </div>
-        <div class="stat-val c-green" id="st-done">0</div>
-        <div class="stat-blob b-green"></div>
-      </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <div class="sync-bar"><span class="sdot sdot-ok"></span><span id="sync-txt">구글 시트 연결됨</span></div>
     </div>
-
-    <div class="toolbar">
-      <div class="search-wrap">
-        <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="4.5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
-        <input type="text" id="search-input" placeholder="검색..." oninput="render_tasks()">
-      </div>
-    </div>
-
-    <div class="filter-row" id="filter-row">
-      <button class="fchip on" data-cat="all" onclick="set_filter(this)" style="--fc:var(--accent);--fb:var(--accent-bg)">
-        <span class="fchip-dot" style="background:var(--accent)"></span>전체
-      </button>
-      <button class="fchip" data-cat="site" onclick="set_filter(this)" style="--fc:var(--blue);--fb:var(--blue-bg)">
-        <span class="fchip-dot" style="background:var(--blue)"></span>사이트관리
-      </button>
-      <button class="fchip" data-cat="mkt" onclick="set_filter(this)" style="--fc:var(--amber);--fb:var(--amber-bg)">
-        <span class="fchip-dot" style="background:var(--amber)"></span>마케팅
-      </button>
-      <button class="fchip" data-cat="product" onclick="set_filter(this)" style="--fc:var(--pink);--fb:var(--pink-bg)">
-        <span class="fchip-dot" style="background:var(--pink)"></span>상품관리
-      </button>
-      <button class="fchip" data-cat="report" onclick="set_filter(this)" style="--fc:var(--teal);--fb:var(--teal-bg)">
-        <span class="fchip-dot" style="background:var(--teal)"></span>리포트
-      </button>
-      <button class="fchip" data-cat="cs" onclick="set_filter(this)" style="--fc:var(--purple);--fb:var(--purple-bg)">
-        <span class="fchip-dot" style="background:var(--purple)"></span>CS/운영
-      </button>
-    </div>
-
-    <div class="tab-row">
-      <button class="tab-btn on" data-tab="doing" onclick="set_tab(this)">
-        <span style="width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block"></span>
-        진행 중 <span class="tab-cnt" id="tab-doing-cnt">0</span>
-      </button>
-      <button class="tab-btn" data-tab="done" onclick="set_tab(this)">
-        <span style="width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block"></span>
-        완료 <span class="tab-cnt" id="tab-done-cnt">0</span>
-      </button>
-    </div>
-
-    <div class="task-list" id="task-list"></div>
   </div>
+  <div class="scroll-area">
 
-  <!-- ════ 보고서 ════ -->
-  <div class="panel" id="p-report">
-    <div class="page-hd" style="margin-bottom:0">
-      <div><div class="page-title">주간 보고서</div><div class="page-sub">RD 파일 업로드하면 자동으로 분석 후 보고서 완성!</div></div>
-    </div>
-    <div class="ai-panel-inner">
-      <div class="notice">📊 라운즈 RD 엑셀 파일 업로드 → 주차 자동 감지 → 매출·광고비·브랜드 분석 → AI 보고서 완성!</div>
-      <div class="card" id="rpt-up">
-        <div class="card-lbl">파일 업로드</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          <div>
-            <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">① 주문 파일 (ORDER)</div>
-            <div class="dropzone" id="dz" style="padding:20px 12px" ondragover="dz_over(event)" ondragleave="dz_leave()" ondrop="dz_drop(event)">
-              <input type="file" accept=".xls,.xlsx" onchange="load_rd(this.files[0])">
-              <div class="dz-icon" style="width:32px;height:32px;margin-bottom:8px"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="14" height="12" rx="2"/><line x1="10" y1="9" x2="10" y2="14"/><polyline points="7.5 11.5 10 9 12.5 11.5"/></svg></div>
-              <div class="dz-title" style="font-size:13px">order_list.xls</div>
-              <div class="dz-sub" style="font-size:11px">주문 내역 파일</div>
-            </div>
+    <!-- 업로드 카드 -->
+    <div class="card" id="dash-upload">
+      <div class="card-lbl">주간 데이터 업로드</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:6px">① 이번주 ORDER (.xls)</div>
+          <div class="dropzone" id="dz-order">
+            <input type="file" accept=".xls,.xlsx" onchange="on_order_file(this.files[0], 'cur')">
+            <div class="dz-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1.5"/><line x1="8" y1="7" x2="8" y2="11"/><polyline points="6 9 8 7 10 9"/></svg></div>
+            <div class="dz-title" style="font-size:13px">이번주 order.xls</div>
+            <div class="dz-sub" style="font-size:11px">주문 내역</div>
           </div>
-          <div>
-            <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">② 광고비 파일 (선택)</div>
-            <div class="dropzone" id="dz-ad" style="padding:20px 12px" ondragover="dz_over2(event)" ondragleave="dz_leave2()" ondrop="dz_drop2(event)">
-              <input type="file" accept=".csv" onchange="load_rd_ad(this.files[0])">
-              <div class="dz-icon" style="width:32px;height:32px;margin-bottom:8px"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="14" height="12" rx="2"/><line x1="10" y1="9" x2="10" y2="14"/><polyline points="7.5 11.5 10 9 12.5 11.5"/></svg></div>
-              <div class="dz-title" style="font-size:13px">daily_report.csv</div>
-              <div class="dz-sub" style="font-size:11px">네이버 광고 리포트</div>
-            </div>
-          </div>
+          <div id="order-status" style="font-size:11.5px;color:var(--muted);margin-top:5px;text-align:center"></div>
         </div>
-        <div id="upload-status" style="margin-top:10px;font-size:12px;color:var(--muted)"></div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">② 전주 ORDER (.xls, 선택)</div>
+          <div class="dropzone" id="dz-order-prev">
+            <input type="file" accept=".xls,.xlsx" onchange="on_order_file(this.files[0], 'prev')">
+            <div class="dz-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1.5"/><line x1="8" y1="7" x2="8" y2="11"/><polyline points="6 9 8 7 10 9"/></svg></div>
+            <div class="dz-title" style="font-size:13px">전주 order.xls</div>
+            <div class="dz-sub" style="font-size:11px">전주 대비 증감용</div>
+          </div>
+          <div id="order-prev-status" style="font-size:11.5px;color:var(--muted);margin-top:5px;text-align:center"></div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">③ 광고비 CSV (선택)</div>
+          <div class="dropzone" id="dz-ad">
+            <input type="file" accept=".csv" onchange="on_ad_file(this.files[0])">
+            <div class="dz-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1.5"/><line x1="8" y1="7" x2="8" y2="11"/><polyline points="6 9 8 7 10 9"/></svg></div>
+            <div class="dz-title" style="font-size:13px">daily_report.csv</div>
+            <div class="dz-sub" style="font-size:11px">네이버 광고 리포트</div>
+          </div>
+          <div id="ad-status" style="font-size:11.5px;color:var(--muted);margin-top:5px;text-align:center"></div>
+        </div>
       </div>
-      <div class="card" id="rpt-parsed" style="display:none">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-          <div class="card-lbl" style="margin:0">자동 분석 결과</div>
-          <button class="btn btn-sm" onclick="reset_rd()">다시 업로드</button>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn btn-p" id="analyze-btn" onclick="analyze()" disabled>분석 시작</button>
+      </div>
+    </div>
+
+    <!-- KPI -->
+    <div id="dash-kpi" style="display:none">
+      <!-- 이번 주 KPI -->
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi-lbl">매출 (VAT제외)</div><div class="kpi-val c-blue" id="k-rev">-</div><div class="kpi-diff" id="k-rev-d"></div><div class="kpi-blob b-blue"></div></div>
+        <div class="kpi"><div class="kpi-lbl">판매량</div><div class="kpi-val" id="k-qty">-</div><div class="kpi-diff" id="k-qty-d"></div><div class="kpi-blob b-purple"></div></div>
+        <div class="kpi"><div class="kpi-lbl">이익</div><div class="kpi-val c-green" id="k-profit">-</div><div class="kpi-diff" id="k-profit-d"></div><div class="kpi-blob b-green"></div></div>
+        <div class="kpi"><div class="kpi-lbl">이익률</div><div class="kpi-val" id="k-margin">-</div><div class="kpi-blob b-amber"></div></div>
+        <div class="kpi"><div class="kpi-lbl">광고비 (VAT제외)</div><div class="kpi-val c-amber" id="k-ad">-</div><div class="kpi-blob b-amber"></div></div>
+        <div class="kpi"><div class="kpi-lbl">ROAS</div><div class="kpi-val c-purple" id="k-roas">-</div><div class="kpi-blob b-purple"></div></div>
+      </div>
+      <!-- 연누적 -->
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-lbl">연누적 실적 (26년 전체)</div>
+        <div class="kpi-grid">
+          <div class="kpi"><div class="kpi-lbl">누적 매출</div><div class="kpi-val c-blue" id="k-cum-rev">-</div><div class="kpi-blob b-blue"></div></div>
+          <div class="kpi"><div class="kpi-lbl">누적 판매량</div><div class="kpi-val" id="k-cum-qty">-</div><div class="kpi-blob b-purple"></div></div>
+          <div class="kpi"><div class="kpi-lbl">누적 이익</div><div class="kpi-val c-green" id="k-cum-profit">-</div><div class="kpi-blob b-green"></div></div>
+          <div class="kpi"><div class="kpi-lbl">이번 주 매출 비중</div><div class="kpi-val" id="k-week-share">-</div><div class="kpi-blob b-amber"></div></div>
         </div>
-        <div class="file-pill"><div class="file-pill-name" id="rd-fname"></div></div>
-        <div class="field" style="margin-bottom:14px">
-          <label class="flbl">보고 주차 선택</label>
-          <select id="rpt-week-sel" onchange="update_week_summary()"></select>
+      </div>
+
+      <!-- 브랜드 검색 -->
+      <div class="card">
+        <div class="card-lbl">브랜드 검색 (멀티 검색 가능)</div>
+        <div class="brand-search-wrap">
+          <svg class="search-icon" style="left:10px;top:50%;transform:translateY(-50%);position:absolute;color:var(--muted)" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="4.5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
+          <input type="text" class="brand-search-input" id="brand-search" placeholder="브랜드 검색 후 Enter 또는 쉼표로 추가 (예: 레이밴, 오클리)" onkeydown="brand_search_key(event)">
         </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px">
-          <div class="stat-card"><div class="stat-lbl">매출</div><div class="stat-val c-blue" id="kpi-rev" style="font-size:18px">-</div></div>
-          <div class="stat-card"><div class="stat-lbl">전주 대비</div><div class="stat-val" id="kpi-rev-diff" style="font-size:18px">-</div></div>
-          <div class="stat-card"><div class="stat-lbl">판매량</div><div class="stat-val" id="kpi-qty" style="font-size:18px">-</div></div>
-          <div class="stat-card"><div class="stat-lbl">이익</div><div class="stat-val c-green" id="kpi-profit" style="font-size:18px">-</div></div>
-          <div class="stat-card"><div class="stat-lbl">광고비</div><div class="stat-val c-amber" id="kpi-ad" style="font-size:18px">-</div></div>
-          <div class="stat-card"><div class="stat-lbl">ROAS</div><div class="stat-val" id="kpi-roas" style="font-size:18px">-</div></div>
+        <div class="brand-tags-row" id="brand-tags"></div>
+
+        <!-- 카테고리 탭 -->
+        <div class="tab-row">
+          <button class="tab-btn on" data-cat="all" onclick="set_cat(this)">전체</button>
+          <button class="tab-btn" data-cat="GLASSES" onclick="set_cat(this)">안경 (일반+AI)</button>
+          <button class="tab-btn" data-cat="SUNGLASSES" onclick="set_cat(this)">선글라스</button>
         </div>
-        <div style="margin-bottom:14px">
-          <div class="card-lbl" style="margin-bottom:10px">카테고리별 브랜드 매출 순위</div>
-          <div style="display:flex;gap:6px;margin-bottom:10px;border-bottom:1px solid var(--border)">
-            <button class="tab-btn on" id="cat-tab-all"    onclick="set_cat_tab('all')"    style="padding:6px 12px;font-size:12px">전체 TOP10</button>
-            <button class="tab-btn"    id="cat-tab-glasses" onclick="set_cat_tab('GLASSES')" style="padding:6px 12px;font-size:12px">안경 TOP10</button>
-            <button class="tab-btn"    id="cat-tab-sun"     onclick="set_cat_tab('SUNGLASSES')" style="padding:6px 12px;font-size:12px">선글라스 TOP10</button>
-            <button class="tab-btn"    id="cat-tab-acc"     onclick="set_cat_tab('ACCESSORY')" style="padding:6px 12px;font-size:12px">악세서리</button>
-          </div>
-          <div id="brand-top10" style="font-size:13px"></div>
-        </div>
+        <div id="brand-top10"></div>
+      </div>
+
+      <!-- AI 보고서 -->
+      <div class="card">
+        <div class="card-lbl">AI 주간 보고서</div>
         <div class="g2">
           <div class="field"><label class="flbl">보고 대상</label>
             <select id="rpt-to"><option>팀장</option><option>본부장</option><option>대표</option><option>팀 내부</option></select>
           </div>
-          <div class="field"><label class="flbl">추가 메모 (선택)</label>
+          <div class="field"><label class="flbl">추가 메모</label>
             <input type="text" id="rpt-memo" placeholder="특이사항, 이슈 등">
           </div>
         </div>
-        <div class="btn-row">
-          <button class="btn btn-primary" id="rpt-btn" onclick="gen_report()">AI 보고서 자동 생성</button>
+        <div class="btn-row" style="margin-top:0">
+          <button class="btn btn-p" id="rpt-btn" onclick="gen_report()">AI 보고서 자동 생성</button>
         </div>
       </div>
-      <div class="card" id="rpt-res" style="display:none">
+
+      <div class="card" id="rpt-res-card" style="display:none">
         <div class="result-hd">
           <div class="result-lbl">생성된 보고서</div>
           <div style="display:flex;gap:6px">
             <button class="btn btn-sm" onclick="copy_text('rpt-out')">복사</button>
-            <button class="btn btn-sm btn-primary" onclick="dl_text('rpt-out','주간보고서.txt')">다운로드</button>
+            <button class="btn btn-sm btn-p" onclick="dl_text('rpt-out','주간보고서.txt')">다운로드</button>
           </div>
         </div>
         <div class="result-box" id="rpt-out"></div>
       </div>
+
+      <div style="text-align:center;margin-top:10px">
+        <button class="btn btn-sm" onclick="reset_dash()">다시 업로드</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════
+  PANEL: 할 일
+════════════════════════════ -->
+<div class="panel" id="p-tasks">
+  <div class="ph">
+    <div class="ph-left"><div class="pt">할 일 관리</div><div class="ps" id="today-lbl"></div></div>
+    <button class="add-btn" onclick="open_modal()">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+      + 할 일 추가
+    </button>
+  </div>
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="4.5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
+      <input type="text" id="task-search" placeholder="검색..." oninput="render_tasks()">
     </div>
   </div>
-
-  <!-- ════ 카피라이팅 ════ -->
-  <div class="panel" id="p-copy">
-    <div class="page-hd" style="margin-bottom:0"><div><div class="page-title">카피라이팅</div><div class="page-sub">채널별 마케팅 카피를 AI가 즉시 작성해드려요</div></div></div>
-    <div class="ai-panel-inner">
-      <div class="card">
-        <div class="card-lbl">채널</div>
-        <div class="chips" id="ch-g"><button class="chip on" onclick="solo('ch-g',this)">인스타그램</button><button class="chip" onclick="solo('ch-g',this)">네이버 블로그</button><button class="chip" onclick="solo('ch-g',this)">카카오 채널</button><button class="chip" onclick="solo('ch-g',this)">스마트스토어</button><button class="chip" onclick="solo('ch-g',this)">유튜브</button></div>
-        <div class="card-lbl">톤 & 무드</div>
-        <div class="chips" id="tone-g"><button class="chip" onclick="solo('tone-g',this)">트렌디</button><button class="chip on" onclick="solo('tone-g',this)">친근함</button><button class="chip" onclick="solo('tone-g',this)">고급스러움</button><button class="chip" onclick="solo('tone-g',this)">유머</button><button class="chip" onclick="solo('tone-g',this)">감성</button></div>
-        <div class="g2">
-          <div class="field"><label class="flbl">상품 / 캠페인명</label><input type="text" id="cp-prod" placeholder="예: 여름 신상 린넨 셔츠"></div>
-          <div class="field"><label class="flbl">버전 수</label><select id="cp-cnt"><option value="3">3가지</option><option value="5">5가지</option></select></div>
-        </div>
-        <div class="field"><label class="flbl">키워드 / 강조 포인트</label><textarea id="cp-kw" rows="2" placeholder="예: 시원한 소재, 반값 특가, 오늘만 할인"></textarea></div>
-        <div class="btn-row"><button class="btn btn-primary" id="cp-btn" onclick="gen_copy()">카피 생성</button></div>
-      </div>
-      <div class="card" id="cp-res" style="display:none">
-        <div class="result-hd"><div class="result-lbl">생성된 카피</div><div style="display:flex;gap:6px"><button class="btn btn-sm" onclick="copy_text('cp-out')">복사</button><button class="btn btn-sm btn-primary" onclick="dl_text('cp-out','마케팅카피.txt')">다운로드</button></div></div>
-        <div class="result-box" id="cp-out"></div>
-      </div>
-    </div>
+  <div class="filter-row">
+    <button class="fchip on" data-cat="all" onclick="set_filter(this)"><span class="fdot" style="background:var(--accent)"></span>전체</button>
+    <button class="fchip" data-cat="site" onclick="set_filter(this)" style="--fc:var(--blue);--fb:var(--blue-bg)"><span class="fdot" style="background:var(--blue)"></span>사이트관리</button>
+    <button class="fchip" data-cat="mkt" onclick="set_filter(this)" style="--fc:var(--amber);--fb:var(--amber-bg)"><span class="fdot" style="background:var(--amber)"></span>마케팅</button>
+    <button class="fchip" data-cat="product" onclick="set_filter(this)" style="--fc:var(--pink);--fb:var(--pink-bg)"><span class="fdot" style="background:var(--pink)"></span>상품관리</button>
+    <button class="fchip" data-cat="report" onclick="set_filter(this)" style="--fc:var(--teal);--fb:var(--teal-bg)"><span class="fdot" style="background:var(--teal)"></span>리포트</button>
+    <button class="fchip" data-cat="cs" onclick="set_filter(this)" style="--fc:var(--purple);--fb:var(--purple-bg)"><span class="fdot" style="background:var(--purple)"></span>CS/운영</button>
   </div>
-
-  <!-- ════ 상품 기획 ════ -->
-  <div class="panel" id="p-plan">
-    <div class="page-hd" style="margin-bottom:0"><div><div class="page-title">상품 기획</div><div class="page-sub">상품 상세·기획전·이벤트 기획안을 AI가 작성해드려요</div></div></div>
-    <div class="ai-panel-inner">
-      <div class="card">
-        <div class="card-lbl">기획 유형</div>
-        <div class="chips" id="plan-g"><button class="chip on" onclick="solo('plan-g',this)">상품 상세페이지</button><button class="chip" onclick="solo('plan-g',this)">시즌 기획전</button><button class="chip" onclick="solo('plan-g',this)">번들 / 세트</button><button class="chip" onclick="solo('plan-g',this)">리뷰 이벤트</button></div>
-        <div class="g2">
-          <div class="field"><label class="flbl">상품명</label><input type="text" id="pl-name" placeholder="예: 쿨링 에어쿠션"></div>
-          <div class="field"><label class="flbl">타겟 고객</label><input type="text" id="pl-target" placeholder="예: 20-30대 직장 여성"></div>
-        </div>
-        <div class="field"><label class="flbl">핵심 셀링 포인트 (USP)</label><textarea id="pl-usp" rows="2" placeholder="예: 지속 24시간, 수분 성분 함유, SPF50+"></textarea></div>
-        <div class="field"><label class="flbl">차별화 포인트 (선택)</label><textarea id="pl-diff" rows="2" placeholder="예: A브랜드 대비 30% 저렴, 국내 생산"></textarea></div>
-        <div class="btn-row"><button class="btn btn-primary" id="pl-btn" onclick="gen_plan()">기획안 작성</button></div>
-      </div>
-      <div class="card" id="pl-res" style="display:none">
-        <div class="result-hd"><div class="result-lbl">기획안</div><div style="display:flex;gap:6px"><button class="btn btn-sm" onclick="copy_text('pl-out')">복사</button><button class="btn btn-sm btn-primary" onclick="dl_text('pl-out','상품기획안.txt')">다운로드</button></div></div>
-        <div class="result-box" id="pl-out"></div>
-      </div>
-    </div>
+  <div class="task-tabs-row">
+    <button class="ttab on" data-tab="doing" onclick="set_ttab(this)"><span style="width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block"></span>진행 중<span class="ttab-cnt" id="tc-doing">0</span></button>
+    <button class="ttab" data-tab="done" onclick="set_ttab(this)"><span style="width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block"></span>완료<span class="ttab-cnt" id="tc-done">0</span></button>
   </div>
+  <div class="task-list" id="task-list"></div>
+</div>
 
-  <!-- ════ 구글 시트 설정 ════ -->
-  <div class="panel" id="p-settings">
-    <div class="page-hd" style="margin-bottom:0"><div><div class="page-title">구글 시트 연동 설정</div><div class="page-sub">설정하면 PC·모바일 어디서든 같은 데이터를 사용할 수 있어요</div></div></div>
-    <div class="ai-panel-inner">
-
-      <div class="setup-banner" style="background:linear-gradient(135deg,#F0FAF4 0%,#DCFCE7 100%);border-color:#86EFAC">
-        <div class="setup-banner-title" style="color:var(--green)">✅ Apps Script 연동 완료</div>
-        <div class="setup-banner-sub" style="color:#166534">
-          구글 시트와 연결됐어요! 이제 PC·모바일 어디서든 같은 데이터를 사용할 수 있어요.<br>
-          할 일 추가/수정/삭제 시 자동으로 구글 시트에 저장돼요.
-        </div>
+<!-- ════════════════════════════
+  PANEL: 카피라이팅
+════════════════════════════ -->
+<div class="panel" id="p-copy">
+  <div class="ph"><div class="ph-left"><div class="pt">카피라이팅</div><div class="ps">채널별 마케팅 카피를 AI가 즉시 작성해드려요</div></div></div>
+  <div class="scroll-area">
+    <div class="card">
+      <div class="card-lbl">채널</div>
+      <div class="chips" id="ch-g"><button class="chip on" onclick="solo('ch-g',this)">인스타그램</button><button class="chip" onclick="solo('ch-g',this)">네이버 블로그</button><button class="chip" onclick="solo('ch-g',this)">카카오 채널</button><button class="chip" onclick="solo('ch-g',this)">스마트스토어</button><button class="chip" onclick="solo('ch-g',this)">유튜브</button></div>
+      <div class="card-lbl">톤 & 무드</div>
+      <div class="chips" id="tone-g"><button class="chip" onclick="solo('tone-g',this)">트렌디</button><button class="chip on" onclick="solo('tone-g',this)">친근함</button><button class="chip" onclick="solo('tone-g',this)">고급스러움</button><button class="chip" onclick="solo('tone-g',this)">유머</button><button class="chip" onclick="solo('tone-g',this)">감성</button></div>
+      <div class="g2">
+        <div class="field"><label class="flbl">상품 / 캠페인명</label><input type="text" id="cp-prod" placeholder="예: 여름 신상 린넨 셔츠"></div>
+        <div class="field"><label class="flbl">버전 수</label><select id="cp-cnt"><option value="3">3가지</option><option value="5">5가지</option></select></div>
       </div>
-
-      <div class="card" style="border-color:#B8DFC9;background:#F0FAF4">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-          <span style="width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block;flex-shrink:0"></span>
-          <span style="font-size:14px;font-weight:700;color:var(--green)">구글 시트 연동 완료!</span>
-        </div>
-        <div style="font-size:13px;color:#166534;line-height:1.7">
-          Apps Script URL이 연결됐어요. 할 일을 추가/수정/삭제하면 자동으로 구글 시트에 저장돼요.<br>
-          모바일에서도 "구글 시트에서 불러오기" 버튼을 누르면 최신 데이터가 나와요.
-        </div>
-        <div class="btn-row" style="margin-top:12px">
-          <button class="btn btn-sm" onclick="test_connection()" id="test-btn">연결 테스트</button>
-        </div>
-        <div id="conn-status" style="margin-top:8px;font-size:12.5px;color:var(--muted)"></div>
-      </div>
-
-      <div class="card">
-        <div class="card-lbl">현재 상태</div>
-        <div style="display:flex;flex-direction:column;gap:10px">
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface2);border-radius:var(--r8);font-size:13px">
-            <span style="font-weight:600">저장 방식</span>
-            <span id="storage-mode-txt" style="color:var(--muted)">로컬 (localStorage)</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface2);border-radius:var(--r8);font-size:13px">
-            <span style="font-weight:600">구글 시트 연결</span>
-            <span id="gs-status-txt" style="color:var(--muted)">미연결</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface2);border-radius:var(--r8);font-size:13px">
-            <span style="font-weight:600">저장된 할 일</span>
-            <span id="task-count-txt" style="color:var(--muted)">0개</span>
-          </div>
-        </div>
-        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn btn-sm" onclick="sync_to_sheet()" id="sync-btn" disabled>구글 시트로 동기화</button>
-          <button class="btn btn-sm" onclick="sync_from_sheet()" id="pull-btn" disabled>구글 시트에서 불러오기</button>
-          <button class="btn btn-sm" onclick="export_data()">JSON 내보내기</button>
-        </div>
-      </div>
-
-      <div class="card" style="border-color:#C7CBFF;background:#F8F9FF">
-        <div class="card-lbl">💡 구글 시트 없이 쓰는 법</div>
-        <div style="font-size:13px;color:var(--ink2);line-height:1.8">
-          지금 당장 설정이 번거로우시면 — <b>JSON 내보내기</b>로 데이터 백업 후 다른 기기에서 <b>JSON 불러오기</b>로 옮기실 수 있어요.<br>
-          구글 시트 연동하면 자동으로 실시간 동기화돼서 훨씬 편해요.
-        </div>
-      </div>
-
+      <div class="field"><label class="flbl">키워드 / 강조 포인트</label><textarea id="cp-kw" rows="2" placeholder="예: 시원한 소재, 반값 특가, 오늘만 할인"></textarea></div>
+      <div class="btn-row"><button class="btn btn-p" id="cp-btn" onclick="gen_copy()">카피 생성</button></div>
     </div>
-  </div>
-
-</div><!-- /main -->
-</div><!-- /app -->
-
-<!-- ══ ADD/EDIT MODAL ══ -->
-<div class="overlay" id="overlay" onclick="if(event.target===this)close_modal()">
-  <div class="modal">
-    <div class="modal-hd">
-      <div class="modal-title" id="modal-title">할 일 추가</div>
-      <button class="modal-close" onclick="close_modal()">×</button>
-    </div>
-    <div class="field">
-      <label class="flbl">할 일 내용 *</label>
-      <input type="text" id="m-title" placeholder="예: 메인 배너 이미지 교체" onkeydown="if(event.key==='Enter')save_task()">
-    </div>
-    <div class="field">
-      <label class="flbl" style="margin-bottom:8px">카테고리</label>
-      <div class="mchips" id="m-cat">
-        <button class="mchip" data-val="site" onclick="solo_m('m-cat',this)">사이트관리</button>
-        <button class="mchip on" data-val="mkt" onclick="solo_m('m-cat',this)">마케팅</button>
-        <button class="mchip" data-val="product" onclick="solo_m('m-cat',this)">상품관리</button>
-        <button class="mchip" data-val="report" onclick="solo_m('m-cat',this)">리포트</button>
-        <button class="mchip" data-val="cs" onclick="solo_m('m-cat',this)">CS/운영</button>
-      </div>
-    </div>
-    <div class="field">
-      <label class="flbl" style="margin-bottom:8px">우선순위</label>
-      <div class="mchips" id="m-pri">
-        <button class="mchip on" data-val="normal" onclick="solo_m('m-pri',this)">보통</button>
-        <button class="mchip" data-val="high" onclick="solo_m('m-pri',this)">높음</button>
-        <button class="mchip" data-val="urgent" onclick="solo_m('m-pri',this)">긴급</button>
-      </div>
-    </div>
-    <div class="g2">
-      <div class="field"><label class="flbl">마감일</label><input type="date" id="m-date"></div>
-      <div class="field"><label class="flbl">메모 (선택)</label><input type="text" id="m-memo" placeholder="상세 내용..."></div>
-    </div>
-    <div class="btn-row">
-      <button class="btn" onclick="close_modal()">취소</button>
-      <button class="btn btn-primary" id="modal-save" onclick="save_task()">추가하기</button>
+    <div class="card" id="cp-res" style="display:none">
+      <div class="result-hd"><div class="result-lbl">생성된 카피</div><div style="display:flex;gap:6px"><button class="btn btn-sm" onclick="copy_text('cp-out')">복사</button><button class="btn btn-sm btn-p" onclick="dl_text('cp-out','카피.txt')">다운로드</button></div></div>
+      <div class="result-box" id="cp-out"></div>
     </div>
   </div>
 </div>
 
-<script>
-/* ══════════ DATA ══════════ */
-const LS = 'md_mkt_v5';
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzsAI_oeUJSpF2Yfbtz7kE3gdt8VnXcMXClfttMOR_A6_3tatF71ytNgIFBQjZg_aY3/exec';
-let DB = { tasks: [], use_sheets: true };
-try { const s = localStorage.getItem(LS); if (s) DB = { ...DB, ...JSON.parse(s) }; } catch {}
+<!-- ════════════════════════════
+  PANEL: 상품 기획
+════════════════════════════ -->
+<div class="panel" id="p-plan">
+  <div class="ph"><div class="ph-left"><div class="pt">상품 기획</div><div class="ps">기획안을 AI가 자동 작성해드려요</div></div></div>
+  <div class="scroll-area">
+    <div class="card">
+      <div class="card-lbl">기획 유형</div>
+      <div class="chips" id="plan-g"><button class="chip on" onclick="solo('plan-g',this)">상품 상세페이지</button><button class="chip" onclick="solo('plan-g',this)">시즌 기획전</button><button class="chip" onclick="solo('plan-g',this)">번들 / 세트</button><button class="chip" onclick="solo('plan-g',this)">리뷰 이벤트</button></div>
+      <div class="g2">
+        <div class="field"><label class="flbl">상품명</label><input type="text" id="pl-name" placeholder="예: 쿨링 에어쿠션"></div>
+        <div class="field"><label class="flbl">타겟 고객</label><input type="text" id="pl-target" placeholder="예: 20-30대 직장 여성"></div>
+      </div>
+      <div class="field"><label class="flbl">핵심 셀링 포인트 (USP)</label><textarea id="pl-usp" rows="2" placeholder="예: 지속 24시간, 수분 성분, SPF50+"></textarea></div>
+      <div class="field"><label class="flbl">차별화 포인트 (선택)</label><textarea id="pl-diff" rows="2" placeholder="예: A브랜드 대비 30% 저렴, 국내 생산"></textarea></div>
+      <div class="btn-row"><button class="btn btn-p" id="pl-btn" onclick="gen_plan()">기획안 작성</button></div>
+    </div>
+    <div class="card" id="pl-res" style="display:none">
+      <div class="result-hd"><div class="result-lbl">기획안</div><div style="display:flex;gap:6px"><button class="btn btn-sm" onclick="copy_text('pl-out')">복사</button><button class="btn btn-sm btn-p" onclick="dl_text('pl-out','기획안.txt')">다운로드</button></div></div>
+      <div class="result-box" id="pl-out"></div>
+    </div>
+  </div>
+</div>
 
-function save_local() {
-  try { localStorage.setItem(LS, JSON.stringify(DB)); } catch {}
-  update_settings_status();
+<!-- ════════════════════════════
+  PANEL: 이미지 860×860
+════════════════════════════ -->
+<div class="panel" id="p-image">
+  <div class="ph"><div class="ph-left"><div class="pt">이미지 리사이즈</div><div class="ps">이미지를 860×860으로 변환 + 상품등록 양식 자동 작성</div></div></div>
+  <div class="scroll-area">
+    <div class="card">
+      <div class="card-lbl">이미지 업로드</div>
+      <div class="dropzone" id="dz-img" style="padding:24px">
+        <input type="file" accept="image/*" multiple onchange="on_images(this.files)">
+        <div class="dz-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="14" height="14" rx="2"/><circle cx="7" cy="7" r="1.5"/><polyline points="2 12 6 8 9 11 12 8 16 12"/></svg></div>
+        <div class="dz-title">이미지 파일 업로드</div>
+        <div class="dz-sub">JPG · PNG · WEBP — 여러 장 가능, 클릭 또는 드래그</div>
+      </div>
+      <div id="img-status" style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center"></div>
+    </div>
+    <div class="card" id="img-result-card" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div class="card-lbl" style="margin:0">변환된 이미지 (860×860)</div>
+        <button class="btn btn-sm btn-p" onclick="dl_all_images()">전체 다운로드</button>
+      </div>
+      <div class="img-grid" id="img-grid"></div>
+    </div>
+    <div class="card" id="product-form-card" style="display:none">
+      <div class="card-lbl">상품 등록 양식</div>
+      <div class="field"><label class="flbl">상품명</label><input type="text" id="pf-name" placeholder="예: 블랙 GEEKS C1 53mm 에트라 안경테"></div>
+      <div class="g2">
+        <div class="field"><label class="flbl">카테고리</label>
+          <select id="pf-cat"><option>안경테 (GLASSES)</option><option>선글라스 (SUNGLASSES)</option><option>기타</option></select>
+        </div>
+        <div class="field"><label class="flbl">브랜드</label><input type="text" id="pf-brand" placeholder="예: ETRA"></div>
+      </div>
+      <div class="g2">
+        <div class="field"><label class="flbl">판매가 (원)</label><input type="text" id="pf-price" placeholder="예: 205000"></div>
+        <div class="field"><label class="flbl">공급가 (원)</label><input type="text" id="pf-supply" placeholder="예: 168450"></div>
+      </div>
+      <div class="field"><label class="flbl">상품 특징 / 메모</label><textarea id="pf-memo" rows="2" placeholder="예: 티타늄 소재, 경량, 봄 신상"></textarea></div>
+      <div class="btn-row">
+        <button class="btn btn-sm" onclick="copy_text('pf-out')">복사</button>
+        <button class="btn btn-sm btn-p" onclick="dl_text('pf-out','상품등록양식.txt')">다운로드</button>
+      </div>
+      <div class="result-box" id="pf-out" style="margin-top:10px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════
+  PANEL: 기획전 퍼블
+════════════════════════════ -->
+<div class="panel" id="p-promo">
+  <div class="ph">
+    <div class="ph-left">
+      <div class="pt">기획전 퍼블</div>
+      <div class="ps">내용 입력하면 CMS용 HTML 자동 완성</div>
+    </div>
+  </div>
+  <div class="scroll-area">
+
+    <!-- 타입 + 플랫폼 선택 -->
+    <div class="card">
+      <div class="card-lbl">기획전 타입</div>
+      <div class="chips" id="promo-type">
+        <button class="chip on" data-v="brand" onclick="solo('promo-type',this)">브랜드 소개형</button>
+        <button class="chip" data-v="product" onclick="solo('promo-type',this)">제품 링크형</button>
+      </div>
+      <div class="card-lbl">플랫폼</div>
+      <div class="chips" id="promo-platform">
+        <button class="chip on" data-v="app" onclick="solo('promo-platform',this)">앱</button>
+        <button class="chip" data-v="pc" onclick="solo('promo-platform',this)">PC</button>
+      </div>
+    </div>
+
+    <!-- 공통 정보 -->
+    <div class="card">
+      <div class="card-lbl">공통 정보</div>
+      <div class="g2">
+        <div class="field"><label class="flbl">이미지 폴더 경로</label><input type="text" id="pr-folder" placeholder="예: 260203 또는 brand/carven"></div>
+        <div class="field"><label class="flbl">브랜드명 (영문)</label><input type="text" id="pr-brand-en" placeholder="예: CARVEN"></div>
+      </div>
+      <div class="g2">
+        <div class="field"><label class="flbl">브랜드명 (한글)</label><input type="text" id="pr-brand-kr" placeholder="예: 까르뱅"></div>
+        <div class="field"><label class="flbl">배경색</label><input type="text" id="pr-bg" placeholder="#ffffff" value="#ffffff"></div>
+      </div>
+      <div class="g2">
+        <div class="field"><label class="flbl">텍스트색</label><input type="text" id="pr-color" placeholder="#000000" value="#000000"></div>
+        <div class="field"><label class="flbl">히어로 이미지 파일명</label><input type="text" id="pr-hero" placeholder="예: main_img.jpg 또는 kv.jpg"></div>
+      </div>
+    </div>
+
+    <!-- 브랜드 소개형 전용 -->
+    <div id="brand-sections">
+      <div class="card">
+        <div class="card-lbl">히어로 오버레이 텍스트 (선택)</div>
+        <div class="field"><label class="flbl">소제목 (eyebrow)</label><input type="text" id="pr-eyebrow" placeholder="예: 2026 SPRING COLLECTION"></div>
+        <div class="field"><label class="flbl">메인 타이틀</label><input type="text" id="pr-title" placeholder="예: 시간이 지날수록&lt;br&gt;깊어지는 아름다움"></div>
+        <div class="field"><label class="flbl">서브 텍스트</label><input type="text" id="pr-sub" placeholder="예: 세니아, 우아함을 담다"></div>
+        <div class="g2">
+          <div class="field"><label class="flbl">오버레이 텍스트색</label><input type="text" id="pr-overlay-color" placeholder="#FFFFFF" value="#FFFFFF"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-lbl">영상 (선택)</div>
+        <div class="field"><label class="flbl">영상 파일명</label><input type="text" id="pr-video" placeholder="예: model_video.mp4 (비우면 미포함)"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-lbl">콘텐츠 섹션 (텍스트+이미지 반복)</div>
+        <div id="brand-content-list"></div>
+        <button class="btn btn-sm" onclick="add_brand_section()" style="margin-top:8px">+ 섹션 추가</button>
+      </div>
+
+      <div class="card">
+        <div class="card-lbl">로고 이미지 (선택)</div>
+        <div class="field"><label class="flbl">로고 파일명</label><input type="text" id="pr-logo" placeholder="예: LOGO.jpg (비우면 미포함)"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-lbl">AR 체험 하단 버튼</div>
+        <div class="field"><label class="flbl">버튼 위 문구</label><input type="text" id="pr-ar-title" placeholder="예: 내 얼굴에 잘 어울릴까?&lt;br /&gt;먼저 써보세요." value="내 얼굴에 잘 어울릴까?&lt;br /&gt;먼저 써보세요."></div>
+        <div class="g2">
+          <div class="field"><label class="flbl">AR 링크</label><input type="text" id="pr-ar-link" placeholder="예: https://abr.ge/3f5h1r 또는 rounz://fitting" value="rounz://fitting"></div>
+          <div class="field"><label class="flbl">버튼 색</label><input type="text" id="pr-ar-btn-color" placeholder="#1729EC" value="#1729EC"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제품 링크형 전용 -->
+    <div id="product-sections" style="display:none">
+      <div class="card">
+        <div class="card-lbl">히어로 섹션</div>
+        <div class="field"><label class="flbl">히어로 텍스트</label><input type="text" id="pr-hero-txt" placeholder="예: 프랑스 감성으로 완성된&lt;br /&gt;브랜드, 까르뱅"></div>
+        <div class="g2">
+          <div class="field"><label class="flbl">히어로 텍스트색</label><input type="text" id="pr-hero-color" placeholder="#ffffff" value="#ffffff"></div>
+          <div class="field"><label class="flbl">텍스트 정렬</label>
+            <select id="pr-hero-align"><option value="right">오른쪽</option><option value="center">가운데</option><option value="left">왼쪽</option></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-lbl">브랜드 소개글</div>
+        <div class="field"><label class="flbl">소개 텍스트</label><textarea id="pr-about" rows="3" placeholder="브랜드 소개 내용 (줄바꿈은 &lt;br /&gt; 사용)"></textarea></div>
+      </div>
+
+      <div class="card">
+        <div class="card-lbl">영상 (선택)</div>
+        <div class="field"><label class="flbl">영상 URL (전체 경로 또는 파일명)</label><input type="text" id="pr-video2" placeholder="예: CARVEN_video_low.mp4 또는 전체 URL"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-lbl">컬렉션 섹션 (이미지+설명+상품 그룹)</div>
+        <div id="product-section-list"></div>
+        <button class="btn btn-sm" onclick="add_product_section()" style="margin-top:8px">+ 섹션 추가</button>
+      </div>
+
+      <div class="card">
+        <div class="card-lbl">마감 배경 섹션</div>
+        <div class="g2">
+          <div class="field"><label class="flbl">배경 이미지 파일명</label><input type="text" id="pr-end-bg" placeholder="예: bg.jpg"></div>
+          <div class="field"><label class="flbl">배경색 (이미지 없을 때)</label><input type="text" id="pr-end-bgcolor" placeholder="#000000" value="#000000"></div>
+        </div>
+        <div class="field"><label class="flbl">마감 문구</label><textarea id="pr-end-txt" rows="2" placeholder="예: 트렌드가 모두&lt;br /&gt; 어우러진 브랜드 까르뱅&lt;br /&gt; 직접 써보고 구매하세요!"></textarea></div>
+      </div>
+    </div>
+
+    <!-- 생성 버튼 -->
+    <div class="btn-row" style="margin-top:4px">
+      <button class="btn btn-p" onclick="gen_promo()">HTML 생성</button>
+    </div>
+
+    <!-- 결과 -->
+    <div class="card" id="promo-result-card" style="display:none">
+      <div class="result-hd">
+        <div class="result-lbl">완성된 HTML</div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-sm" onclick="copy_text('promo-out')">복사</button>
+          <button class="btn btn-sm btn-p" onclick="dl_text('promo-out','기획전_'+new Date().toISOString().slice(0,10)+'.html')">다운로드</button>
+        </div>
+      </div>
+      <div class="result-box" id="promo-out" style="font-size:11px;font-family:monospace;max-height:400px"></div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /wrap -->
+
+<!-- ── TASK MODAL ── -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)close_modal()">
+  <div class="modal">
+    <div class="modal-hd">
+      <div class="modal-title" id="m-title">할 일 추가</div>
+      <button class="modal-x" onclick="close_modal()">×</button>
+    </div>
+    <div class="field"><label class="flbl">내용 *</label><input type="text" id="m-text" placeholder="예: 메인 배너 이미지 교체" onkeydown="if(event.key==='Enter')save_task()"></div>
+    <div class="field">
+      <label class="flbl" style="margin-bottom:7px">카테고리</label>
+      <div class="mchips" id="m-cat">
+        <button class="mchip" data-v="site" onclick="solo_m('m-cat',this)">사이트관리</button>
+        <button class="mchip on" data-v="mkt" onclick="solo_m('m-cat',this)">마케팅</button>
+        <button class="mchip" data-v="product" onclick="solo_m('m-cat',this)">상품관리</button>
+        <button class="mchip" data-v="report" onclick="solo_m('m-cat',this)">리포트</button>
+        <button class="mchip" data-v="cs" onclick="solo_m('m-cat',this)">CS/운영</button>
+      </div>
+    </div>
+    <div class="field">
+      <label class="flbl" style="margin-bottom:7px">우선순위</label>
+      <div class="mchips" id="m-pri">
+        <button class="mchip on" data-v="normal" onclick="solo_m('m-pri',this)">보통</button>
+        <button class="mchip" data-v="high" onclick="solo_m('m-pri',this)">높음</button>
+        <button class="mchip" data-v="urgent" onclick="solo_m('m-pri',this)">긴급</button>
+      </div>
+    </div>
+    <div class="g2">
+      <div class="field"><label class="flbl">마감일</label><input type="date" id="m-date"></div>
+      <div class="field"><label class="flbl">메모</label><input type="text" id="m-memo" placeholder="상세 내용..."></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="close_modal()">취소</button>
+      <button class="btn btn-p" onclick="save_task()" id="m-save">추가하기</button>
+    </div>
+  </div>
+</div>
+
+<canvas id="resize-canvas" style="display:none"></canvas>
+
+<script>
+const APPS_URL = 'https://script.google.com/macros/s/AKfycbxAW9UsQ7Ig4XnxqzzNO-BXTR3CSFUStrxNVkKJrcBB5hC6OzBaYcuJ_iwo_3Gc57xU/exec';
+const LS = 'eong_md_v1';
+let DB = { tasks: [] };
+try { const s = localStorage.getItem(LS); if (s) DB = { ...DB, ...JSON.parse(s) }; } catch {}
+function save() { try { localStorage.setItem(LS, JSON.stringify(DB)); } catch {} }
+
+/* ── NAV ── */
+function nav(el) {
+  const p = el.dataset.p;
+  document.querySelectorAll('.s-btn[data-p], .mtab[data-p]').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('[data-p="' + p + '"]').forEach(b => b.classList.add('on'));
+  document.querySelectorAll('.panel').forEach(x => x.classList.remove('on'));
+  document.getElementById('p-' + p).classList.add('on');
 }
 
-/* ══════════ DATE ══════════ */
+/* ── DATE ── */
 (function () {
-  const d = new Date(), days = ['일', '월', '화', '수', '목', '금', '토'];
-  document.getElementById('today-label').textContent =
-    `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일 ${days[d.getDay()]}요일`;
-  document.getElementById('m-date').value = d.toISOString().slice(0, 10);
+  const d = new Date(), days = ['일','월','화','수','목','금','토'];
+  const lbl = d.getFullYear() + '년 ' + (d.getMonth()+1) + '월 ' + d.getDate() + '일 ' + days[d.getDay()] + '요일';
+  const el = document.getElementById('today-lbl');
+  if (el) el.textContent = lbl;
+  const md = document.getElementById('m-date');
+  if (md) md.value = d.toISOString().slice(0, 10);
 })();
 
-/* ══════════ NAV ══════════ */
-function go(el) {
-  const id = el.dataset.panel;
-  document.querySelectorAll('.s-btn, .mob-tab').forEach(b => b.classList.remove('on'));
-  document.querySelectorAll(`[data-panel="${id}"]`).forEach(b => b.classList.add('on'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
-  document.getElementById('p-' + id).classList.add('on');
-  if (id === 'settings') { load_config(); update_settings_status(); }
-}
+/* ── CHIP HELPERS ── */
+function tog(el) { el.classList.toggle('on'); }
+function solo(g, el) { document.querySelectorAll('#' + g + ' .chip').forEach(c => c.classList.remove('on')); el.classList.add('on'); }
+function solo_m(g, el) { if (!el) return; document.querySelectorAll('#' + g + ' .mchip').forEach(c => c.classList.remove('on')); el.classList.add('on'); }
+function ac(g) { return [...document.querySelectorAll('#' + g + ' .chip.on')].map(c => c.textContent.trim()).join(', '); }
 
-/* ══════════ FILTER & TAB ══════════ */
+/* ── TASK FILTER & TAB ── */
 let cur_filter = 'all', cur_tab = 'doing', edit_id = null;
 
 function set_filter(el) {
   cur_filter = el.dataset.cat;
-  document.querySelectorAll('.fchip').forEach(c => {
-    c.classList.remove('on');
-    c.style.background = '';c.style.color = '';c.style.borderColor = '';
-  });
+  document.querySelectorAll('.fchip').forEach(c => { c.classList.remove('on'); c.style.cssText = ''; });
   el.classList.add('on');
   const fc = getComputedStyle(el).getPropertyValue('--fc').trim();
   const fb = getComputedStyle(el).getPropertyValue('--fb').trim();
   if (fc) { el.style.background = fb; el.style.color = fc; el.style.borderColor = 'transparent'; }
   render_tasks();
 }
-
-function set_tab(el) {
+function set_ttab(el) {
   cur_tab = el.dataset.tab;
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.ttab').forEach(b => b.classList.remove('on'));
   el.classList.add('on');
   render_tasks();
 }
 
-/* ══════════ CAT CONFIG ══════════ */
 const CAT = {
-  site:    { label: '사이트관리', color: '#2563EB', bg: '#DBEAFE' },
-  mkt:     { label: '마케팅',    color: '#D97706', bg: '#FEF3C7' },
-  product: { label: '상품관리',  color: '#DB2777', bg: '#FCE7F3' },
-  report:  { label: '리포트',    color: '#0D9488', bg: '#CCFBF1' },
-  cs:      { label: 'CS/운영',   color: '#7C3AED', bg: '#EDE9FE' },
+  site: { label:'사이트관리', c:'#2563EB', bg:'#DBEAFE' },
+  mkt: { label:'마케팅', c:'#D97706', bg:'#FEF3C7' },
+  product: { label:'상품관리', c:'#DB2777', bg:'#FCE7F3' },
+  report: { label:'리포트', c:'#0D9488', bg:'#CCFBF1' },
+  cs: { label:'CS/운영', c:'#7C3AED', bg:'#EDE9FE' },
 };
 const PRI = {
-  normal: { label: '보통', color: '#8A8DA8', bg: '#F0F1F5' },
-  high:   { label: '높음', color: '#D97706', bg: '#FEF3C7' },
-  urgent: { label: '긴급', color: '#DC2626', bg: '#FEE2E2' },
+  normal: { label:'보통', c:'#8A8DA8', bg:'#F0F1F7' },
+  high: { label:'높음', c:'#D97706', bg:'#FEF3C7' },
+  urgent: { label:'긴급', c:'#DC2626', bg:'#FEE2E2' },
 };
 
-function mk_tag(cfg) {
-  return `<span class="tag" style="background:${cfg.bg};color:${cfg.color}">
-    <span class="tag-dot" style="background:${cfg.color}"></span>${cfg.label}
-  </span>`;
-}
+function mk_tag(cfg) { return '<span class="tag" style="background:' + cfg.bg + ';color:' + cfg.c + '"><span class="tag-dot" style="background:' + cfg.c + '"></span>' + cfg.label + '</span>'; }
+function fmt_date(s) { if (!s) return ''; const [y,m,d] = s.split('-'); return m + '/' + d; }
+function is_past(s) { if (!s) return false; return new Date(s) < new Date(new Date().toDateString()); }
 
-/* ══════════ RENDER TASKS ══════════ */
 function render_tasks() {
-  const search = document.getElementById('search-input').value.trim().toLowerCase();
+  const search = document.getElementById('task-search').value.trim().toLowerCase();
   const today = new Date().toISOString().slice(0, 10);
-  let all = DB.tasks;
-
-  // stats
-  document.getElementById('st-total').textContent = all.filter(t => !t.done).length;
-  document.getElementById('st-urgent').textContent = all.filter(t => !t.done && t.priority === 'urgent').length;
-  document.getElementById('st-overdue').textContent = all.filter(t => !t.done && t.date && t.date < today).length;
-  document.getElementById('st-done').textContent = all.filter(t => t.done).length;
-
-  let filtered = all.filter(t => {
+  let all = DB.tasks.filter(t => {
     if (cur_filter !== 'all' && t.cat !== cur_filter) return false;
     if (search && !t.title.toLowerCase().includes(search)) return false;
     return true;
   });
-
-  const doing = filtered.filter(t => !t.done);
-  const done = filtered.filter(t => t.done);
-
-  document.getElementById('tab-doing-cnt').textContent = doing.length;
-  document.getElementById('tab-done-cnt').textContent = done.length;
-
+  const doing = all.filter(t => !t.done), done = all.filter(t => t.done);
+  document.getElementById('tc-doing').textContent = doing.length;
+  document.getElementById('tc-done').textContent = done.length;
   const list = cur_tab === 'doing' ? doing : done;
   const el = document.getElementById('task-list');
-
   if (!list.length) {
-    el.innerHTML = `<div class="empty">
-      <div class="empty-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="4 6 7.5 9.5 14 3.5"/><line x1="18" y1="6.5" x2="21" y2="6.5"/><polyline points="4 14 7.5 17.5 14 11.5"/><line x1="18" y1="14.5" x2="21" y2="14.5"/></svg></div>
-      <div class="empty-title">${cur_tab === 'doing' ? '진행 중인 할 일이 없어요' : '완료된 항목이 없어요'}</div>
-      <div class="empty-sub">${cur_tab === 'doing' ? '+ 할 일 추가 버튼으로 시작해보세요' : ''}</div>
-    </div>`;
+    el.innerHTML = '<div class="empty"><div class="empty-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="4 6 7.5 9.5 14 3.5"/><line x1="18" y1="6.5" x2="21" y2="6.5"/><polyline points="4 14 7.5 17.5 14 11.5"/><line x1="18" y1="14.5" x2="21" y2="14.5"/></svg></div><div class="empty-title">' + (cur_tab === 'doing' ? '진행 중인 할 일이 없어요' : '완료된 항목이 없어요') + '</div></div>';
     return;
   }
-
   el.innerHTML = list.map(t => {
-    const cat = CAT[t.cat] || { label: t.cat, color: '#8A8DA8', bg: '#F0F1F5' };
+    const cat = CAT[t.cat] || { label: t.cat, c:'#8A8DA8', bg:'#F0F1F7' };
     const pri = PRI[t.priority] || PRI.normal;
-    const isOverdue = t.date && t.date < today && !t.done;
-    const isToday = t.date === today;
-
-    const dateEl = t.date ? `<span class="meta-piece">
-      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1.5" width="9" height="8" rx="1.5"/><line x1="3.5" y1="1" x2="3.5" y2="3"/><line x1="7.5" y1="1" x2="7.5" y2="3"/><line x1="1" y1="4.5" x2="10" y2="4.5"/></svg>
-      <span style="${isOverdue ? 'color:var(--red);font-weight:700' : ''}">${fmt_date(t.date)}</span>
-    </span>` : '';
-
-    const memoEl = t.memo ? `<span class="meta-piece">
-      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="9" height="9" rx="1.5"/><line x1="3" y1="4.5" x2="8" y2="4.5"/><line x1="3" y1="7" x2="6" y2="7"/></svg>
-      ${t.memo}
-    </span>` : '';
-
-    const todayTag = isToday ? `<span class="tag" style="background:var(--accent-bg);color:var(--accent);font-size:10.5px">· 오늘</span>` : '';
-
-    return `<div class="task-item${t.done ? ' done-item' : ''}">
-      <input type="checkbox" class="task-cb" ${t.done ? 'checked' : ''} onchange="toggle_task(${t.id}, this.checked)">
-      <div class="task-body">
-        <div class="task-title">${t.title}</div>
-        <div class="task-meta">${dateEl}${memoEl}</div>
-      </div>
-      <div class="task-tags">
-        ${mk_tag(cat)}
-        ${t.priority !== 'normal' ? mk_tag(pri) : ''}
-        ${todayTag}
-      </div>
-      <div class="task-acts">
-        <button class="act-btn" onclick="open_edit(${t.id})" title="수정">
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9.5 1.5l2 2L4 11H2v-2L9.5 1.5z"/></svg>
-        </button>
-        <button class="act-btn del-btn" onclick="del_task(${t.id})" title="삭제">
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="2 3.5 11 3.5"/><path d="M4.5 3.5V2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v1"/><path d="M3 3.5l.7 7.5a1 1 0 0 0 1 .9h3.6a1 1 0 0 0 1-.9L10 3.5"/></svg>
-        </button>
-      </div>
-    </div>`;
+    const overdue = t.date && is_past(t.date) && !t.done;
+    const dateEl = t.date ? '<span class="meta-txt"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1.5" width="8" height="7" rx="1"/><line x1="3" y1="4" x2="7" y2="4"/></svg><span style="' + (overdue ? 'color:var(--red);font-weight:700' : '') + '">' + fmt_date(t.date) + '</span></span>' : '';
+    const memoEl = t.memo ? '<span class="meta-txt">' + t.memo + '</span>' : '';
+    const todayTag = t.date === new Date().toISOString().slice(0,10) ? '<span class="tag" style="background:var(--accent-bg);color:var(--accent);font-size:10px">오늘</span>' : '';
+    return '<div class="task-item' + (t.done ? ' done-item' : '') + '">' +
+      '<input type="checkbox" class="task-cb"' + (t.done ? ' checked' : '') + ' onchange="toggle_task(' + t.id + ',this.checked)">' +
+      '<div class="task-body"><div class="task-title">' + t.title + '</div><div class="task-meta">' + dateEl + memoEl + '</div></div>' +
+      '<div class="task-tags">' + mk_tag(cat) + (t.priority !== 'normal' ? mk_tag(pri) : '') + todayTag + '</div>' +
+      '<div class="task-acts"><button class="act-btn" onclick="open_edit(' + t.id + ')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 2l1.5 1.5L4 11H2V9L9 2z"/></svg></button>' +
+      '<button class="act-btn act-del" onclick="del_task(' + t.id + ')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="2 3 10 3"/><path d="M4 3V2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V3"/><path d="M3 3l.6 7a1 1 0 0 0 1 .9h2.8a1 1 0 0 0 1-.9L9 3"/></svg></button></div>' +
+      '</div>';
   }).join('');
 }
 
-function fmt_date(s) {
-  if (!s) return '';
-  const [y, m, d] = s.split('-');
-  return `${m}/${d}`;
-}
+function toggle_task(id, v) { const t = DB.tasks.find(t => t.id === id); if (t) { t.done = v; save(); render_tasks(); auto_sync(); } }
+function del_task(id) { if (!confirm('삭제할까요?')) return; DB.tasks = DB.tasks.filter(t => t.id !== id); save(); render_tasks(); auto_sync(); }
 
-function toggle_task(id, v) {
-  const t = DB.tasks.find(t => t.id === id);
-  if (t) { t.done = v; save_local(); render_tasks(); auto_sync(); }
-}
-
-function del_task(id) {
-  if (!confirm('삭제할까요?')) return;
-  DB.tasks = DB.tasks.filter(t => t.id !== id);
-  save_local(); render_tasks(); auto_sync();
-}
-
-/* ══════════ MODAL ══════════ */
 function open_modal() {
   edit_id = null;
-  document.getElementById('modal-title').textContent = '할 일 추가';
-  document.getElementById('modal-save').textContent = '추가하기';
-  document.getElementById('m-title').value = '';
+  document.getElementById('m-title').textContent = '할 일 추가';
+  document.getElementById('m-save').textContent = '추가하기';
+  document.getElementById('m-text').value = '';
   document.getElementById('m-memo').value = '';
   document.getElementById('m-date').value = new Date().toISOString().slice(0, 10);
-  solo_m('m-cat', document.querySelector('#m-cat [data-val="mkt"]'));
-  solo_m('m-pri', document.querySelector('#m-pri [data-val="normal"]'));
+  solo_m('m-cat', document.querySelector('#m-cat [data-v="mkt"]'));
+  solo_m('m-pri', document.querySelector('#m-pri [data-v="normal"]'));
   document.getElementById('overlay').classList.add('show');
-  setTimeout(() => document.getElementById('m-title').focus(), 100);
+  setTimeout(() => document.getElementById('m-text').focus(), 100);
 }
-
 function open_edit(id) {
-  const t = DB.tasks.find(t => t.id === id);
-  if (!t) return;
+  const t = DB.tasks.find(t => t.id === id); if (!t) return;
   edit_id = id;
-  document.getElementById('modal-title').textContent = '할 일 수정';
-  document.getElementById('modal-save').textContent = '저장하기';
-  document.getElementById('m-title').value = t.title;
+  document.getElementById('m-title').textContent = '할 일 수정';
+  document.getElementById('m-save').textContent = '저장하기';
+  document.getElementById('m-text').value = t.title;
   document.getElementById('m-memo').value = t.memo || '';
   document.getElementById('m-date').value = t.date || '';
-  const ce = document.querySelector(`#m-cat [data-val="${t.cat}"]`);
-  if (ce) solo_m('m-cat', ce);
-  const pe = document.querySelector(`#m-pri [data-val="${t.priority || 'normal'}"]`);
-  if (pe) solo_m('m-pri', pe);
+  const ce = document.querySelector('#m-cat [data-v="' + t.cat + '"]'); if (ce) solo_m('m-cat', ce);
+  const pe = document.querySelector('#m-pri [data-v="' + (t.priority||'normal') + '"]'); if (pe) solo_m('m-pri', pe);
   document.getElementById('overlay').classList.add('show');
-  setTimeout(() => document.getElementById('m-title').focus(), 100);
+  setTimeout(() => document.getElementById('m-text').focus(), 100);
 }
-
 function close_modal() { document.getElementById('overlay').classList.remove('show'); }
-
 function save_task() {
-  const title = document.getElementById('m-title').value.trim();
-  if (!title) { document.getElementById('m-title').focus(); return; }
-  const cat = document.querySelector('#m-cat .mchip.on')?.dataset.val || 'mkt';
-  const priority = document.querySelector('#m-pri .mchip.on')?.dataset.val || 'normal';
+  const title = document.getElementById('m-text').value.trim(); if (!title) return;
+  const cat = document.querySelector('#m-cat .mchip.on')?.dataset.v || 'mkt';
+  const priority = document.querySelector('#m-pri .mchip.on')?.dataset.v || 'normal';
   const date = document.getElementById('m-date').value;
   const memo = document.getElementById('m-memo').value.trim();
   if (edit_id) {
@@ -1006,507 +872,750 @@ function save_task() {
   } else {
     DB.tasks.unshift({ id: Date.now(), title, cat, priority, date, memo, done: false });
   }
-  save_local(); close_modal(); render_tasks(); auto_sync();
+  save(); close_modal(); render_tasks(); auto_sync();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') close_modal(); });
+
+/* ── GOOGLE SHEETS SYNC ── */
+async function auto_sync() {
+  try {
+    await fetch(APPS_URL, { method: 'POST', body: JSON.stringify({ tasks: DB.tasks }) });
+  } catch {}
 }
 
-/* ══════════ CHIP HELPERS ══════════ */
-function tog(el) { el.classList.toggle('on'); }
-function solo(g, el) { document.querySelectorAll('#' + g + ' .chip').forEach(c => c.classList.remove('on')); el.classList.add('on'); }
-function solo_m(g, el) { if (!el) return; document.querySelectorAll('#' + g + ' .mchip').forEach(c => c.classList.remove('on')); el.classList.add('on'); }
-function active_chips(g) { return [...document.querySelectorAll('#' + g + ' .chip.on')].map(c => c.textContent.trim()).join(', '); }
-
-/* ══════════ GOOGLE SHEETS ══════════ */
-const SHEET_RANGE = 'Tasks!A:H';
-const SHEET_HEADERS = ['id', 'title', 'cat', 'priority', 'date', 'memo', 'done', 'created'];
-
-function load_config() { /* Apps Script URL is hardcoded */ }
-function cfg_changed() {}
-function save_config() {}
-
-async function test_connection() {
-  const btn = document.getElementById('test-btn');
-  const status = document.getElementById('conn-status');
-  btn.disabled = true; btn.textContent = '테스트 중...';
+(async function init_sync() {
   try {
-    const r = await fetch(APPS_SCRIPT_URL + '?action=ping');
-    if (r.ok) {
-      status.innerHTML = `<span style="color:var(--green);font-weight:700">✓ 연결 성공!</span> — 구글 시트와 연결됐어요.`;
-    } else {
-      status.innerHTML = `<span style="color:var(--red);font-weight:700">✗ 연결 실패</span> — 스크립트 배포 상태를 확인해주세요.`;
-    }
-  } catch (e) {
-    status.innerHTML = `<span style="color:var(--red);font-weight:700">✗ 오류</span> — ${e.message}`;
-  }
-  btn.disabled = false; btn.textContent = '연결 테스트';
-}
-
-async function sync_to_sheet() {
-  set_sync_ui('syncing');
-  try {
-    const r = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify({ tasks: DB.tasks })
-    });
+    const r = await fetch(APPS_URL + '?action=get');
+    if (!r.ok) throw new Error();
     const d = await r.json();
-    if (d.ok) {
-      set_sync_ui('ok');
-      alert(`✓ ${d.count}개의 할 일을 구글 시트에 저장했어요!`);
-    } else {
-      throw new Error(d.error || '알 수 없는 오류');
-    }
-  } catch (e) {
-    set_sync_ui('error');
-    alert('동기화 실패: ' + e.message);
-  }
-}
-
-async function sync_from_sheet() {
-  set_sync_ui('syncing');
-  try {
-    const r = await fetch(APPS_SCRIPT_URL + '?action=get');
-    if (!r.ok) throw new Error('서버 오류 ' + r.status);
-    const d = await r.json();
-    if (!d.ok) throw new Error(d.error || '불러오기 실패');
-    const tasks = (d.tasks || [])
-      .filter(t => t.title)
-      .map(t => ({
-        id: Number(t.id) || Date.now(),
-        title: t.title || '',
-        cat: t.cat || 'mkt',
-        priority: t.priority || 'normal',
-        date: t.date || '',
-        memo: t.memo || '',
-        done: t.done === 'TRUE' || t.done === true || t.done === '1',
+    if (d.ok && d.tasks && d.tasks.length > 0) {
+      DB.tasks = d.tasks.filter(t => t.title).map(t => ({
+        id: Number(t.id) || Date.now(), title: t.title || '', cat: t.cat || 'mkt',
+        priority: t.priority || 'normal', date: t.date || '', memo: t.memo || '',
+        done: t.done === 'TRUE' || t.done === true,
       }));
-    DB.tasks = tasks;
-    save_local();
-    render_tasks();
-    set_sync_ui('ok');
-    alert(`✓ ${tasks.length}개의 할 일을 불러왔어요!`);
-  } catch (e) {
-    set_sync_ui('error');
-    alert('불러오기 실패: ' + e.message);
+      save();
+    }
+    document.getElementById('sync-txt').textContent = '구글 시트 연결됨';
+  } catch {
+    document.getElementById('sync-txt').textContent = '로컬 저장';
+    document.querySelector('.sdot').className = 'sdot sdot-wait';
+  }
+  render_tasks();
+  // 구글 시트 RD 누적 데이터 미리 로드
+  load_gs_rd();
+})();
+
+// 구글 시트에서 RD 누적 데이터 로드
+async function load_gs_rd() {
+  try {
+    const r = await fetch(APPS_URL + '?action=get_rd');
+    if (!r.ok) throw new Error();
+    const d = await r.json();
+    if (d.ok && d.weeks && Object.keys(d.weeks).length > 0) {
+      all_weeks_data = d.weeks;
+      rd_weeks = Object.keys(d.weeks).sort((a,b) => a.localeCompare(b));
+      // 주차 셀렉트 업데이트
+      const sel = document.getElementById('week-sel');
+      sel.innerHTML = rd_weeks.map(w => `<option value="${w}">${w}</option>`).join('');
+      sel.value = rd_weeks[rd_weeks.length - 1];
+      sel.disabled = false;
+      document.getElementById('analyze-btn').disabled = false;
+      document.getElementById('order-status').textContent = '✓ 구글 시트에서 ' + rd_weeks.length + '주차 데이터 로드됨';
+      document.getElementById('order-status').style.color = 'var(--green)';
+      document.getElementById('dash-period').textContent = rd_weeks[rd_weeks.length-1] + ' 기준 (새 파일 업로드 시 갱신)';
+    }
+  } catch(e) {
+    console.log('RD 로드 실패:', e.message);
   }
 }
 
-function auto_sync() {
-  if (DB.use_sheets) {
-    sync_to_sheet();
-  }
-}
+/* ── DASHBOARD: 파일 파싱 ── */
+let order_data = null, order_prev = null, ad_cost = 0;
 
-function set_sync_ui(state) {
-  const dot = document.querySelector('#sync-indicator .sync-dot');
-  const txt = document.getElementById('sync-text');
-  if (state === 'ok') { dot.className = 'sync-dot sync-ok'; txt.textContent = '구글 시트 연결됨'; }
-  else if (state === 'syncing') { dot.className = 'sync-dot sync-wait'; txt.textContent = '동기화 중...'; }
-  else if (state === 'error') { dot.className = 'sync-dot sync-err'; txt.textContent = '동기화 실패'; }
-  else { dot.className = 'sync-dot sync-wait'; txt.textContent = '로컬 저장'; }
-}
-
-function update_sync_indicator() {
-  set_sync_ui('ok');
-}
-
-function update_settings_status() {
-  const syncBtn = document.getElementById('sync-btn');
-  const pullBtn = document.getElementById('pull-btn');
-  if (!syncBtn) return;
-  syncBtn.disabled = false;
-  pullBtn.disabled = false;
-  document.getElementById('storage-mode-txt').textContent = '구글 시트 + 로컬 (자동 저장)';
-  document.getElementById('gs-status-txt').textContent = '연결됨 ✓';
-  document.getElementById('task-count-txt').textContent = DB.tasks.length + '개';
-}
-
-/* ══════════ EXCEL ══════════ */
-let xlsx_sheets = {}, xlsx_cur = '';
-function dz_over(e) { e.preventDefault(); document.getElementById('dz').classList.add('drag'); }
-function dz_leave() { document.getElementById('dz').classList.remove('drag'); }
-function dz_drop(e) { e.preventDefault(); dz_leave(); load_rd(e.dataTransfer.files[0]); }
-function dz_over2(e) { e.preventDefault(); document.getElementById('dz-ad').classList.add('drag'); }
-function dz_leave2() { document.getElementById('dz-ad').classList.remove('drag'); }
-function dz_drop2(e) { e.preventDefault(); dz_leave2(); load_rd_ad(e.dataTransfer.files[0]); }
-function load_xlsx(file) {
+function on_order_file(file, which) {
   if (!file) return;
-  const r = new FileReader();
-  r.onload = e => {
-    const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-    xlsx_sheets = {};
-    wb.SheetNames.forEach(n => xlsx_sheets[n] = XLSX.utils.sheet_to_json(wb.Sheets[n], { header: 1 }));
-    xlsx_cur = wb.SheetNames[0];
-    document.getElementById('xlsx-name').textContent = file.name;
-    document.getElementById('sheet-tabs').innerHTML = wb.SheetNames.map((n, i) =>
-      `<button class="stab${i === 0 ? ' on' : ''}" onclick="sw_tab(this,'${n}')">${n}</button>`).join('');
-    render_preview(xlsx_cur);
-    document.getElementById('rpt-up').style.display = 'none';
-    document.getElementById('rpt-prev').style.display = 'block';
-    document.getElementById('rpt-cfg').style.display = 'block';
-    const now = new Date(), wk = Math.ceil(now.getDate() / 7);
-    document.getElementById('rpt-period').value = `${now.getFullYear()}년 ${now.getMonth() + 1}월 ${wk}주차`;
+  const statusId = which === 'prev' ? 'order-prev-status' : 'order-status';
+  document.getElementById(statusId).textContent = '읽는 중...';
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      let text = e.target.result;
+      text = text.replace(/^\s+/, '').replace(/<\?mso-application[^?]*\?>\r?\n?/g, '');
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, 'text/xml');
+      const ns = 'urn:schemas-microsoft-com:office:spreadsheet';
+      const ws = doc.getElementsByTagNameNS(ns, 'Worksheet')[0];
+      if (!ws) throw new Error('시트를 찾을 수 없어요');
+      const rowEls = ws.getElementsByTagNameNS(ns, 'Row');
+
+      const getRow = (rowEl) => {
+        const vals = [];
+        const cells = rowEl.getElementsByTagNameNS(ns, 'Cell');
+        for (let i = 0; i < cells.length; i++) {
+          const cell = cells[i];
+          const idx = cell.getAttributeNS(ns, 'Index');
+          if (idx) { while (vals.length < parseInt(idx) - 1) vals.push(''); }
+          const data = cell.getElementsByTagNameNS(ns, 'Data')[0];
+          vals.push(data ? data.textContent : '');
+        }
+        return vals;
+      };
+
+      const EXCLUDE = new Set(['취소완료','반품완료','교환완료']);
+      const result = { revenue:0, qty:0, profit:0, brands:{}, cat_brands:{}, period:'' };
+      let dateMin = '', dateMax = '';
+
+      for (let i = 1; i < rowEls.length; i++) {
+        const v = getRow(rowEls[i]);
+        const status = v[17] || '';
+        if (EXCLUDE.has(status)) continue;
+        const cat = v[20] || 'OTHER';
+        const brand = v[21] || '기타';
+        const date = (v[3] || '').slice(0, 10);
+        if (date && (!dateMin || date < dateMin)) dateMin = date;
+        if (date && date > dateMax) dateMax = date;
+        const qty = parseInt(v[8]) || 0;
+        const salePrice = parseFloat(v[13]) || 0;
+        const coupon = parseFloat(v[12]) || 0;
+        const supply = parseFloat(v[14]) || 0;
+        const cost = parseFloat(v[15]) || 0;
+        const rev = (salePrice - coupon) / 1.1;
+        const profit = (supply - cost) / 1.1;
+        result.revenue += rev; result.qty += qty; result.profit += profit;
+        if (!result.brands[brand]) result.brands[brand] = { revenue:0, qty:0, profit:0 };
+        result.brands[brand].revenue += rev; result.brands[brand].qty += qty; result.brands[brand].profit += profit;
+        if (!result.cat_brands[cat]) result.cat_brands[cat] = {};
+        if (!result.cat_brands[cat][brand]) result.cat_brands[cat][brand] = { revenue:0, qty:0, profit:0 };
+        result.cat_brands[cat][brand].revenue += rev; result.cat_brands[cat][brand].qty += qty; result.cat_brands[cat][brand].profit += profit;
+      }
+      result.period = dateMin && dateMax ? dateMin + ' ~ ' + dateMax : '';
+
+      if (which === 'prev') {
+        order_prev = result;
+        document.getElementById('order-prev-status').textContent = '✓ ' + file.name + (result.period ? ' (' + result.period + ')' : '');
+        document.getElementById('order-prev-status').style.color = 'var(--green)';
+      } else {
+        order_data = result;
+        document.getElementById('order-status').textContent = '✓ ' + file.name + (result.period ? ' (' + result.period + ')' : '');
+        document.getElementById('order-status').style.color = 'var(--green)';
+      }
+      check_ready();
+    } catch (err) {
+      document.getElementById(statusId).textContent = '오류: ' + err.message;
+      document.getElementById(statusId).style.color = 'var(--red)';
+    }
   };
-  r.readAsArrayBuffer(file);
-}
-function sw_tab(el, name) {
-  xlsx_cur = name;
-  document.querySelectorAll('.stab').forEach(b => b.classList.remove('on'));
-  el.classList.add('on'); render_preview(name);
-}
-function render_preview(name) {
-  const rows = (xlsx_sheets[name] || []).slice(0, 8);
-  if (!rows.length) { document.getElementById('preview-tbl').innerHTML = '<p style="padding:12px;font-size:12px;color:var(--muted)">데이터가 없습니다.</p>'; return; }
-  const hdrs = rows[0] || [];
-  let h = '<table><thead><tr>' + hdrs.map(c => `<th>${c ?? ''}</th>`).join('') + '</tr></thead><tbody>';
-  rows.slice(1).forEach(r => h += '<tr>' + hdrs.map((_, i) => `<td>${r[i] ?? ''}</td>`).join('') + '</tr>');
-  document.getElementById('preview-tbl').innerHTML = h + '</tbody></table>';
-}
-function reset_xlsx() {
-  xlsx_sheets = {};
-  ['rpt-up','rpt-prev','rpt-cfg','rpt-res'].forEach((id, i) =>
-    document.getElementById(id).style.display = i === 0 ? 'block' : 'none');
+  reader.readAsText(file, 'utf-8');
 }
 
-/* ══════════ CLAUDE ══════════ */
+function on_ad_file(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const lines = e.target.result.split('\n').filter(l => l.trim());
+    let total = 0, headerIdx = -1;
+    lines.forEach((line, i) => { if (line.includes('캠페인유형') || line.includes('캠페인')) headerIdx = i; });
+    if (headerIdx >= 0) {
+      lines.slice(headerIdx + 1).forEach(line => {
+        const cols = line.split(',');
+        total += parseFloat(cols[8]) || 0;
+      });
+    }
+    ad_cost = total / 1.1;
+    document.getElementById('ad-status').textContent = '✓ ' + file.name + ' (광고비 ' + fmt_money(ad_cost) + '원)';
+    document.getElementById('ad-status').style.color = 'var(--green)';
+    check_ready();
+  };
+  reader.readAsText(file, 'utf-8');
+}
+
+function check_ready() {
+  document.getElementById('analyze-btn').disabled = !order_data;
+}
+
+// 드래그&드롭
+const dzOrder = document.getElementById('dz-order');
+dzOrder.addEventListener('dragover', e => { e.preventDefault(); dzOrder.classList.add('drag'); });
+dzOrder.addEventListener('dragleave', () => dzOrder.classList.remove('drag'));
+dzOrder.addEventListener('drop', e => { e.preventDefault(); dzOrder.classList.remove('drag'); on_order_file(e.dataTransfer.files[0], 'cur'); });
+const dzOrderPrev = document.getElementById('dz-order-prev');
+dzOrderPrev.addEventListener('dragover', e => { e.preventDefault(); dzOrderPrev.classList.add('drag'); });
+dzOrderPrev.addEventListener('dragleave', () => dzOrderPrev.classList.remove('drag'));
+dzOrderPrev.addEventListener('drop', e => { e.preventDefault(); dzOrderPrev.classList.remove('drag'); on_order_file(e.dataTransfer.files[0], 'prev'); });
+const dzAd = document.getElementById('dz-ad');
+dzAd.addEventListener('dragover', e => { e.preventDefault(); dzAd.classList.add('drag'); });
+dzAd.addEventListener('dragleave', () => dzAd.classList.remove('drag'));
+dzAd.addEventListener('drop', e => { e.preventDefault(); dzAd.classList.remove('drag'); on_ad_file(e.dataTransfer.files[0]); });
+
+/* ── DASHBOARD: 분석 ── */
+let cur_cat = 'all', brand_filters = [];
+
+function analyze() {
+  if (!order_data) return;
+  const d = order_data;
+  const p = order_prev;
+  if (ad_cost > 0) d.adCost = ad_cost;
+  else d.adCost = 0;
+
+  const roas = d.adCost > 0 ? (d.revenue / d.adCost).toFixed(1) : '-';
+  const margin = d.revenue > 0 ? (d.profit / d.revenue * 100).toFixed(1) : '-';
+
+  const mk_diff = (cur, prev) => {
+    if (!prev || prev === 0) return '';
+    const pct = ((cur - prev) / prev * 100).toFixed(1);
+    const up = cur >= prev;
+    return '<span style="color:' + (up ? 'var(--green)' : 'var(--red)') + ';font-size:12px;font-weight:700">' +
+      (up ? '▲' : '▼') + ' ' + Math.abs(pct) + '% 전주대비</span>';
+  };
+
+  document.getElementById('k-rev').textContent = fmt_money(d.revenue) + '원';
+  document.getElementById('k-rev-d').innerHTML = p ? mk_diff(d.revenue, p.revenue) + '<span style="font-size:11px;color:var(--muted);margin-left:4px">전주 ' + fmt_money(p.revenue) + '원</span>' : '';
+  document.getElementById('k-qty').textContent = Math.round(d.qty) + '개';
+  document.getElementById('k-qty-d').innerHTML = p ? mk_diff(d.qty, p.qty) + '<span style="font-size:11px;color:var(--muted);margin-left:4px">전주 ' + Math.round(p.qty) + '개</span>' : '';
+  document.getElementById('k-profit').textContent = fmt_money(d.profit) + '원';
+  document.getElementById('k-profit-d').innerHTML = p ? mk_diff(d.profit, p.profit) + '<span style="font-size:11px;color:var(--muted);margin-left:4px">전주 ' + fmt_money(p.profit) + '원</span>' : '';
+  document.getElementById('k-margin').textContent = margin !== '-' ? margin + '%' : '-';
+  document.getElementById('k-ad').textContent = d.adCost > 0 ? fmt_money(d.adCost) + '원' : '-';
+  document.getElementById('k-roas').textContent = roas;
+  document.getElementById('dash-period').textContent = d.period || '이번 주' + (p ? ' vs 전주 ' + (p.period || '') : '');
+
+  document.getElementById('dash-upload').style.display = 'none';
+  document.getElementById('dash-kpi').style.display = 'block';
+  render_brand_top10();
+}
+
+function fmt_money(n) {
+  n = Math.round(n);
+  if (n >= 100000000) return (n / 100000000).toFixed(1) + '억';
+  if (n >= 10000) return Math.round(n / 10000) + '만';
+  return n.toLocaleString();
+}
+
+function set_cat(el) {
+  cur_cat = el.dataset.cat;
+  document.querySelectorAll('.tab-btn[data-cat]').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  render_brand_top10();
+}
+
+function brand_search_key(e) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    const val = document.getElementById('brand-search').value.trim().replace(/,$/, '');
+    if (val && !brand_filters.includes(val)) {
+      brand_filters.push(val);
+      document.getElementById('brand-search').value = '';
+      render_brand_tags();
+      render_brand_top10();
+    }
+  }
+}
+function remove_brand_filter(name) {
+  brand_filters = brand_filters.filter(b => b !== name);
+  render_brand_tags();
+  render_brand_top10();
+}
+function render_brand_tags() {
+  document.getElementById('brand-tags').innerHTML = brand_filters.map(b =>
+    '<span class="brand-tag" onclick="remove_brand_filter(\'' + b.replace(/'/g, "\\'") + '\')">' + b + ' ×</span>'
+  ).join('');
+}
+
+function render_brand_top10() {
+  if (!order_data) return;
+  const d = order_data;
+  let brands;
+  if (cur_cat === 'all') {
+    brands = Object.entries(d.brands);
+  } else if (cur_cat === 'GLASSES') {
+    // GLASSES + AIGLASSES 합산
+    const merged = {};
+    ['GLASSES', 'AIGLASSES'].forEach(cat => {
+      Object.entries(d.cat_brands[cat] || {}).forEach(([name, v]) => {
+        if (!merged[name]) merged[name] = { revenue:0, qty:0, profit:0 };
+        merged[name].revenue += v.revenue;
+        merged[name].qty += v.qty;
+        merged[name].profit += v.profit;
+      });
+    });
+    brands = Object.entries(merged);
+  } else {
+    brands = Object.entries(d.cat_brands[cur_cat] || {});
+  }
+
+  // 기타/OTHER 제외
+  const EXCLUDE_BRANDS = ['기타', 'OTHER BRAND', 'OTHER', '기타 브랜드'];
+  brands = brands.filter(([name]) => !EXCLUDE_BRANDS.some(ex => name.toUpperCase().includes(ex.toUpperCase())));
+
+  // 브랜드 검색 필터
+  if (brand_filters.length > 0) {
+    const lowerFilters = brand_filters.map(f => f.toLowerCase());
+    brands = brands.filter(([name]) => lowerFilters.some(f => name.toLowerCase().includes(f)));
+  }
+
+  // 판매 수량 기준 정렬
+  brands = brands.sort((a, b) => b[1].qty - a[1].qty).slice(0, 10);
+  const totalQty = brands.reduce((s, [, v]) => s + v.qty, 0) || 1;
+  const totalRev = brands.reduce((s, [, v]) => s + v.revenue, 0) || 1;
+
+  const el = document.getElementById('brand-top10');
+  if (!brands.length) {
+    el.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:12px 0">검색 결과가 없어요</div>';
+    return;
+  }
+
+  // 컬럼 헤더
+  const header = '<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:2px solid var(--border);margin-bottom:4px">' +
+    '<span style="font-size:10px;font-weight:700;color:var(--muted);min-width:18px">#</span>' +
+    '<span style="font-size:10px;font-weight:700;color:var(--muted);flex:1">브랜드</span>' +
+    '<span style="font-size:10px;font-weight:700;color:var(--muted);min-width:44px;text-align:right">판매수량</span>' +
+    '<span style="font-size:10px;font-weight:700;color:var(--muted);min-width:70px;text-align:right">매출</span>' +
+    '<span style="font-size:10px;font-weight:700;color:var(--muted);min-width:48px;text-align:right">이익률</span>' +
+    '<span style="font-size:10px;font-weight:700;color:var(--accent);min-width:34px;text-align:right">수량%</span>' +
+    '</div>';
+
+  const rows = brands.map(([name, v], i) => {
+    const qtyPct = (v.qty / totalQty * 100).toFixed(1);
+    const pr = v.revenue > 0 ? (v.profit / v.revenue * 100).toFixed(1) : '-';
+    const prColor = pr !== '-' && Number(pr) > 30 ? 'var(--green)' : Number(pr) < 10 ? 'var(--red)' : 'var(--amber)';
+    return '<div class="stat-row">' +
+      '<span class="stat-rank">' + (i+1) + '</span>' +
+      '<span class="stat-name">' + name + '</span>' +
+      '<span class="stat-rev" style="color:var(--ink);font-weight:700">' + Math.round(v.qty) + '개</span>' +
+      '<span class="stat-rev">' + fmt_money(v.revenue) + '원</span>' +
+      '<span class="stat-profit" style="color:' + prColor + '">' + (pr !== '-' ? pr + '%' : '-') + '</span>' +
+      '<span class="stat-pct">' + qtyPct + '%</span>' +
+      '</div>';
+  }).join('');
+
+  el.innerHTML = header + rows;
+}
+
+function reset_dash() {
+  order_data = null; order_prev = null; ad_cost = 0; brand_filters = [];
+  document.getElementById('dash-upload').style.display = 'block';
+  document.getElementById('dash-kpi').style.display = 'none';
+  document.getElementById('rpt-res-card').style.display = 'none';
+  document.getElementById('order-status').textContent = '';
+  document.getElementById('ad-status').textContent = '';
+  document.getElementById('analyze-btn').disabled = true;
+  document.getElementById('brand-tags').innerHTML = '';
+  document.getElementById('brand-search').value = '';
+}
+
+/* ── AI 보고서 ── */
 async function claude(prompt) {
   const r = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1500, messages: [{ role: 'user', content: prompt }] })
+    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1500, messages: [{ role:'user', content: prompt }] })
   });
   const d = await r.json();
   if (d.error) throw new Error(d.error.message);
   return d.content.map(b => b.text || '').join('');
 }
+
 function set_btn(id, loading, label) {
   const b = document.getElementById(id);
   if (!b) return;
-  if (loading) { b.disabled = true; b.innerHTML = `<span class="spin"></span> ${label}`; }
+  if (loading) { b.disabled = true; b.innerHTML = '<span class="spin"></span> ' + label; }
   else b.disabled = false;
-}
-/* ══ RD 파일 파싱 ══ */
-let rd_data = {}; // { week: { revenue, qty, profit, adCost, brands: [{brand, revenue, qty, profit}] } }
-let rd_weeks = [];
-
-function load_rd(file) {
-  if (!file) return;
-  document.getElementById('rd-fname').textContent = file.name;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-    parse_rd(wb);
-    document.getElementById('rpt-up').style.display = 'none';
-    document.getElementById('rpt-parsed').style.display = 'block';
-  };
-  reader.readAsArrayBuffer(file);
-}
-
-function parse_rd(wb) {
-  rd_data = {};
-  // RD_CMS 파싱 (매출/이익/판매량)
-  const cms = wb.Sheets['RD_CMS'];
-  if (cms) {
-    const rows = XLSX.utils.sheet_to_json(cms, { header: 1 });
-    rows.slice(1).forEach(row => {
-      const week = row[24]; // Y열
-      const cat  = row[20]; // U열 대분류명
-      const brand = row[22]; // W열
-      const qty = Number(row[25]) || 0; // Z열
-      const revenue = Number(row[27]) || 0; // AB열
-      const profit = Number(row[33]) || 0; // AH열
-      if (!week) return;
-      if (!rd_data[week]) rd_data[week] = { revenue: 0, qty: 0, profit: 0, adCost: 0, brands: {}, cat_brands: {} };
-      rd_data[week].revenue += revenue;
-      rd_data[week].qty += qty;
-      rd_data[week].profit += profit;
-      if (brand) {
-        if (!rd_data[week].brands[brand]) rd_data[week].brands[brand] = { revenue: 0, qty: 0, profit: 0 };
-        rd_data[week].brands[brand].revenue += revenue;
-        rd_data[week].brands[brand].qty += qty;
-        rd_data[week].brands[brand].profit += profit;
-      }
-      if (cat && brand) {
-        if (!rd_data[week].cat_brands[cat]) rd_data[week].cat_brands[cat] = {};
-        if (!rd_data[week].cat_brands[cat][brand]) rd_data[week].cat_brands[cat][brand] = { revenue: 0, qty: 0, profit: 0 };
-        rd_data[week].cat_brands[cat][brand].revenue += revenue;
-        rd_data[week].cat_brands[cat][brand].qty += qty;
-        rd_data[week].cat_brands[cat][brand].profit += profit;
-      }
-    });
-  }
-  // RD_광고비 파싱
-  const ad = wb.Sheets['RD_광고비'];
-  if (ad) {
-    const rows = XLSX.utils.sheet_to_json(ad, { header: 1 });
-    rows.slice(1).forEach(row => {
-      const week = row[10]; // K열
-      const cost = Number(row[6]) || 0; // G열 VAT미포함
-      if (week && cost) {
-        if (!rd_data[week]) rd_data[week] = { revenue: 0, qty: 0, profit: 0, adCost: 0, brands: {} };
-        rd_data[week].adCost += cost;
-      }
-    });
-  }
-  // 주차 정렬
-  rd_weeks = Object.keys(rd_data).sort((a, b) => a.localeCompare(b));
-  // 주차 셀렉트 업데이트
-  const sel = document.getElementById('rpt-week-sel');
-  sel.innerHTML = rd_weeks.map(w => `<option value="${w}">${w}</option>`).join('');
-  // 최신 주차 선택
-  if (rd_weeks.length > 0) sel.value = rd_weeks[rd_weeks.length - 1];
-  update_week_summary();
-}
-
-let cur_cat_tab = 'all';
-
-function set_cat_tab(cat) {
-  cur_cat_tab = cat;
-  ['all','glasses','sun','acc'].forEach(t => {
-    const el = document.getElementById('cat-tab-' + t);
-    if (el) el.classList.remove('on');
-  });
-  const map = {all:'all', GLASSES:'glasses', SUNGLASSES:'sun', ACCESSORY:'acc'};
-  const tabEl = document.getElementById('cat-tab-' + (map[cat]||cat));
-  if (tabEl) tabEl.classList.add('on');
-  render_brand_top10();
-}
-
-function render_brand_top10() {
-  const week = document.getElementById('rpt-week-sel').value;
-  const d = rd_data[week];
-  if (!d) return;
-  const fmt = n => n >= 1e8 ? (n/1e8).toFixed(1)+'억' : n >= 1e4 ? Math.round(n/1e4)+'만' : n.toLocaleString();
-
-  let brands;
-  if (cur_cat_tab === 'all') {
-    brands = Object.entries(d.brands);
-  } else {
-    brands = Object.entries(d.cat_brands?.[cur_cat_tab] || {});
-  }
-  brands = brands.sort((a,b) => b[1].revenue - a[1].revenue).slice(0,10);
-  const total = (cur_cat_tab === 'all' ? d.revenue : brands.reduce((s,[,v])=>s+v.revenue,0)) || 1;
-
-  document.getElementById('brand-top10').innerHTML = brands.length === 0
-    ? '<div style="color:var(--muted);font-size:12px;padding:12px 0">데이터 없음</div>'
-    : brands.map(([name, v], i) => {
-      const pct = (v.revenue / total * 100).toFixed(1);
-      const profitRate = v.revenue > 0 ? (v.profit / v.revenue * 100).toFixed(1) : '-';
-      return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);min-width:18px">${i+1}</span>
-        <span style="flex:1;font-weight:600;font-size:13px">${name}</span>
-        <span style="font-size:11px;color:var(--muted)">${Math.round(v.qty)}개</span>
-        <span style="font-size:12px;color:var(--ink2);min-width:60px;text-align:right">${fmt(v.revenue)}원</span>
-        <span style="font-size:11px;color:${profitRate > 30 ? 'var(--green)' : profitRate < 10 ? 'var(--red)' : 'var(--amber)'};min-width:36px;text-align:right">이익 ${profitRate}%</span>
-        <span style="font-size:10px;font-weight:700;color:var(--accent);min-width:32px;text-align:right">${pct}%</span>
-      </div>`;
-    }).join('');
-}
-
-function update_week_summary() {
-  const week = document.getElementById('rpt-week-sel').value;
-  const d = rd_data[week];
-  if (!d) return;
-  const prevIdx = rd_weeks.indexOf(week) - 1;
-  const prev = prevIdx >= 0 ? rd_data[rd_weeks[prevIdx]] : null;
-
-  const fmt = n => n >= 1e8 ? (n/1e8).toFixed(1)+'억' : n >= 1e4 ? Math.round(n/1e4)+'만' : n.toLocaleString();
-  const diff = (cur, pre) => pre && pre > 0 ? ((cur-pre)/pre*100).toFixed(1) : '-';
-
-  document.getElementById('kpi-rev').textContent = fmt(d.revenue) + '원';
-  const rd = diff(d.revenue, prev?.revenue);
-  const rdEl = document.getElementById('kpi-rev-diff');
-  rdEl.textContent = rd !== '-' ? (Number(rd) > 0 ? '+' : '') + rd + '%' : '-';
-  rdEl.style.color = Number(rd) > 0 ? 'var(--green)' : Number(rd) < 0 ? 'var(--red)' : '';
-  document.getElementById('kpi-qty').textContent = Math.round(d.qty) + '개';
-  document.getElementById('kpi-profit').textContent = fmt(d.profit) + '원';
-  document.getElementById('kpi-ad').textContent = fmt(d.adCost) + '원';
-  const roas = d.adCost > 0 ? (d.revenue / d.adCost).toFixed(1) : '-';
-  document.getElementById('kpi-roas').textContent = roas !== '-' ? roas : '-';
-
-  render_brand_top10();
-}
-
-function reset_rd() {
-  rd_data = {}; rd_weeks = [];
-  pending_files = { order: null, ad: null };
-  document.getElementById('rpt-up').style.display = 'block';
-  document.getElementById('rpt-parsed').style.display = 'none';
-  document.getElementById('rpt-res').style.display = 'none';
 }
 
 async function gen_report() {
-  const week = document.getElementById('rpt-week-sel').value;
-  const d = rd_data[week];
-  if (!d) { alert('파일을 먼저 업로드해주세요.'); return; }
+  if (!order_data) { alert('파일을 먼저 업로드하고 분석해주세요.'); return; }
+  const d = order_data;
   set_btn('rpt-btn', true, '보고서 생성 중...');
-
-  const prevIdx = rd_weeks.indexOf(week) - 1;
-  const prev = prevIdx >= 0 ? rd_data[rd_weeks[prevIdx]] : null;
-  const prevWeek = prevIdx >= 0 ? rd_weeks[prevIdx] : null;
-
   const fmt = n => Math.round(n).toLocaleString();
-  const pct = (cur, pre) => pre && pre > 0 ? ((cur-pre)/pre*100).toFixed(1) + '%' : '-';
   const roas = d.adCost > 0 ? (d.revenue / d.adCost).toFixed(1) : '-';
+  const margin = d.revenue > 0 ? (d.profit / d.revenue * 100).toFixed(1) : '-';
 
-  const brands_str = Object.entries(d.brands)
-    .sort((a, b) => b[1].revenue - a[1].revenue)
-    .slice(0, 10)
-    .map(([name, v]) => `${name}: 매출 ${fmt(v.revenue)}원 / ${Math.round(v.qty)}개 / 이익 ${fmt(v.profit)}원`)
-    .join('
-');
+  const top_brands = (cat) => {
+    let src;
+    if (!cat) { src = d.brands; }
+    else if (cat === 'GLASSES') {
+      const merged = {};
+      ['GLASSES','AIGLASSES'].forEach(c => {
+        Object.entries(d.cat_brands[c] || {}).forEach(([n,v]) => {
+          if (!merged[n]) merged[n] = { revenue:0, qty:0, profit:0 };
+          merged[n].revenue += v.revenue; merged[n].qty += v.qty; merged[n].profit += v.profit;
+        });
+      });
+      src = merged;
+    } else { src = d.cat_brands[cat]; }
+    return Object.entries(src || {}).sort((a,b) => b[1].qty - a[1].qty).slice(0, 8)
+      .map(([n,v], i) => (i+1) + '. ' + n + ': ' + fmt(v.revenue) + '원 / ' + Math.round(v.qty) + '개 / 이익률 ' + (v.revenue>0?(v.profit/v.revenue*100).toFixed(1):'-') + '%')
+      .join('\n') || '  데이터 없음';
+  };
 
-  const to = document.getElementById('rpt-to').value;
-  const memo = document.getElementById('rpt-memo').value;
+  const pct_str = (cur, prev) => prev && prev > 0 ? ((cur-prev)/prev*100).toFixed(1) + '%' : '-';
 
-  const prompt = `라운즈 온라인 MD·마케팅 담당자입니다. 아래 데이터를 바탕으로 ${to}에게 보고할 주간 실적 보고서를 작성해주세요.
+  const prompt = `라운즈 온라인 MD·마케팅 담당자입니다. 아래 주간 실적 데이터를 바탕으로 ${document.getElementById('rpt-to').value}에게 보고할 주간 실적 보고서를 작성해주세요.
 
-📅 보고 주차: ${week}${prevWeek ? ` (전주: ${prevWeek})` : ''}
+📅 기간: ${d.period || '이번 주'}${order_prev ? ' (전주: ' + (order_prev.period || '전주') + ')' : ''}
 
-📊 핵심 지표:
-- 매출: ${fmt(d.revenue)}원 (전주 대비: ${pct(d.revenue, prev?.revenue)})
-- 판매량: ${Math.round(d.qty)}개 (전주 대비: ${pct(d.qty, prev?.qty)})
-- 이익: ${fmt(d.profit)}원 (전주 대비: ${pct(d.profit, prev?.profit)})
-- 광고비: ${fmt(d.adCost)}원 (전주 대비: ${pct(d.adCost, prev?.adCost)})
+📊 핵심 지표 (이번주 / 전주 / 증감):
+- 매출: ${fmt(d.revenue)}원 / ${order_prev ? fmt(order_prev.revenue)+'원' : '-'} / ${order_prev ? pct_str(d.revenue, order_prev.revenue) : '-'}
+- 판매량: ${Math.round(d.qty)}개 / ${order_prev ? Math.round(order_prev.qty)+'개' : '-'} / ${order_prev ? pct_str(d.qty, order_prev.qty) : '-'}
+- 이익: ${fmt(d.profit)}원 / ${order_prev ? fmt(order_prev.profit)+'원' : '-'} / ${order_prev ? pct_str(d.profit, order_prev.profit) : '-'}
+- 이익률: ${margin}%
+- 광고비: ${d.adCost > 0 ? fmt(d.adCost) + '원' : '미입력'}
 - ROAS: ${roas}
-${prev ? `
-📊 전주 지표:
-- 전주 매출: ${fmt(prev.revenue)}원
-- 전주 이익: ${fmt(prev.profit)}원
-- 전주 광고비: ${fmt(prev.adCost)}원` : ''}
 
-🏷️ 브랜드별 실적 TOP 10:
-${brands_str}
+🏷️ 전체 브랜드 TOP 8:
+${top_brands(null)}
 
-${memo ? `📝 추가 메모: ${memo}` : ''}
+👓 안경 (GLASSES + AI GLASSES) TOP 8:
+${top_brands('GLASSES')}
+
+🕶️ 선글라스 (SUNGLASSES) TOP 8:
+${top_brands('SUNGLASSES')}
+
+${document.getElementById('rpt-memo').value ? '📝 추가 메모: ' + document.getElementById('rpt-memo').value : ''}
 
 보고서 형식:
 - 섹션별 이모지 구분
 - 핵심 수치 명확히 표기
-- 전주 대비 증감 분석 및 원인 추측
 - 주목할 브랜드 인사이트
-- 광고 효율(ROAS) 코멘트
+- 광고 효율 코멘트 (ROAS 기준)
 - 다음 주 제언
 - 간결하고 실용적인 실무 문체`;
 
   try {
     const out = await claude(prompt);
     document.getElementById('rpt-out').textContent = out;
-    document.getElementById('rpt-res').style.display = 'block';
-    document.getElementById('rpt-res').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('rpt-res-card').style.display = 'block';
+    document.getElementById('rpt-res-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch (e) {
     document.getElementById('rpt-out').textContent = '오류: ' + e.message;
-    document.getElementById('rpt-res').style.display = 'block';
+    document.getElementById('rpt-res-card').style.display = 'block';
   }
   set_btn('rpt-btn', false);
   document.getElementById('rpt-btn').textContent = 'AI 보고서 자동 생성';
 }
+
 async function gen_copy() {
   set_btn('cp-btn', true, '생성 중...');
-  const ch = active_chips('ch-g'), tone = active_chips('tone-g');
-  const prod = document.getElementById('cp-prod').value || '상품';
-  const kw = document.getElementById('cp-kw').value;
-  const cnt = document.getElementById('cp-cnt').value;
   try {
-    const out = await claude(`온라인 쇼핑몰 마케터입니다. ${ch}용 마케팅 카피를 ${cnt}가지 버전으로 작성해주세요.\n상품: ${prod} / 톤: ${tone}${kw ? ` / 강조: ${kw}` : ''}\n[버전 1], [버전 2] 형식으로 구분, 이모지 적극 활용, 해시태그 포함.`);
+    const out = await claude('온라인 쇼핑몰 마케터입니다. ' + ac('ch-g') + '용 마케팅 카피를 ' + document.getElementById('cp-cnt').value + '가지 버전으로 작성해주세요.\n상품: ' + (document.getElementById('cp-prod').value||'상품') + ' / 톤: ' + ac('tone-g') + (document.getElementById('cp-kw').value ? ' / 강조: ' + document.getElementById('cp-kw').value : '') + '\n[버전 1], [버전 2] 형식으로 구분, 이모지 적극 활용, 해시태그 포함.');
     document.getElementById('cp-out').textContent = out;
     document.getElementById('cp-res').style.display = 'block';
   } catch (e) { document.getElementById('cp-out').textContent = '오류: ' + e.message; document.getElementById('cp-res').style.display = 'block'; }
   set_btn('cp-btn', false); document.getElementById('cp-btn').textContent = '카피 생성';
 }
+
 async function gen_plan() {
   set_btn('pl-btn', true, '작성 중...');
-  const type = active_chips('plan-g');
-  const name = document.getElementById('pl-name').value || '상품';
-  const target = document.getElementById('pl-target').value;
-  const usp = document.getElementById('pl-usp').value;
-  const diff = document.getElementById('pl-diff').value;
   try {
-    const out = await claude(`온라인 MD입니다. 아래 상품의 ${type} 기획안을 작성해주세요.\n상품명: ${name}${target ? ` / 타겟: ${target}` : ''}${usp ? ` / USP: ${usp}` : ''}${diff ? ` / 차별화: ${diff}` : ''}\n포함: 컨셉, 주요 메시지, 구성 제안, 예상 효과, 운영 팁`);
+    const out = await claude('온라인 MD입니다. 아래 상품의 ' + ac('plan-g') + ' 기획안을 작성해주세요.\n상품명: ' + (document.getElementById('pl-name').value||'상품') + (document.getElementById('pl-target').value?' / 타겟: '+document.getElementById('pl-target').value:'') + (document.getElementById('pl-usp').value?' / USP: '+document.getElementById('pl-usp').value:'') + (document.getElementById('pl-diff').value?' / 차별화: '+document.getElementById('pl-diff').value:'') + '\n포함: 컨셉, 주요 메시지, 구성 제안, 예상 효과, 운영 팁');
     document.getElementById('pl-out').textContent = out;
     document.getElementById('pl-res').style.display = 'block';
   } catch (e) { document.getElementById('pl-out').textContent = '오류: ' + e.message; document.getElementById('pl-res').style.display = 'block'; }
   set_btn('pl-btn', false); document.getElementById('pl-btn').textContent = '기획안 작성';
 }
 
-/* ══════════ UTILS ══════════ */
+/* ── IMAGE RESIZE 860×860 ── */
+let resized_images = [];
+
+const dzImg = document.getElementById('dz-img');
+dzImg.addEventListener('dragover', e => { e.preventDefault(); dzImg.classList.add('drag'); });
+dzImg.addEventListener('dragleave', () => dzImg.classList.remove('drag'));
+dzImg.addEventListener('drop', e => { e.preventDefault(); dzImg.classList.remove('drag'); on_images(e.dataTransfer.files); });
+
+function on_images(files) {
+  if (!files || !files.length) return;
+  resized_images = [];
+  document.getElementById('img-status').textContent = '변환 중... (0/' + files.length + ')';
+  const canvas = document.getElementById('resize-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = 860; canvas.height = 860;
+
+  let done = 0;
+  Array.from(files).forEach(file => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      ctx.clearRect(0, 0, 860, 860);
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, 860, 860);
+      // 비율 유지하며 중앙 배치
+      const ratio = Math.min(860 / img.width, 860 / img.height);
+      const w = img.width * ratio, h = img.height * ratio;
+      const x = (860 - w) / 2, y = (860 - h) / 2;
+      ctx.drawImage(img, x, y, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+      resized_images.push({ name: file.name.replace(/\.[^.]+$/, '') + '_860x860.jpg', dataUrl });
+      URL.revokeObjectURL(url);
+      done++;
+      document.getElementById('img-status').textContent = '변환 중... (' + done + '/' + files.length + ')';
+      if (done === files.length) show_images();
+    };
+    img.src = url;
+  });
+}
+
+function show_images() {
+  document.getElementById('img-status').textContent = '✓ ' + resized_images.length + '장 변환 완료!';
+  document.getElementById('img-status').style.color = 'var(--green)';
+  const grid = document.getElementById('img-grid');
+  grid.innerHTML = resized_images.map((img, i) =>
+    '<div class="img-thumb">' +
+    '<img src="' + img.dataUrl + '" alt="' + img.name + '">' +
+    '<div class="img-thumb-lbl">' + img.name + '</div>' +
+    '<button class="img-dl" onclick="dl_image(' + i + ')">저장</button>' +
+    '</div>'
+  ).join('');
+  document.getElementById('img-result-card').style.display = 'block';
+  document.getElementById('product-form-card').style.display = 'block';
+  render_product_form();
+}
+
+function dl_image(i) {
+  const a = document.createElement('a');
+  a.href = resized_images[i].dataUrl;
+  a.download = resized_images[i].name;
+  a.click();
+}
+
+function dl_all_images() {
+  resized_images.forEach((img, i) => setTimeout(() => dl_image(i), i * 150));
+}
+
+function render_product_form() {
+  const name = document.getElementById('pf-name').value;
+  const cat = document.getElementById('pf-cat').value;
+  const brand = document.getElementById('pf-brand').value;
+  const price = document.getElementById('pf-price').value;
+  const supply = document.getElementById('pf-supply').value;
+  const memo = document.getElementById('pf-memo').value;
+  const imgList = resized_images.map(img => img.name).join(', ');
+
+  document.getElementById('pf-out').textContent = [
+    '[ 상품 등록 양식 ]',
+    '',
+    '상품명: ' + (name || '(입력)'),
+    '카테고리: ' + cat,
+    '브랜드: ' + (brand || '(입력)'),
+    '판매가: ' + (price ? Number(price).toLocaleString() + '원' : '(입력)'),
+    '공급가: ' + (supply ? Number(supply).toLocaleString() + '원' : '(입력)'),
+    '',
+    '이미지 파일 (860×860):',
+    imgList || '(없음)',
+    '',
+    '특이사항: ' + (memo || '-'),
+    '',
+    '등록일: ' + new Date().toLocaleDateString('ko-KR'),
+  ].join('\n');
+}
+
+['pf-name','pf-brand','pf-price','pf-supply','pf-memo'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', render_product_form);
+});
+document.getElementById('pf-cat').addEventListener('change', render_product_form);
+
+/* ── UTILS ── */
 function copy_text(id) {
-  navigator.clipboard.writeText(document.getElementById(id).textContent).then(() => {
-    const btns = document.querySelectorAll(`[onclick="copy_text('${id}')"]`);
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btns = document.querySelectorAll('[onclick*="copy_text(\'' + id + '\')"]');
     btns.forEach(b => { const o = b.textContent; b.textContent = '복사됨!'; setTimeout(() => b.textContent = o, 1500); });
   }).catch(() => {});
 }
 function dl_text(id, fn) {
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([document.getElementById(id).textContent], { type: 'text/plain;charset=utf-8' }));
+  a.href = URL.createObjectURL(new Blob([document.getElementById(id).textContent], { type:'text/plain;charset=utf-8' }));
   a.download = fn; a.click(); URL.revokeObjectURL(a.href);
 }
 function export_data() {
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(DB, null, 2)], { type: 'application/json' }));
-  a.download = `md-mkt-${new Date().toISOString().slice(0, 10)}.json`;
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(DB, null, 2)], { type:'application/json' }));
+  a.download = 'eong_md_' + new Date().toISOString().slice(0,10) + '.json';
   a.click(); URL.revokeObjectURL(a.href);
 }
 function import_data(input) {
   const file = input.files[0]; if (!file) return;
   const r = new FileReader();
   r.onload = e => {
-    try {
-      const d = JSON.parse(e.target.result);
-      if (!d.tasks) throw new Error();
-      DB = { ...DB, ...d }; save_local(); render_tasks(); alert('불러왔어요!');
-    } catch { alert('파일 오류'); }
+    try { const d = JSON.parse(e.target.result); if (!d.tasks) throw new Error(); DB = { ...DB, ...d }; save(); render_tasks(); alert('불러왔어요!'); }
+    catch { alert('파일 오류'); }
   };
   r.readAsText(file); input.value = '';
 }
 
-/* ══════════ KEYBOARD ══════════ */
-document.addEventListener('keydown', e => { if (e.key === 'Escape') close_modal(); });
-
-/* ══════════ INIT ══════════ */
-update_sync_indicator();
 render_tasks();
 
-// 페이지 열 때 자동으로 구글 시트에서 불러오기
-(async function init() {
-  set_sync_ui('syncing');
-  try {
-    const r = await fetch(APPS_SCRIPT_URL + '?action=get');
-    if (!r.ok) throw new Error('서버 오류');
-    const d = await r.json();
-    if (!d.ok) throw new Error('불러오기 실패');
-    const tasks = (d.tasks || [])
-      .filter(t => t.title)
-      .map(t => ({
-        id: Number(t.id) || Date.now(),
-        title: t.title || '',
-        cat: t.cat || 'mkt',
-        priority: t.priority || 'normal',
-        date: t.date || '',
-        memo: t.memo || '',
-        done: t.done === 'TRUE' || t.done === true || t.done === '1',
-      }));
-    if (tasks.length > 0) {
-      DB.tasks = tasks;
-      save_local();
-      render_tasks();
+/* ── 기획전 퍼블 ── */
+const IMG_BASE = 'https://image.rounz.com/newrounz/images/promotion/';
+const IMG_DATA_BASE = 'https://image.rounz.com/_data/product/';
+let brand_section_count = 0;
+let product_section_count = 0;
+
+document.querySelectorAll('#promo-type .chip').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const type = btn.dataset.v;
+    document.getElementById('brand-sections').style.display = type === 'brand' ? 'block' : 'none';
+    document.getElementById('product-sections').style.display = type === 'product' ? 'block' : 'none';
+  });
+});
+
+function get_img_url(folder, filename) {
+  if (!filename) return '';
+  if (filename.startsWith('http')) return filename;
+  return IMG_BASE + folder + '/' + filename;
+}
+function get_product_link(platform, productId) {
+  if (!productId) return '#';
+  return platform === 'app' ? 'rounz://productdetail/' + productId : '/product.php?productIndex=' + productId;
+}
+function v(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+
+function add_brand_section() {
+  const idx = ++brand_section_count;
+  const el = document.createElement('div');
+  el.id = 'bs-' + idx;
+  el.style.cssText = 'background:var(--s2);border:1.5px dashed var(--border2);border-radius:var(--r8);padding:14px;margin-bottom:10px';
+  el.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span style="font-size:12px;font-weight:700;color:var(--muted)">섹션 ${idx}</span><button class="btn btn-sm" onclick="this.closest('[id]').remove()" style="color:var(--red);border-color:var(--red)">삭제</button></div>
+    <div class="field"><label class="flbl">제목 (h3)</label><input type="text" id="bs-title-${idx}" placeholder="예: 시간이 지날수록 &lt;br&gt; 깊어지는 아름다움"></div>
+    <div class="field"><label class="flbl">본문 (p)</label><textarea id="bs-body-${idx}" rows="3" placeholder="줄바꿈은 &lt;br/&gt;"></textarea></div>
+    <div class="g2">
+      <div class="field"><label class="flbl">단일 이미지 파일명</label><input type="text" id="bs-img-${idx}" placeholder="예: 01_img.jpg"></div>
+      <div class="field"><label class="flbl">배경색</label><input type="text" id="bs-bg-${idx}" placeholder="#ffffff" value="#ffffff"></div>
+    </div>
+    <div class="field"><label class="flbl">슬라이드 이미지 (쉼표 구분)</label><input type="text" id="bs-slides-${idx}" placeholder="예: 02_img_01.jpg,02_img_02.jpg,02_img_03.jpg"></div>`;
+  document.getElementById('brand-content-list').appendChild(el);
+}
+
+function add_product_section() {
+  const idx = ++product_section_count;
+  const el = document.createElement('div');
+  el.style.cssText = 'background:var(--s2);border:1.5px dashed var(--border2);border-radius:var(--r8);padding:14px;margin-bottom:10px';
+  el.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span style="font-size:12px;font-weight:700;color:var(--muted)">컬렉션 ${idx}</span><button class="btn btn-sm" onclick="this.closest('[style]').remove()" style="color:var(--red);border-color:var(--red)">삭제</button></div>
+    <div class="field"><label class="flbl">섹션 이미지 파일명</label><input type="text" id="ps-img-${idx}" placeholder="예: img_01.jpg"></div>
+    <div class="field"><label class="flbl">상품 그룹 제목</label><input type="text" id="ps-title-${idx}" placeholder="예: 트렌디한 티타늄 하금테"></div>
+    <div class="field"><label class="flbl">설명 1</label><textarea id="ps-desc-${idx}" rows="3" placeholder="첫 번째 상품 그룹 설명"></textarea></div>
+    <div class="g2">
+      <div><div class="field"><label class="flbl">상품번호 1</label><input type="text" id="ps-id1-${idx}" placeholder="3012858"></div>
+      <div class="field"><label class="flbl">상품명 1</label><input type="text" id="ps-name1-${idx}" placeholder="FEVER C1 53"></div>
+      <div class="field"><label class="flbl">이미지 경로 1</label><input type="text" id="ps-img1-${idx}" placeholder="CARVEN/FEVER-C1(53)/FEVER-C1(53)_03.jpg"></div></div>
+      <div><div class="field"><label class="flbl">상품번호 2</label><input type="text" id="ps-id2-${idx}" placeholder="3012860"></div>
+      <div class="field"><label class="flbl">상품명 2</label><input type="text" id="ps-name2-${idx}" placeholder="FEVER C4 53"></div>
+      <div class="field"><label class="flbl">이미지 경로 2</label><input type="text" id="ps-img2-${idx}" placeholder="CARVEN/FEVER-C4(53)/FEVER-C4(53)_03.jpg"></div></div>
+    </div>
+    <div class="field"><label class="flbl">설명 2 (선택)</label><textarea id="ps-desc2-${idx}" rows="2" placeholder="두 번째 상품 그룹 설명 (없으면 비워두세요)"></textarea></div>
+    <div class="g2">
+      <div><div class="field"><label class="flbl">상품번호 3 (선택)</label><input type="text" id="ps-id3-${idx}" placeholder=""></div>
+      <div class="field"><label class="flbl">상품명 3</label><input type="text" id="ps-name3-${idx}" placeholder=""></div>
+      <div class="field"><label class="flbl">이미지 경로 3</label><input type="text" id="ps-img3-${idx}" placeholder=""></div></div>
+      <div><div class="field"><label class="flbl">상품번호 4 (선택)</label><input type="text" id="ps-id4-${idx}" placeholder=""></div>
+      <div class="field"><label class="flbl">상품명 4</label><input type="text" id="ps-name4-${idx}" placeholder=""></div>
+      <div class="field"><label class="flbl">이미지 경로 4</label><input type="text" id="ps-img4-${idx}" placeholder=""></div></div>
+    </div>`;
+  document.getElementById('product-section-list').appendChild(el);
+}
+
+add_brand_section();
+add_product_section();
+
+function gen_promo() {
+  const type = document.querySelector('#promo-type .chip.on')?.dataset.v || 'brand';
+  const platform = document.querySelector('#promo-platform .chip.on')?.dataset.v || 'app';
+  const folder = v('pr-folder');
+  const bg = v('pr-bg') || '#ffffff';
+  const color = v('pr-color') || '#000000';
+  const heroUrl = get_img_url(folder, v('pr-hero'));
+  const bclass = (v('pr-brand-en') || 'brand').toLowerCase().replace(/\s/g,'');
+
+  const html = type === 'brand' ? gen_brand(folder, bg, color, heroUrl, platform) : gen_product(folder, bclass, bg, color, heroUrl, platform);
+  document.getElementById('promo-out').textContent = html;
+  document.getElementById('promo-result-card').style.display = 'block';
+  document.getElementById('promo-result-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function gen_brand(folder, bg, color, heroUrl, platform) {
+  const eyebrow = v('pr-eyebrow'), title = v('pr-title'), sub = v('pr-sub');
+  const overlayColor = v('pr-overlay-color') || '#FFFFFF';
+  const videoFile = v('pr-video'), logoFile = v('pr-logo');
+  const arTitle = v('pr-ar-title') || '내 얼굴에 잘 어울릴까?<br />먼저 써보세요.';
+  const arLink = v('pr-ar-link') || 'rounz://fitting';
+  const arBtn = v('pr-ar-btn-color') || '#1729EC';
+
+  let html = `<!DOCTYPE html>\n<html lang="ko">\n<head>\n    <meta charset="utf-8" />\n    <meta name="viewport" content="width=device-width, maximum-scale=1, initial-scale=1, user-scalable=0" />\n    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"><\/script>\n    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>\n    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"><\/script>\n    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">\n    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">\n</head>\n<body>\n<!-- :: 시작 :: -->\n<style>\n    body,html{margin:0;padding:0;width:100%;font-family:'Montserrat','Noto Sans KR',sans-serif;}\n    .fp{min-width:315px;background:${bg};padding:0}\n    .fp section{padding:0;}\n    .fp article{overflow:hidden;max-width:500px;margin:0 auto;box-sizing:border-box;}\n    .fp article img{width:100%;vertical-align:top;display:block;}\n    .fp .intro{position:relative;background:#000;overflow:hidden;color:#fff;text-align:center;}\n    .fp .intro .frame{position:relative;width:100%;max-width:500px;margin:0 auto;}\n    .fp .intro .frame::before{content:"";display:block;padding-top:130%;}\n    .fp .intro video,.fp .intro img.bg_media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}\n    .fp .intro .overlay{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;padding:36px 20px;z-index:2;}\n    .fp .intro .overlay .txt{position:relative;z-index:1;width:100%;text-align:center;}\n    .fp .intro .eyebrow{font-size:14px;letter-spacing:0.08em;opacity:0.8;margin-bottom:12px;font-weight:400;}\n    .fp .intro .title{font-size:30px;line-height:1.25;font-weight:800;margin:0 0 14px;}\n    .fp .intro .sub{font-size:15px;line-height:1.5;opacity:0.9;margin:0;font-weight:400;}\n    .fp .text_block{padding-top:60px;padding-bottom:60px;}\n    .fp .text_block h3{font-size:28px;line-height:1.3;margin:0 0 14px;font-weight:700;}\n    .fp .text_block p{font-size:17px;line-height:1.6;margin:0;word-break:keep-all;}\n    .evt_try_bottom{background:#fff;}\n    .evt_try_bottom .cont_try{text-align:center;padding:60px 16px 80px;max-width:500px;margin:0 auto;}\n    .evt_try_bottom h4{font-size:24px;line-height:1.4;margin:0 0 24px;font-weight:700;color:#000;}\n    .evt_try_bottom .video_wrap{margin:12px 0 40px;}\n    .evt_try_bottom .video_wrap figure{position:relative;width:283px;height:583px;margin:0 auto;padding:12px;background:#000;border-radius:31px;box-shadow:9.698px 12.468px 16.624px rgba(0,0,0,0.1);overflow:hidden;display:flex;align-items:center;justify-content:center;}\n    .evt_try_bottom .video_wrap figure::after{content:"";position:absolute;inset:0;background:url("https://image.rounz.com/newrounz/images/promotion/241205_holiday/mobile_frame.png") 50% 50%/100% auto no-repeat;pointer-events:none;}\n    .evt_try_bottom video{width:100%;height:100%;object-fit:cover;}\n    .evt_try_bottom .btn_try{display:inline-flex;align-items:center;justify-content:center;height:50px;padding:0 36px;font-size:16px;font-weight:700;color:#fff;background:${arBtn};border-radius:500px;text-decoration:none;}\n    .wrap_cont .slide_full{position:relative;overflow:hidden;width:100%;display:block;}\n    .wrap_cont .slide_full ul{margin:0;padding:0;list-style:none;display:block;}\n    .wrap_cont .slide_full .slick-slide img{width:100%;display:block;}\n    .slick-slider .slick-dots-wrap{position:absolute;bottom:20px;left:0;width:100%;text-align:center;pointer-events:none;line-height:0;z-index:10;}\n    .slick-slider .slick-dots-wrap .slick-dots{display:inline-block;vertical-align:top;padding:0;margin:0;pointer-events:auto;}\n    .slick-slider .slick-dots-wrap .slick-dots li{display:inline-flex;justify-content:center;align-items:center;width:12px;height:12px;margin:0 4px;padding:0;cursor:pointer;border:2px solid transparent;border-radius:50%;box-sizing:border-box;}\n    .slick-slider .slick-dots-wrap .slick-dots li button{display:block;width:6px;height:6px;padding:0;border:none;background-color:rgba(255,255,255,0.5);border-radius:50%;text-indent:-9999px;cursor:pointer;outline:none;}\n    .slick-slider .slick-dots-wrap .slick-dots li button:before{display:none;content:none;}\n    .slick-slider .slick-dots-wrap .slick-dots li.slick-active{border-color:#fff;}\n    .slick-slider .slick-dots-wrap .slick-dots li.slick-active button{background-color:transparent;}\n</style>\n<!-- :: 컨텐츠 시작 :: -->\n<section class="fp">\n\n    <section class="intro">\n      <div class="frame">\n        <img src="${heroUrl}" alt="" class="bg_media" />\n        <div class="overlay" style="color: ${overlayColor}">\n            <div class="txt">\n                ${eyebrow ? '<p class="eyebrow">'+eyebrow+'</p>' : ''}\n                ${title ? '<h1 class="title">'+title+'</h1>' : ''}\n                ${sub ? '<p class="sub">'+sub+'</p>' : ''}\n            </div>\n        </div>\n      </div>\n    </section>\n`;
+
+  if (videoFile) html += `\n    <section class="photo" style="background-color:${bg};">\n        <video muted autoplay playsinline loop poster="" style="width:100%;display:block;">\n            <source src="${get_img_url(folder, videoFile)}" type="video/mp4">\n        </video>\n    </section>\n`;
+
+  let slideIdx = 0;
+  document.querySelectorAll('#brand-content-list [id^="bs-"]').forEach(card => {
+    const idx = card.id.replace('bs-', '');
+    const sTitle = v('bs-title-'+idx), sBody = v('bs-body-'+idx);
+    const sImg = v('bs-img-'+idx), sBg = v('bs-bg-'+idx) || bg;
+    const sSlides = v('bs-slides-'+idx);
+    if (sTitle || sBody) html += `\n    <section style="background-color:${sBg};">\n        <article class="text_block" style="padding-left:20px;padding-right:20px;text-align:center;color:${color};">\n            <h3>${sTitle}</h3>\n            <p>${sBody}</p>\n        </article>\n    </section>\n`;
+    if (sImg) html += `\n    <section style="background-color:${sBg};">\n        <article style="padding:0;">\n             <img src="${get_img_url(folder,sImg)}" alt="" />\n        </article>\n    </section>\n`;
+    if (sSlides) {
+      slideIdx++;
+      const imgs = sSlides.split(',').map(s=>s.trim()).filter(Boolean);
+      html += `\n    <section class="wrap_cont cont_${slideIdx}" style="background-color:${sBg};">\n          <div class="slide_full">\n              <ul>\n${imgs.map(f=>'                  <li><img src="'+get_img_url(folder,f)+'" alt="" /></li>').join('\n')}\n              </ul>\n          </div>\n    </section>\n`;
     }
-    set_sync_ui('ok');
-  } catch(e) {
-    // 구글 시트 연결 실패시 로컬 데이터 사용
-    set_sync_ui('error');
-    if (!DB.tasks.length) {
-      const t = new Date().toISOString().slice(0,10);
-      const t1 = new Date(Date.now()+86400000).toISOString().slice(0,10);
-      const t2 = new Date(Date.now()+2*86400000).toISOString().slice(0,10);
-      DB.tasks = [
-        {id:1,title:'메인 배너 이미지 교체',cat:'site',priority:'urgent',date:t,memo:'3종 업데이트',done:false},
-        {id:2,title:'고객 문의 처리',cat:'cs',priority:'urgent',date:t,memo:'처리 7건',done:false},
-        {id:3,title:'인스타 게시물 예약 등록',cat:'mkt',priority:'high',date:t,memo:'',done:false},
-        {id:4,title:'신상품 상세페이지 작성',cat:'product',priority:'high',date:t1,memo:'',done:false},
-        {id:5,title:'주간 매출 리포트 작성',cat:'report',priority:'normal',date:t2,memo:'경주 데이터 분석',done:false},
-      ];
-      save_local(); render_tasks();
-    }
+  });
+
+  if (logoFile) html += `\n    <section style="background-color:${bg};">\n        <article style="padding:0;">\n             <img src="${get_img_url(folder,logoFile)}" alt="" />\n        </article>\n    </section>\n`;
+
+  html += `\n    <section class="evt_content evt_try_bottom">\n      <article class="cont_try">\n        <h4>${arTitle}</h4>\n        <div class="video_wrap">\n          <figure>\n            <video src="https://image.rounz.com/newrounz/images/promotion/241205_holiday/video_gift.mp4" autoplay muted loop playsinline preload="none"></video>\n          </figure>\n        </div>\n        <a class="btn_try" href="${arLink}">어울리는지 써보기</a>\n      </article>\n    </section>\n</section>\n<!-- :: 컨텐츠 종료 :: -->\n\n<script>\n$(function(){\n  $(".slide_full ul").each(function(){\n    $(this).on('init',function(event,slick){slick.$dots.wrap("<div class='slick-dots-wrap'></div>");})\n    .slick({dots:true,autoplay:true,autoplaySpeed:3000,arrows:false,infinite:true,slidesToShow:1,slidesToScroll:1,pauseOnHover:false});\n  });\n});\n<\/script>\n</body>\n</html>`;
+  return html;
+}
+
+function gen_product(folder, bclass, bg, color, heroUrl, platform) {
+  const heroTxt = v('pr-hero-txt'), heroColor = v('pr-hero-color') || '#ffffff';
+  const heroAlign = v('pr-hero-align') || 'right';
+  const about = v('pr-about'), videoFile = v('pr-video2');
+  const endBg = v('pr-end-bg'), endBgColor = v('pr-end-bgcolor') || '#000000';
+  const endTxt = v('pr-end-txt');
+
+  let html = `<!DOCTYPE html>\n<html lang="ko">\n<head>\n    <meta charset="utf-8" />\n    <meta name="viewport" content="width=device-width, maximum-scale=1, initial-scale=1, user-scalable=0" />\n    <link href="https://app.rounz.com/css/common.css" rel="stylesheet" />\n    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"><\/script>\n    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">\n    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">\n</head>\n<body>\n<!-- :: 시작 :: -->\n<style>\n    .${bclass}{padding:0;}\n    .${bclass} img{width:100%;display:block;}\n    .${bclass} section{max-width:500px;padding:0;margin:0 auto;}\n    .${bclass} a{color:inherit;text-decoration:none;}\n    .${bclass} figure,.${bclass} figcaption{display:block;margin:0;padding:0;}\n    .${bclass} p{font-size:17px;line-height:1.6;}\n    .${bclass} .intro{height:624px;text-align:${heroAlign};color:${heroColor};background:url(${heroUrl}) 50% 50%/cover no-repeat;padding:40px 30px;}\n    .${bclass} .intro h2{font-size:20px;line-height:1.4;}\n    .${bclass} .about .a_2{padding:60px 20px;background:${bg};color:${color};}\n    .${bclass} .wrap_cont>img{display:block;width:100%;}\n    .${bclass} .wrap_cont .excerpt{padding:40px 20px 60px;}\n    .${bclass} .wrap_cont .excerpt dl{padding-bottom:40px;}\n    .${bclass} .wrap_cont .excerpt dl dt{font-size:24px;line-height:1.3;font-weight:bold;padding-bottom:20px;}\n    .${bclass} .wrap_cont .excerpt dl dd{font-size:17px;line-height:1.6;}\n    .${bclass} .wrap_cont .excerpt ul{overflow:hidden;}\n    .${bclass} .wrap_cont .excerpt ul li{float:left;width:calc(50% - 10px);text-align:center;}\n    .${bclass} .wrap_cont .excerpt ul li+li{margin-left:20px;}\n    .${bclass} .wrap_cont .excerpt li figure{overflow:hidden;display:flex;justify-content:center;align-items:center;width:100%;}\n    .${bclass} .wrap_cont .excerpt li figcaption strong{display:block;font-size:14px;line-height:20px;padding:8px 0 0;}\n    .${bclass} .wrap_cont .excerpt li figcaption span{display:block;font-size:14px;line-height:20px;text-decoration:underline;color:#1729ec;}\n    .${bclass} .wrap_cont h3{font-size:28px;font-weight:bold;text-align:center;padding:64px 0 40px;}\n    .flexbox{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;}\n    .flexbox h3{font-size:28px;line-height:1.4;padding-bottom:28px;}\n    .evt_movie{overflow:hidden;position:relative;}\n</style>\n<!-- :: 컨텐츠 시작 :: -->\n<section class="${bclass}">\n    <section class="intro">\n        <h2>${heroTxt}</h2>\n    </section>\n`;
+
+  if (about) html += `    <section class="about">\n        <article class="a_2"><p>${about}</p></article>\n    </section>\n`;
+  if (videoFile) {
+    const vUrl = videoFile.startsWith('http') ? videoFile : IMG_BASE + folder + '/' + videoFile;
+    html += `    <section class="evt_movie">\n        <span class="bg"><video muted="" loop="" autoplay="" playsinline="" style="width:100%;"><source src="${vUrl}" type="video/mp4"></video></span>\n    </section>\n`;
   }
-})();
+
+  document.querySelectorAll('#product-section-list > div').forEach((card, i) => {
+    const idx = i + 1;
+    const pImg = v('ps-img-'+idx), pTitle = v('ps-title-'+idx);
+    const pDesc = v('ps-desc-'+idx), pDesc2 = v('ps-desc2-'+idx);
+
+    const mkP = (idVal, nameVal, imgVal) => {
+      if (!idVal) return '';
+      const link = get_product_link(platform, idVal);
+      const imgSrc = imgVal.startsWith('http') ? imgVal : IMG_DATA_BASE + imgVal;
+      return `                    <li>\n                        <a href="${link}">\n                            <figure><img src="${imgSrc}" alt="" /></figure>\n                            <figcaption><strong>${nameVal}</strong><span>바로가기</span></figcaption>\n                        </a>\n                    </li>`;
+    };
+
+    const p1=mkP(v('ps-id1-'+idx),v('ps-name1-'+idx),v('ps-img1-'+idx));
+    const p2=mkP(v('ps-id2-'+idx),v('ps-name2-'+idx),v('ps-img2-'+idx));
+    const p3=mkP(v('ps-id3-'+idx),v('ps-name3-'+idx),v('ps-img3-'+idx));
+    const p4=mkP(v('ps-id4-'+idx),v('ps-name4-'+idx),v('ps-img4-'+idx));
+
+    html += `\n    <section class="wrap_cont cont_${idx}">\n`;
+    if (pImg) html += `        <img src="${get_img_url(folder,pImg)}" alt="" />\n`;
+    html += `        <div class="excerpt">\n`;
+    if (pTitle||pDesc) html += `            <dl><dt>${pTitle}</dt><dd>${pDesc}</dd></dl>\n`;
+    if (p1||p2) html += `            <ul>\n${p1}\n${p2}\n            </ul>\n`;
+    if (pDesc2) html += `            <dl><dt></dt><dd>${pDesc2}</dd></dl>\n`;
+    if (p3||p4) html += `            <ul>\n${p3}\n${p4}\n            </ul>\n`;
+    html += `        </div>\n    </section>\n`;
+  });
+
+  if (endTxt) {
+    const endBgUrl = endBg ? get_img_url(folder, endBg) : '';
+    const endStyle = endBgUrl ? `height:560px;color:#fff;background:${endBgColor} url(${endBgUrl}) 50% 50%/cover no-repeat;` : `height:560px;color:#fff;background:${endBgColor};`;
+    html += `\n    <section class="evt_content bg_full" style="${endStyle}">\n        <article class="flexbox"><h3>${endTxt}</h3></article>\n    </section>\n`;
+  }
+
+  html += `</section>\n<!-- :: 컨텐츠 종료 :: -->\n<!-- :: 끝 :: -->\n</body>\n</html>`;
+  return html;
+}
 </script>
 </body>
 </html>
