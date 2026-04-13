@@ -308,29 +308,20 @@ textarea{resize:vertical}
     <!-- 업로드 카드 -->
     <div class="card" id="dash-upload">
       <div class="card-lbl">주간 데이터 업로드</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <div class="notice" style="margin-bottom:12px">구글 시트 누적 데이터는 자동으로 불러와요. 매주 이번주 ORDER 파일과 광고비만 올리면 돼요.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div>
           <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:6px">① 이번주 ORDER (.xls)</div>
           <div class="dropzone" id="dz-order">
-            <input type="file" accept=".xls,.xlsx" onchange="on_order_file(this.files[0], 'cur')">
+            <input type="file" accept=".xls,.xlsx" onchange="on_order_file(this.files[0])">
             <div class="dz-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1.5"/><line x1="8" y1="7" x2="8" y2="11"/><polyline points="6 9 8 7 10 9"/></svg></div>
-            <div class="dz-title" style="font-size:13px">이번주 order.xls</div>
-            <div class="dz-sub" style="font-size:11px">주문 내역</div>
+            <div class="dz-title" style="font-size:13px">order_list.xls</div>
+            <div class="dz-sub" style="font-size:11px">이번주 주문 내역</div>
           </div>
           <div id="order-status" style="font-size:11.5px;color:var(--muted);margin-top:5px;text-align:center"></div>
         </div>
         <div>
-          <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">② 전주 ORDER (.xls, 선택)</div>
-          <div class="dropzone" id="dz-order-prev">
-            <input type="file" accept=".xls,.xlsx" onchange="on_order_file(this.files[0], 'prev')">
-            <div class="dz-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1.5"/><line x1="8" y1="7" x2="8" y2="11"/><polyline points="6 9 8 7 10 9"/></svg></div>
-            <div class="dz-title" style="font-size:13px">전주 order.xls</div>
-            <div class="dz-sub" style="font-size:11px">전주 대비 증감용</div>
-          </div>
-          <div id="order-prev-status" style="font-size:11.5px;color:var(--muted);margin-top:5px;text-align:center"></div>
-        </div>
-        <div>
-          <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">③ 광고비 CSV (선택)</div>
+          <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">② 광고비 CSV (선택)</div>
           <div class="dropzone" id="dz-ad">
             <input type="file" accept=".csv" onchange="on_ad_file(this.files[0])">
             <div class="dz-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1.5"/><line x1="8" y1="7" x2="8" y2="11"/><polyline points="6 9 8 7 10 9"/></svg></div>
@@ -351,10 +342,29 @@ textarea{resize:vertical}
       <div class="kpi-grid">
         <div class="kpi"><div class="kpi-lbl">매출 (VAT제외)</div><div class="kpi-val c-blue" id="k-rev">-</div><div class="kpi-diff" id="k-rev-d"></div><div class="kpi-blob b-blue"></div></div>
         <div class="kpi"><div class="kpi-lbl">판매량</div><div class="kpi-val" id="k-qty">-</div><div class="kpi-diff" id="k-qty-d"></div><div class="kpi-blob b-purple"></div></div>
-        <div class="kpi"><div class="kpi-lbl">이익</div><div class="kpi-val c-green" id="k-profit">-</div><div class="kpi-diff" id="k-profit-d"></div><div class="kpi-blob b-green"></div></div>
+        <div class="kpi"><div class="kpi-lbl">이익 (원가총액 기준, VAT제외)</div><div class="kpi-val c-green" id="k-profit">-</div><div class="kpi-diff" id="k-profit-d"></div><div class="kpi-blob b-green"></div></div>
         <div class="kpi"><div class="kpi-lbl">이익률</div><div class="kpi-val" id="k-margin">-</div><div class="kpi-blob b-amber"></div></div>
         <div class="kpi"><div class="kpi-lbl">광고비 (VAT제외)</div><div class="kpi-val c-amber" id="k-ad">-</div><div class="kpi-blob b-amber"></div></div>
         <div class="kpi"><div class="kpi-lbl">ROAS</div><div class="kpi-val c-purple" id="k-roas">-</div><div class="kpi-blob b-purple"></div></div>
+      </div>
+      <!-- 비용 상세 -->
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+        <div style="flex:1;min-width:120px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r10);padding:12px 14px">
+          <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:4px">상품원가 (VAT제외)</div>
+          <div style="font-size:16px;font-weight:700" id="k-origin">-</div>
+        </div>
+        <div style="flex:1;min-width:120px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r10);padding:12px 14px">
+          <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:4px">부대비용 (소모품+택배)</div>
+          <div style="font-size:16px;font-weight:700" id="k-supply">-</div>
+        </div>
+        <div style="flex:1;min-width:120px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r10);padding:12px 14px">
+          <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:4px">쿠폰 사용액</div>
+          <div style="font-size:16px;font-weight:700" id="k-coupon">-</div>
+        </div>
+        <div style="flex:1;min-width:120px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r10);padding:12px 14px">
+          <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:4px">원가율</div>
+          <div style="font-size:16px;font-weight:700" id="k-cost-rate">-</div>
+        </div>
       </div>
       <!-- 연누적 -->
       <div class="card" style="margin-bottom:14px">
@@ -367,9 +377,33 @@ textarea{resize:vertical}
         </div>
       </div>
 
-      <!-- 브랜드 검색 -->
+      <!-- 기간 설정 -->
       <div class="card">
-        <div class="card-lbl">브랜드 검색 (멀티 검색 가능)</div>
+        <div class="card-lbl">분석 기간 설정</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+          <div class="field" style="margin:0;flex:1;min-width:140px">
+            <label class="flbl">시작 주차</label>
+            <select id="week-from" onchange="analyze()"></select>
+          </div>
+          <div style="font-size:18px;color:var(--muted);padding-bottom:8px">~</div>
+          <div class="field" style="margin:0;flex:1;min-width:140px">
+            <label class="flbl">종료 주차</label>
+            <select id="week-to" onchange="analyze()"></select>
+          </div>
+          <div class="field" style="margin:0;flex-shrink:0">
+            <label class="flbl">빠른 선택</label>
+            <div style="display:flex;gap:5px">
+              <button class="btn btn-sm" onclick="set_period('this')">이번주</button>
+              <button class="btn btn-sm" onclick="set_period('month')">이번달</button>
+              <button class="btn btn-sm" onclick="set_period('year')">연간</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 브랜드 검색 + 테이블 -->
+      <div class="card">
+        <div class="card-lbl">브랜드별 실적 (멀티 검색 가능)</div>
         <div class="brand-search-wrap">
           <svg class="search-icon" style="left:10px;top:50%;transform:translateY(-50%);position:absolute;color:var(--muted)" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="4.5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
           <input type="text" class="brand-search-input" id="brand-search" placeholder="브랜드 검색 후 Enter 또는 쉼표로 추가 (예: 레이밴, 오클리)" onkeydown="brand_search_key(event)">
@@ -382,7 +416,7 @@ textarea{resize:vertical}
           <button class="tab-btn" data-cat="GLASSES" onclick="set_cat(this)">안경 (일반+AI)</button>
           <button class="tab-btn" data-cat="SUNGLASSES" onclick="set_cat(this)">선글라스</button>
         </div>
-        <div id="brand-top10"></div>
+        <div id="brand-top10" style="overflow-x:auto"></div>
       </div>
 
       <!-- AI 보고서 -->
@@ -730,7 +764,7 @@ textarea{resize:vertical}
 <canvas id="resize-canvas" style="display:none"></canvas>
 
 <script>
-const APPS_URL = 'https://script.google.com/macros/s/AKfycbxAW9UsQ7Ig4XnxqzzNO-BXTR3CSFUStrxNVkKJrcBB5hC6OzBaYcuJ_iwo_3Gc57xU/exec';
+const APPS_URL = 'https://script.google.com/macros/s/AKfycbxM0Wvn033UnAVPSHfj9A2umGJcUBIkq2Z1hNm5UnJTJD--gFFp0M71pX1SlGA7LqQ-/exec';
 const LS = 'eong_md_v1';
 let DB = { tasks: [] };
 try { const s = localStorage.getItem(LS); if (s) DB = { ...DB, ...JSON.parse(s) }; } catch {}
@@ -914,16 +948,33 @@ async function load_gs_rd() {
     const d = await r.json();
     if (d.ok && d.weeks && Object.keys(d.weeks).length > 0) {
       all_weeks_data = d.weeks;
-      rd_weeks = Object.keys(d.weeks).sort((a,b) => a.localeCompare(b));
-      // 주차 셀렉트 업데이트
-      const sel = document.getElementById('week-sel');
-      sel.innerHTML = rd_weeks.map(w => `<option value="${w}">${w}</option>`).join('');
-      sel.value = rd_weeks[rd_weeks.length - 1];
-      sel.disabled = false;
+      // 추가 필드 없으면 0으로 초기화
+      Object.values(all_weeks_data).forEach(w => {
+        w.origin_price = w.origin_price || 0;
+        w.supply = w.supply || 0;
+        w.coupon = w.coupon || 0;
+        w.cost_total = w.cost_total || 0;
+        Object.values(w.brands || {}).forEach(b => {
+          b.origin_price = b.origin_price || 0;
+          b.supply = b.supply || 0;
+          b.coupon = b.coupon || 0;
+          b.cost_total = b.cost_total || 0;
+        });
+        Object.values(w.cat_brands || {}).forEach(cat => {
+          Object.values(cat).forEach(b => {
+            b.origin_price = b.origin_price || 0;
+            b.supply = b.supply || 0;
+            b.coupon = b.coupon || 0;
+            b.cost_total = b.cost_total || 0;
+          });
+        });
+      });
+      rd_weeks = Object.keys(all_weeks_data).sort((a,b) => a.localeCompare(b));
+      populate_week_selects();
       document.getElementById('analyze-btn').disabled = false;
       document.getElementById('order-status').textContent = '✓ 구글 시트에서 ' + rd_weeks.length + '주차 데이터 로드됨';
       document.getElementById('order-status').style.color = 'var(--green)';
-      document.getElementById('dash-period').textContent = rd_weeks[rd_weeks.length-1] + ' 기준 (새 파일 업로드 시 갱신)';
+      document.getElementById('dash-period').textContent = rd_weeks[rd_weeks.length-1] + ' 기준';
     }
   } catch(e) {
     console.log('RD 로드 실패:', e.message);
@@ -931,12 +982,11 @@ async function load_gs_rd() {
 }
 
 /* ── DASHBOARD: 파일 파싱 ── */
-let order_data = null, order_prev = null, ad_cost = 0;
+let order_data = null, ad_cost = 0;
 
-function on_order_file(file, which) {
+function on_order_file(file) {
   if (!file) return;
-  const statusId = which === 'prev' ? 'order-prev-status' : 'order-status';
-  document.getElementById(statusId).textContent = '읽는 중...';
+  document.getElementById('order-status').textContent = '읽는 중...';
   const reader = new FileReader();
   reader.onload = e => {
     try {
@@ -963,50 +1013,105 @@ function on_order_file(file, which) {
       };
 
       const EXCLUDE = new Set(['취소완료','반품완료','교환완료']);
-      const result = { revenue:0, qty:0, profit:0, brands:{}, cat_brands:{}, period:'' };
+      const newWeekData = {};
       let dateMin = '', dateMax = '';
 
       for (let i = 1; i < rowEls.length; i++) {
         const v = getRow(rowEls[i]);
         const status = v[17] || '';
         if (EXCLUDE.has(status)) continue;
-        const cat = v[20] || 'OTHER';
+        const cat   = v[20] || 'OTHER';
         const brand = v[21] || '기타';
-        const date = (v[3] || '').slice(0, 10);
+        const date  = (v[3] || '').slice(0, 10);
         if (date && (!dateMin || date < dateMin)) dateMin = date;
         if (date && date > dateMax) dateMax = date;
-        const qty = parseInt(v[8]) || 0;
-        const salePrice = parseFloat(v[13]) || 0;
-        const coupon = parseFloat(v[12]) || 0;
-        const supply = parseFloat(v[14]) || 0;
-        const cost = parseFloat(v[15]) || 0;
-        const rev = (salePrice - coupon) / 1.1;
-        const profit = (supply - cost) / 1.1;
-        result.revenue += rev; result.qty += qty; result.profit += profit;
-        if (!result.brands[brand]) result.brands[brand] = { revenue:0, qty:0, profit:0 };
-        result.brands[brand].revenue += rev; result.brands[brand].qty += qty; result.brands[brand].profit += profit;
-        if (!result.cat_brands[cat]) result.cat_brands[cat] = {};
-        if (!result.cat_brands[cat][brand]) result.cat_brands[cat][brand] = { revenue:0, qty:0, profit:0 };
-        result.cat_brands[cat][brand].revenue += rev; result.cat_brands[cat][brand].qty += qty; result.cat_brands[cat][brand].profit += profit;
-      }
-      result.period = dateMin && dateMax ? dateMin + ' ~ ' + dateMax : '';
 
-      if (which === 'prev') {
-        order_prev = result;
-        document.getElementById('order-prev-status').textContent = '✓ ' + file.name + (result.period ? ' (' + result.period + ')' : '');
-        document.getElementById('order-prev-status').style.color = 'var(--green)';
-      } else {
-        order_data = result;
-        document.getElementById('order-status').textContent = '✓ ' + file.name + (result.period ? ' (' + result.period + ')' : '');
-        document.getElementById('order-status').style.color = 'var(--green)';
+        const week = get_week_from_date(date);
+        if (!week) continue;
+
+        const qty    = parseInt(v[8]) || 0;
+        const saleP  = parseFloat(v[13]) || 0;
+        const coupon = parseFloat(v[12]) || 0;
+        const supplyP= parseFloat(v[14]) || 0;
+        const costP  = parseFloat(v[15]) || 0;
+        const rev    = (saleP - coupon) / 1.1;
+        const origin = costP / 1.1;
+        const profit = (supplyP - costP) / 1.1;
+        const sup_cost = 3693;
+
+        if (!newWeekData[week]) newWeekData[week] = {
+          revenue:0, qty:0, profit:0, adCost:0,
+          origin_price:0, supply:0, coupon:0, cost_total:0,
+          brands:{}, cat_brands:{}
+        };
+        const wd = newWeekData[week];
+        wd.revenue += rev; wd.qty += qty; wd.profit += profit;
+        wd.origin_price += origin; wd.coupon += coupon/1.1;
+        wd.supply += sup_cost; wd.cost_total += (origin + sup_cost);
+
+        const init_b = () => ({ revenue:0, qty:0, profit:0, origin_price:0, supply:0, coupon:0, cost_total:0 });
+        const add_b = (obj) => {
+          obj.revenue += rev; obj.qty += qty; obj.profit += profit;
+          obj.origin_price += origin; obj.coupon += coupon/1.1;
+          obj.supply += sup_cost; obj.cost_total += (origin + sup_cost);
+        };
+        if (!wd.brands[brand]) wd.brands[brand] = init_b();
+        add_b(wd.brands[brand]);
+        if (!wd.cat_brands[cat]) wd.cat_brands[cat] = {};
+        if (!wd.cat_brands[cat][brand]) wd.cat_brands[cat][brand] = init_b();
+        add_b(wd.cat_brands[cat][brand]);
       }
-      check_ready();
+
+      // 구글 시트 누적 데이터에 병합 (이번주 데이터 우선)
+      Object.entries(newWeekData).forEach(([week, nd]) => {
+        all_weeks_data[week] = nd;
+      });
+      rd_weeks = Object.keys(all_weeks_data).sort((a,b) => a.localeCompare(b));
+      populate_week_selects();
+
+      // 가장 최신 주차 선택
+      const newWeeks = Object.keys(newWeekData).sort();
+      const latest = newWeeks[newWeeks.length - 1];
+      ['week-sel','week-from','week-to'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && latest) el.value = latest;
+      });
+
+      const period = dateMin && dateMax ? dateMin + ' ~ ' + dateMax : '';
+      document.getElementById('order-status').textContent = '✓ ' + file.name + (period ? ' (' + period + ')' : '');
+      document.getElementById('order-status').style.color = 'var(--green)';
+      document.getElementById('analyze-btn').disabled = false;
+
+      // 구글 시트에 자동 저장
+      save_new_weeks_to_gs(newWeekData);
+
     } catch (err) {
-      document.getElementById(statusId).textContent = '오류: ' + err.message;
-      document.getElementById(statusId).style.color = 'var(--red)';
+      document.getElementById('order-status').textContent = '오류: ' + err.message;
+      document.getElementById('order-status').style.color = 'var(--red)';
     }
   };
   reader.readAsText(file, 'utf-8');
+}
+
+function get_week_from_date(dateStr) {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  if (isNaN(d)) return null;
+  const year = d.getFullYear().toString().slice(2);
+  const month = d.getMonth() + 1;
+  const week = Math.ceil(d.getDate() / 7);
+  return `${year}' ${month}월 ${week}주`;
+}
+
+async function save_new_weeks_to_gs(newWeekData) {
+  try {
+    const r = await fetch(APPS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ type: 'rd_week', weeks: newWeekData })
+    });
+    const d = await r.json();
+    if (d.ok) console.log('구글 시트 저장 완료:', d);
+  } catch(e) { console.log('GS 저장 실패:', e.message); }
 }
 
 function on_ad_file(file) {
@@ -1025,24 +1130,19 @@ function on_ad_file(file) {
     ad_cost = total / 1.1;
     document.getElementById('ad-status').textContent = '✓ ' + file.name + ' (광고비 ' + fmt_money(ad_cost) + '원)';
     document.getElementById('ad-status').style.color = 'var(--green)';
-    check_ready();
   };
   reader.readAsText(file, 'utf-8');
 }
 
 function check_ready() {
-  document.getElementById('analyze-btn').disabled = !order_data;
+  document.getElementById('analyze-btn').disabled = rd_weeks.length === 0;
 }
 
 // 드래그&드롭
 const dzOrder = document.getElementById('dz-order');
 dzOrder.addEventListener('dragover', e => { e.preventDefault(); dzOrder.classList.add('drag'); });
 dzOrder.addEventListener('dragleave', () => dzOrder.classList.remove('drag'));
-dzOrder.addEventListener('drop', e => { e.preventDefault(); dzOrder.classList.remove('drag'); on_order_file(e.dataTransfer.files[0], 'cur'); });
-const dzOrderPrev = document.getElementById('dz-order-prev');
-dzOrderPrev.addEventListener('dragover', e => { e.preventDefault(); dzOrderPrev.classList.add('drag'); });
-dzOrderPrev.addEventListener('dragleave', () => dzOrderPrev.classList.remove('drag'));
-dzOrderPrev.addEventListener('drop', e => { e.preventDefault(); dzOrderPrev.classList.remove('drag'); on_order_file(e.dataTransfer.files[0], 'prev'); });
+dzOrder.addEventListener('drop', e => { e.preventDefault(); dzOrder.classList.remove('drag'); on_order_file(e.dataTransfer.files[0]); });
 const dzAd = document.getElementById('dz-ad');
 dzAd.addEventListener('dragover', e => { e.preventDefault(); dzAd.classList.add('drag'); });
 dzAd.addEventListener('dragleave', () => dzAd.classList.remove('drag'));
@@ -1054,7 +1154,7 @@ let cur_cat = 'all', brand_filters = [];
 function analyze() {
   if (!order_data) return;
   const d = order_data;
-  const p = order_prev;
+  const p = prevWeek ? all_weeks_data[prevWeek] : null;
   if (ad_cost > 0) d.adCost = ad_cost;
   else d.adCost = 0;
 
@@ -1166,34 +1266,72 @@ function render_brand_top10() {
   }
 
   // 컬럼 헤더
-  const header = '<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:2px solid var(--border);margin-bottom:4px">' +
-    '<span style="font-size:10px;font-weight:700;color:var(--muted);min-width:18px">#</span>' +
-    '<span style="font-size:10px;font-weight:700;color:var(--muted);flex:1">브랜드</span>' +
-    '<span style="font-size:10px;font-weight:700;color:var(--muted);min-width:44px;text-align:right">판매수량</span>' +
-    '<span style="font-size:10px;font-weight:700;color:var(--muted);min-width:70px;text-align:right">매출</span>' +
-    '<span style="font-size:10px;font-weight:700;color:var(--muted);min-width:48px;text-align:right">이익률</span>' +
-    '<span style="font-size:10px;font-weight:700;color:var(--accent);min-width:34px;text-align:right">수량%</span>' +
-    '</div>';
+  // 연누적 판매량 (비중 계산용)
+  const toW2 = document.getElementById('week-to')?.value || rd_weeks[rd_weeks.length-1];
+  const curYear2 = toW2.slice(0,3);
+  const cumWeeksAll = rd_weeks.filter(w => w.startsWith(curYear2) && w <= toW2);
 
-  const rows = brands.map(([name, v], i) => {
-    const qtyPct = (v.qty / totalQty * 100).toFixed(1);
+  const fmtN = n => Math.round(n).toLocaleString();
+
+  const header = `<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px;min-width:700px">
+    <thead><tr style="border-bottom:2px solid var(--border);background:var(--s2)">
+      <th style="padding:8px 6px;text-align:left;font-weight:700;color:var(--muted)">#</th>
+      <th style="padding:8px 6px;text-align:left;font-weight:700;color:var(--muted)">브랜드</th>
+      <th style="padding:8px 6px;text-align:right;font-weight:700;color:var(--muted)">금주<br>판매량</th>
+      <th style="padding:8px 6px;text-align:right;font-weight:700;color:var(--muted)">주간 매출</th>
+      <th style="padding:8px 6px;text-align:right;font-weight:700;color:var(--muted)">주간 이익</th>
+      <th style="padding:8px 6px;text-align:right;font-weight:700;color:var(--muted)">전주대비<br>증감</th>
+      <th style="padding:8px 6px;text-align:right;font-weight:700;color:var(--muted)">연누적<br>판매량</th>
+      <th style="padding:8px 6px;text-align:right;font-weight:700;color:var(--accent)">누적<br>비중</th>
+      <th style="padding:8px 6px;text-align:right;font-weight:700;color:var(--muted)">원가율</th>
+      <th style="padding:8px 6px;text-align:right;font-weight:700;color:var(--muted)">상품원가</th>
+      <th style="padding:8px 6px;text-align:right;font-weight:700;color:var(--muted)">부대비용</th>
+      <th style="padding:8px 6px;text-align:right;font-weight:700;color:var(--muted)">쿠폰사용액</th>
+    </tr></thead><tbody>`;
+
+  const fromW2 = document.getElementById('week-from')?.value || rd_weeks[rd_weeks.length-1];
+  const periodWks = rd_weeks.filter(w => w >= fromW2 && w <= toW2);
+  const prevWkIdx = rd_weeks.indexOf(fromW2) - 1;
+  const prevWk = prevWkIdx >= 0 ? rd_weeks[prevWkIdx] : null;
+
+  const cumTotalQty = cumWeeksAll.reduce((s,w) => s + (all_weeks_data[w]?.qty||0), 0);
+
+  const tableRows = brands.map(([name, v], i) => {
     const pr = v.revenue > 0 ? (v.profit / v.revenue * 100).toFixed(1) : '-';
     const prColor = pr !== '-' && Number(pr) > 30 ? 'var(--green)' : Number(pr) < 10 ? 'var(--red)' : 'var(--amber)';
-    return '<div class="stat-row">' +
-      '<span class="stat-rank">' + (i+1) + '</span>' +
-      '<span class="stat-name">' + name + '</span>' +
-      '<span class="stat-rev" style="color:var(--ink);font-weight:700">' + Math.round(v.qty) + '개</span>' +
-      '<span class="stat-rev">' + fmt_money(v.revenue) + '원</span>' +
-      '<span class="stat-profit" style="color:' + prColor + '">' + (pr !== '-' ? pr + '%' : '-') + '</span>' +
-      '<span class="stat-pct">' + qtyPct + '%</span>' +
-      '</div>';
+    const costRate = v.revenue > 0 && v.cost_total > 0 ? (v.cost_total / v.revenue * 100).toFixed(0) + '%' : '-';
+    
+    // 전주 대비 증감
+    const prevBrand = prevWk ? all_weeks_data[prevWk]?.brands?.[name] : null;
+    const diff = prevBrand ? Math.round(v.qty - prevBrand.qty) : null;
+    const diffTxt = diff !== null ? (diff >= 0 ? '▲'+diff : '▼'+Math.abs(diff)) : '-';
+    const diffColor = diff === null ? 'var(--muted)' : diff > 0 ? 'var(--green)' : diff < 0 ? 'var(--red)' : 'var(--muted)';
+
+    // 연누적
+    const cumQtyB = cumWeeksAll.reduce((s,w) => s + (all_weeks_data[w]?.brands?.[name]?.qty||0), 0);
+    const cumPct = cumTotalQty > 0 ? (cumQtyB / cumTotalQty * 100).toFixed(0) : '0';
+
+    return `<tr style="border-bottom:1px solid var(--border)" onmouseenter="this.style.background='var(--s2)'" onmouseleave="this.style.background=''">
+      <td style="padding:9px 6px;color:var(--muted);font-weight:700">${i+1}</td>
+      <td style="padding:9px 6px;font-weight:600">${name}</td>
+      <td style="padding:9px 6px;text-align:right;font-weight:700">${Math.round(v.qty)}개</td>
+      <td style="padding:9px 6px;text-align:right">${fmtN(v.revenue)}원</td>
+      <td style="padding:9px 6px;text-align:right;color:${prColor}">${fmtN(v.profit)}원<br><span style="font-size:10px">${pr !== '-' ? pr+'%' : ''}</span></td>
+      <td style="padding:9px 6px;text-align:right;font-weight:700;color:${diffColor}">${diffTxt}</td>
+      <td style="padding:9px 6px;text-align:right">${Math.round(cumQtyB)}개</td>
+      <td style="padding:9px 6px;text-align:right;font-weight:700;color:var(--accent)">${cumPct}%</td>
+      <td style="padding:9px 6px;text-align:right;color:var(--muted)">${costRate}</td>
+      <td style="padding:9px 6px;text-align:right">${v.origin_price > 0 ? fmtN(v.origin_price)+'원' : '-'}</td>
+      <td style="padding:9px 6px;text-align:right">${v.supply > 0 ? fmtN(v.supply)+'원' : '-'}</td>
+      <td style="padding:9px 6px;text-align:right">${v.coupon > 0 ? fmtN(v.coupon)+'원' : '-'}</td>
+    </tr>`;
   }).join('');
 
-  el.innerHTML = header + rows;
+  el.innerHTML = header + tableRows + '</tbody></table></div>';
 }
 
 function reset_dash() {
-  order_data = null; order_prev = null; ad_cost = 0; brand_filters = [];
+  order_data = null; ad_cost = 0; brand_filters = [];
   document.getElementById('dash-upload').style.display = 'block';
   document.getElementById('dash-kpi').style.display = 'none';
   document.getElementById('rpt-res-card').style.display = 'none';
@@ -1252,12 +1390,12 @@ async function gen_report() {
 
   const prompt = `라운즈 온라인 MD·마케팅 담당자입니다. 아래 주간 실적 데이터를 바탕으로 ${document.getElementById('rpt-to').value}에게 보고할 주간 실적 보고서를 작성해주세요.
 
-📅 기간: ${d.period || '이번 주'}${order_prev ? ' (전주: ' + (order_prev.period || '전주') + ')' : ''}
+📅 기간: ${selWeek2}${prevWeek2 ? ' (전주: ' + prevWeek2 + ')' : ''}
 
 📊 핵심 지표 (이번주 / 전주 / 증감):
-- 매출: ${fmt(d.revenue)}원 / ${order_prev ? fmt(order_prev.revenue)+'원' : '-'} / ${order_prev ? pct_str(d.revenue, order_prev.revenue) : '-'}
-- 판매량: ${Math.round(d.qty)}개 / ${order_prev ? Math.round(order_prev.qty)+'개' : '-'} / ${order_prev ? pct_str(d.qty, order_prev.qty) : '-'}
-- 이익: ${fmt(d.profit)}원 / ${order_prev ? fmt(order_prev.profit)+'원' : '-'} / ${order_prev ? pct_str(d.profit, order_prev.profit) : '-'}
+- 매출: ${fmt(d.revenue)}원 / ${prev2 ? fmt(prev2.revenue)+'원' : '-'} / ${prev2 ? pct_str(d.revenue, prev2.revenue) : '-'}
+- 판매량: ${Math.round(d.qty)}개 / ${prev2 ? Math.round(prev2.qty)+'개' : '-'} / ${prev2 ? pct_str(d.qty, prev2.qty) : '-'}
+- 이익: ${fmt(d.profit)}원 / ${prev2 ? fmt(prev2.profit)+'원' : '-'} / ${prev2 ? pct_str(d.profit, prev2.profit) : '-'}
 - 이익률: ${margin}%
 - 광고비: ${d.adCost > 0 ? fmt(d.adCost) + '원' : '미입력'}
 - ROAS: ${roas}
