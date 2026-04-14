@@ -80,31 +80,31 @@ body{font-family:'Pretendard',-apple-system,sans-serif;background:var(--bg);colo
 .tab-btn.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
 
 /* ── TASK UI ── */
-.toolbar{display:flex;align-items:center;gap:10px;padding:14px 28px 0;flex-shrink:0;flex-wrap:wrap}
-.search-wrap{flex:1;min-width:160px;position:relative}
-.search-wrap input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r8);padding:8px 12px 8px 34px;color:var(--ink);font-size:13px;font-family:inherit;outline:none;transition:border-color .15s}
+.toolbar{display:flex;align-items:center;gap:10px;padding:14px 28px 0;flex-shrink:0;flex-wrap:nowrap;min-height:52px}
+.search-wrap{flex:1;min-width:0;position:relative}
+.search-wrap input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r8);padding:8px 12px 8px 34px;color:var(--ink);font-size:13px;font-family:inherit;outline:none;transition:border-color .15s;height:38px}
 .search-wrap input::placeholder{color:var(--muted)}
 .search-wrap input:focus{border-color:var(--accent)}
-.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted)}
-.add-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 18px;border-radius:var(--r8);background:var(--accent);color:#fff;border:none;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;z-index:1}
+.add-btn{display:inline-flex;align-items:center;gap:7px;padding:0 18px;height:38px;border-radius:var(--r8);background:var(--accent);color:#fff;border:none;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
 .add-btn:hover{background:#4a4ed4}
 .add-btn:active{transform:scale(.98)}
 
-.filter-row{display:flex;align-items:center;gap:6px;padding:10px 28px 0;flex-shrink:0;overflow-x:auto;scrollbar-width:none}
+.filter-row{display:flex;align-items:center;gap:6px;padding:8px 28px 0;flex-shrink:0;overflow-x:auto;scrollbar-width:none;min-height:40px}
 .filter-row::-webkit-scrollbar{display:none}
-.fchip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s}
+.fchip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s;flex-shrink:0;height:30px}
 .fchip:hover{border-color:var(--border2);color:var(--ink)}
 .fchip.on{color:#fff;border-color:transparent}
 .fdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 
-.task-tabs-row{display:flex;padding:8px 28px 0;flex-shrink:0;gap:0;border-bottom:1px solid var(--border)}
-.ttab{padding:8px 14px;font-size:13px;font-weight:500;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:inherit;transition:all .15s;margin-bottom:-1px;display:flex;align-items:center;gap:6px}
+.task-tabs-row{display:flex;padding:6px 28px 0;flex-shrink:0;gap:0;border-bottom:1.5px solid var(--border);min-height:42px}
+.ttab{padding:8px 14px;font-size:13px;font-weight:500;color:var(--muted);background:none;border:none;border-bottom:2.5px solid transparent;cursor:pointer;font-family:inherit;transition:all .15s;margin-bottom:-1.5px;display:flex;align-items:center;gap:6px;flex-shrink:0}
 .ttab:hover{color:var(--ink2)}
 .ttab.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
 .ttab-cnt{font-size:11px;font-weight:700;padding:1px 6px;border-radius:10px;background:var(--s2)}
 .ttab.on .ttab-cnt{background:var(--accent-bg);color:var(--accent)}
 
-.task-list{flex:1;overflow-y:auto;padding:8px 28px 32px}
+.task-list{flex:1;overflow-y:auto;padding:10px 28px 32px}
 .task-item{display:flex;align-items:center;gap:12px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r12);padding:12px 14px;margin-top:8px;transition:all .15s}
 .task-item:hover{border-color:var(--border2)}
 .task-item.done-item{opacity:.5}
@@ -222,10 +222,15 @@ textarea{resize:vertical}
   .mob-tabs::-webkit-scrollbar{display:none}
   .mtab{padding:10px 12px;font-size:12.5px;font-weight:600;color:rgba(255,255,255,.4);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .13s}
   .mtab.on{color:#fff;border-bottom-color:rgba(255,255,255,.6)}
-  .scroll-area,.toolbar,.filter-row,.task-tabs-row,.task-list{padding-left:14px!important;padding-right:14px!important}
+  .scroll-area{padding-left:14px!important;padding-right:14px!important}
+  .toolbar{padding:10px 14px 0!important;flex-wrap:nowrap}
+  .filter-row{padding:8px 14px 0!important}
+  .task-tabs-row{padding:6px 14px 0!important}
+  .task-list{padding:10px 14px 32px!important}
   .kpi-grid{grid-template-columns:1fr 1fr}
   .ph{padding:16px 14px 0}
   .g2{grid-template-columns:1fr}
+  .add-btn{padding:0 12px;font-size:12px}
 }
 </style>
 </head>
@@ -249,13 +254,9 @@ textarea{resize:vertical}
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><polyline points="3 4.5 6 7.5 11 2.5"/><line x1="14" y1="5" x2="17" y2="5"/><polyline points="3 11 6 14 11 9"/><line x1="14" y1="11.5" x2="17" y2="11.5"/></svg>
     <span class="s-tip">할 일 관리</span>
   </button>
-  <button class="s-btn" data-p="copy" onclick="nav(this)">
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 5h12M3 8.5h12M3 12h7"/><circle cx="15" cy="14" r="2.5"/><line x1="15" y1="12.8" x2="15" y2="15.2"/><line x1="13.8" y1="14" x2="16.2" y2="14"/></svg>
-    <span class="s-tip">카피라이팅</span>
-  </button>
-  <button class="s-btn" data-p="plan" onclick="nav(this)">
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="3" width="14" height="12" rx="2"/><line x1="5" y1="7.5" x2="13" y2="7.5"/><line x1="5" y1="11" x2="10" y2="11"/></svg>
-    <span class="s-tip">상품 기획</span>
+  <button class="s-btn" data-p="brands" onclick="nav(this)">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="6" r="3.5"/><path d="M2 16c0-3.3 3.1-6 7-6s7 2.7 7 6"/></svg>
+    <span class="s-tip">브랜드 관리</span>
   </button>
   <div class="s-divider"></div>
   <button class="s-btn" data-p="image" onclick="nav(this)">
@@ -265,6 +266,10 @@ textarea{resize:vertical}
   <button class="s-btn" data-p="promo" onclick="nav(this)">
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="3" width="14" height="12" rx="2"/><line x1="5" y1="7" x2="13" y2="7"/><line x1="5" y1="10.5" x2="10" y2="10.5"/><circle cx="13" cy="10.5" r="2.5"/><line x1="13" y1="9.5" x2="13" y2="11.5"/><line x1="12" y1="10.5" x2="14" y2="10.5"/></svg>
     <span class="s-tip">기획전 퍼블</span>
+  </button>
+  <button class="s-btn" data-p="preview" onclick="nav(this)">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M1 9s3.5-6 8-6 8 6 8 6-3.5 6-8 6-8-6-8-6z"/><circle cx="9" cy="9" r="2.5"/></svg>
+    <span class="s-tip">미리보기</span>
   </button>
   <div class="s-bottom">
     <button class="s-btn" onclick="export_data()">
@@ -284,11 +289,11 @@ textarea{resize:vertical}
   <span class="mob-brand">에옹_MD</span>
   <div class="mob-tabs">
     <button class="mtab on" data-p="dash" onclick="nav(this)">대시보드</button>
+    <button class="mtab" data-p="brands" onclick="nav(this)">브랜드</button>
     <button class="mtab" data-p="tasks" onclick="nav(this)">할 일</button>
-    <button class="mtab" data-p="copy" onclick="nav(this)">카피</button>
-    <button class="mtab" data-p="plan" onclick="nav(this)">기획</button>
     <button class="mtab" data-p="image" onclick="nav(this)">이미지</button>
     <button class="mtab" data-p="promo" onclick="nav(this)">기획전</button>
+    <button class="mtab" data-p="preview" onclick="nav(this)">미리보기</button>
   </div>
 </div>
 
@@ -502,50 +507,46 @@ textarea{resize:vertical}
 </div>
 
 <!-- ════════════════════════════
-  PANEL: 카피라이팅
+  PANEL: 브랜드 관리
 ════════════════════════════ -->
-<div class="panel" id="p-copy">
-  <div class="ph"><div class="ph-left"><div class="pt">카피라이팅</div><div class="ps">채널별 마케팅 카피를 AI가 즉시 작성해드려요</div></div></div>
-  <div class="scroll-area">
-    <div class="card">
-      <div class="card-lbl">채널</div>
-      <div class="chips" id="ch-g"><button class="chip on" onclick="solo('ch-g',this)">인스타그램</button><button class="chip" onclick="solo('ch-g',this)">네이버 블로그</button><button class="chip" onclick="solo('ch-g',this)">카카오 채널</button><button class="chip" onclick="solo('ch-g',this)">스마트스토어</button><button class="chip" onclick="solo('ch-g',this)">유튜브</button></div>
-      <div class="card-lbl">톤 & 무드</div>
-      <div class="chips" id="tone-g"><button class="chip" onclick="solo('tone-g',this)">트렌디</button><button class="chip on" onclick="solo('tone-g',this)">친근함</button><button class="chip" onclick="solo('tone-g',this)">고급스러움</button><button class="chip" onclick="solo('tone-g',this)">유머</button><button class="chip" onclick="solo('tone-g',this)">감성</button></div>
-      <div class="g2">
-        <div class="field"><label class="flbl">상품 / 캠페인명</label><input type="text" id="cp-prod" placeholder="예: 여름 신상 린넨 셔츠"></div>
-        <div class="field"><label class="flbl">버전 수</label><select id="cp-cnt"><option value="3">3가지</option><option value="5">5가지</option></select></div>
-      </div>
-      <div class="field"><label class="flbl">키워드 / 강조 포인트</label><textarea id="cp-kw" rows="2" placeholder="예: 시원한 소재, 반값 특가, 오늘만 할인"></textarea></div>
-      <div class="btn-row"><button class="btn btn-p" id="cp-btn" onclick="gen_copy()">카피 생성</button></div>
+<div class="panel" id="p-brands">
+  <div class="ph">
+    <div class="ph-left">
+      <div class="pt">브랜드 관리</div>
+      <div class="ps" id="brand-db-status">기준CMS 탭에서 파일을 업로드하면 자동으로 연동돼요</div>
     </div>
-    <div class="card" id="cp-res" style="display:none">
-      <div class="result-hd"><div class="result-lbl">생성된 카피</div><div style="display:flex;gap:6px"><button class="btn btn-sm" onclick="copy_text('cp-out')">복사</button><button class="btn btn-sm btn-p" onclick="dl_text('cp-out','카피.txt')">다운로드</button></div></div>
-      <div class="result-box" id="cp-out"></div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span id="brand-count" style="font-size:12px;color:var(--muted);font-weight:600"></span>
     </div>
   </div>
-</div>
-
-<!-- ════════════════════════════
-  PANEL: 상품 기획
-════════════════════════════ -->
-<div class="panel" id="p-plan">
-  <div class="ph"><div class="ph-left"><div class="pt">상품 기획</div><div class="ps">기획안을 AI가 자동 작성해드려요</div></div></div>
-  <div class="scroll-area">
-    <div class="card">
-      <div class="card-lbl">기획 유형</div>
-      <div class="chips" id="plan-g"><button class="chip on" onclick="solo('plan-g',this)">상품 상세페이지</button><button class="chip" onclick="solo('plan-g',this)">시즌 기획전</button><button class="chip" onclick="solo('plan-g',this)">번들 / 세트</button><button class="chip" onclick="solo('plan-g',this)">리뷰 이벤트</button></div>
-      <div class="g2">
-        <div class="field"><label class="flbl">상품명</label><input type="text" id="pl-name" placeholder="예: 쿨링 에어쿠션"></div>
-        <div class="field"><label class="flbl">타겟 고객</label><input type="text" id="pl-target" placeholder="예: 20-30대 직장 여성"></div>
-      </div>
-      <div class="field"><label class="flbl">핵심 셀링 포인트 (USP)</label><textarea id="pl-usp" rows="2" placeholder="예: 지속 24시간, 수분 성분, SPF50+"></textarea></div>
-      <div class="field"><label class="flbl">차별화 포인트 (선택)</label><textarea id="pl-diff" rows="2" placeholder="예: A브랜드 대비 30% 저렴, 국내 생산"></textarea></div>
-      <div class="btn-row"><button class="btn btn-p" id="pl-btn" onclick="gen_plan()">기획안 작성</button></div>
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="4.5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
+      <input type="text" id="brand-search-input" placeholder="브랜드명 (한글/영문) 검색..." oninput="filter_brand_table()">
     </div>
-    <div class="card" id="pl-res" style="display:none">
-      <div class="result-hd"><div class="result-lbl">기획안</div><div style="display:flex;gap:6px"><button class="btn btn-sm" onclick="copy_text('pl-out')">복사</button><button class="btn btn-sm btn-p" onclick="dl_text('pl-out','기획안.txt')">다운로드</button></div></div>
-      <div class="result-box" id="pl-out"></div>
+  </div>
+  <div class="scroll-area">
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;min-width:480px">
+          <thead>
+            <tr style="background:var(--s2);border-bottom:1.5px solid var(--border)">
+              <th style="padding:10px 10px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap">#</th>
+              <th style="padding:10px 10px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap">브랜드 (CMS)</th>
+              <th style="padding:10px 10px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap">한글명</th>
+              <th style="padding:10px 10px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap">구분</th>
+              <th style="padding:10px 10px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap">대분류</th>
+              <th style="padding:10px 10px;text-align:right;font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap">상품수</th>
+            </tr>
+          </thead>
+          <tbody id="brand-table-body">
+            <tr><td colspan="6" style="padding:40px;text-align:center;color:var(--muted)">
+              <div style="font-size:14px;font-weight:700;color:var(--ink2);margin-bottom:6px">브랜드 데이터 로딩 중...</div>
+              <div style="font-size:12px">구글 시트 기준DB에서 자동으로 불러옵니다.<br>안 나오면 대시보드 ③번에서 기준CMS 파일을 업로드해주세요.</div>
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
@@ -727,6 +728,7 @@ textarea{resize:vertical}
         <div class="result-lbl">완성된 HTML</div>
         <div style="display:flex;gap:6px">
           <button class="btn btn-sm" onclick="copy_text('promo-out')">복사</button>
+          <button class="btn btn-sm" onclick="open_preview()">👁 미리보기</button>
           <button class="btn btn-sm btn-p" onclick="dl_text('promo-out','기획전_'+new Date().toISOString().slice(0,10)+'.html')">다운로드</button>
         </div>
       </div>
@@ -735,6 +737,69 @@ textarea{resize:vertical}
 
   </div>
 </div>
+
+<!-- ════════════════════════════
+  PANEL: 미리보기
+════════════════════════════ -->
+<div class="panel" id="p-preview">
+  <div class="ph">
+    <div class="ph-left">
+      <div class="pt">미리보기</div>
+      <div class="ps">기획전 HTML을 실제 화면으로 확인해요</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button class="btn btn-sm" onclick="reload_preview()">새로고침</button>
+      <button class="btn btn-sm btn-p" onclick="dl_preview_image()">HTML 다운로드</button>
+    </div>
+  </div>
+  <div class="scroll-area" style="display:flex;flex-direction:column;align-items:center;padding-top:20px">
+
+    <div id="preview-empty" style="text-align:center;padding:60px 20px;color:var(--muted)">
+      <div style="width:56px;height:56px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r12);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:var(--hint)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4.5-8 11-8 11 8 11 8-4.5 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+      <div style="font-size:14px;font-weight:700;color:var(--ink2);margin-bottom:6px">미리볼 HTML이 없어요</div>
+      <div style="font-size:12px">기획전 탭에서 HTML 생성 후<br>👁 미리보기 버튼을 눌러주세요</div>
+    </div>
+
+    <div id="preview-frame-wrap" style="display:none;flex-direction:column;align-items:center;gap:20px;width:100%;padding-bottom:40px">
+      <!-- 기기 선택 버튼 -->
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center">
+        <span style="font-size:12px;font-weight:700;color:var(--muted)">기기 선택:</span>
+        <button class="btn btn-sm btn-p" onclick="set_preview_width('pc',1280)" id="pw-pc">🖥 PC</button>
+        <button class="btn btn-sm" onclick="set_preview_width('iphone',375)" id="pw-iphone">📱 iPhone (375px)</button>
+        <button class="btn btn-sm" onclick="set_preview_width('android',360)" id="pw-android">📱 Android (360px)</button>
+      </div>
+
+      <!-- PC 프레임 -->
+      <div id="preview-pc-wrap" style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r12);overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08)">
+        <div style="height:38px;background:var(--s2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 14px;gap:8px;flex-shrink:0">
+          <span style="width:10px;height:10px;border-radius:50%;background:#FF5F57;display:inline-block"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#FEBC2E;display:inline-block"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#28C840;display:inline-block"></span>
+          <span style="flex:1;background:var(--surface);border:1px solid var(--border);border-radius:4px;height:22px;margin:0 16px;display:flex;align-items:center;padding:0 8px;font-size:11px;color:var(--muted)">기획전 미리보기 — PC</span>
+        </div>
+        <div style="overflow:auto;max-height:74vh;background:#f5f5f5">
+          <iframe id="preview-iframe-pc" style="width:100%;min-height:600px;border:none;display:block;background:#fff" scrolling="yes"></iframe>
+        </div>
+      </div>
+
+      <!-- 모바일 폰 프레임 -->
+      <div id="preview-mobile-wrap" style="display:none;flex-direction:column;align-items:center;gap:12px">
+        <div style="position:relative;background:#1A1C2E;border-radius:40px;padding:18px 10px;box-shadow:0 10px 40px rgba(0,0,0,.35);width:100%;max-width:400px">
+          <div style="width:90px;height:24px;background:#1A1C2E;border-radius:0 0 16px 16px;position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:2"></div>
+          <div style="border-radius:28px;overflow:hidden;background:#fff" id="preview-screen">
+            <iframe id="preview-iframe" style="width:375px;border:none;display:block;transform-origin:top left;height:700px" scrolling="yes"></iframe>
+          </div>
+          <div style="width:110px;height:4px;background:rgba(255,255,255,.18);border-radius:2px;margin:14px auto 0"></div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);text-align:center">스크롤하여 전체 확인</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 
 </div><!-- /main -->
 </div><!-- /wrap -->
@@ -779,7 +844,7 @@ textarea{resize:vertical}
 <canvas id="resize-canvas" style="display:none"></canvas>
 
 <script>
-const APPS_URL = 'https://script.google.com/macros/s/AKfycbwIFu-P6MbN708HZPogUYSMVw1HfCer6QU5prxcR4QCgCrIOwGl3qWTrlmurKf7BLJN/exec';
+const APPS_URL = 'https://script.google.com/macros/s/AKfycbyTGXFL5l49hl4sHz4mw3pMkoV1dAM1AMurOcIDQG_QHsXiitH0VOF3DGtbAsbvwLFg/exec';
 const LS = 'eong_md_v1';
 let DB = { tasks: [] };
 try { const s = localStorage.getItem(LS); if (s) DB = { ...DB, ...JSON.parse(s) }; } catch {}
@@ -1157,10 +1222,11 @@ function on_order_file(file) {
         wd.profit += profit; wd.origin_price += origin;
         wd.coupon += coupon / 1.1; wd.supply += supply_total;
         wd.cost_total += (origin + supply_total);
-        // brand_alias 저장 (한글→영문 매핑)
-        if (brand_kr && brand && brand_kr !== brand) {
+        // brand_alias 저장 (한글→영문 매핑) - prod_db에서 한글명 조회
+        const _bkr = prod_db ? Object.values(prod_db).find(p => p.brand_cms === brand)?.brand_kr : null;
+        if (_bkr && _bkr !== brand) {
           if (!wd.brand_alias) wd.brand_alias = {};
-          wd.brand_alias[brand_kr] = brand;
+          wd.brand_alias[_bkr] = brand;
         }
 
         const add = obj => {
@@ -1918,7 +1984,18 @@ async function gen_report() {
 
   const pct_str = (cur, prev) => prev && prev > 0 ? ((cur-prev)/prev*100).toFixed(1) + '%' : '-';
 
-  const prompt = `라운즈 온라인 MD·마케팅 담당자입니다. 아래 주간 실적 데이터를 바탕으로 ${document.getElementById('rpt-to').value}에게 보고할 주간 실적 보고서를 작성해주세요.
+  // 기간 정보
+  const dfromVal = document.getElementById('date-from')?.value || '';
+  const dtoVal   = document.getElementById('date-to')?.value || '';
+  const selWeek2 = dfromVal && dtoVal ? dfromVal + ' ~ ' + dtoVal : (rd_weeks.length ? rd_weeks[rd_weeks.length-1] : '');
+  const periodWeeksR = get_period_weeks();
+  const fromWR = periodWeeksR[0];
+  const fromIdxR = rd_weeks.indexOf(fromWR);
+  const prevWeekKeyR = fromIdxR > 0 ? rd_weeks[fromIdxR - 1] : null;
+  const prevWeek2 = prevWeekKeyR || '';
+  const prev2 = prevWeekKeyR ? all_weeks_data[prevWeekKeyR] : null;
+
+`라운즈 온라인 MD·마케팅 담당자입니다. 아래 주간 실적 데이터를 바탕으로 ${document.getElementById('rpt-to').value}에게 보고할 주간 실적 보고서를 작성해주세요.
 
 📅 기간: ${selWeek2}${prevWeek2 ? ' (전주: ' + prevWeek2 + ')' : ''}
 
@@ -1962,25 +2039,6 @@ ${document.getElementById('rpt-memo').value ? '📝 추가 메모: ' + document.
   document.getElementById('rpt-btn').textContent = 'AI 보고서 자동 생성';
 }
 
-async function gen_copy() {
-  set_btn('cp-btn', true, '생성 중...');
-  try {
-    const out = await claude('온라인 쇼핑몰 마케터입니다. ' + ac('ch-g') + '용 마케팅 카피를 ' + document.getElementById('cp-cnt').value + '가지 버전으로 작성해주세요.\n상품: ' + (document.getElementById('cp-prod').value||'상품') + ' / 톤: ' + ac('tone-g') + (document.getElementById('cp-kw').value ? ' / 강조: ' + document.getElementById('cp-kw').value : '') + '\n[버전 1], [버전 2] 형식으로 구분, 이모지 적극 활용, 해시태그 포함.');
-    document.getElementById('cp-out').textContent = out;
-    document.getElementById('cp-res').style.display = 'block';
-  } catch (e) { document.getElementById('cp-out').textContent = '오류: ' + e.message; document.getElementById('cp-res').style.display = 'block'; }
-  set_btn('cp-btn', false); document.getElementById('cp-btn').textContent = '카피 생성';
-}
-
-async function gen_plan() {
-  set_btn('pl-btn', true, '작성 중...');
-  try {
-    const out = await claude('온라인 MD입니다. 아래 상품의 ' + ac('plan-g') + ' 기획안을 작성해주세요.\n상품명: ' + (document.getElementById('pl-name').value||'상품') + (document.getElementById('pl-target').value?' / 타겟: '+document.getElementById('pl-target').value:'') + (document.getElementById('pl-usp').value?' / USP: '+document.getElementById('pl-usp').value:'') + (document.getElementById('pl-diff').value?' / 차별화: '+document.getElementById('pl-diff').value:'') + '\n포함: 컨셉, 주요 메시지, 구성 제안, 예상 효과, 운영 팁');
-    document.getElementById('pl-out').textContent = out;
-    document.getElementById('pl-res').style.display = 'block';
-  } catch (e) { document.getElementById('pl-out').textContent = '오류: ' + e.message; document.getElementById('pl-res').style.display = 'block'; }
-  set_btn('pl-btn', false); document.getElementById('pl-btn').textContent = '기획안 작성';
-}
 
 /* ── IMAGE RESIZE 860×860 ── */
 let resized_images = [];
@@ -2198,6 +2256,107 @@ function gen_promo() {
   document.getElementById('promo-out').textContent = html;
   document.getElementById('promo-result-card').style.display = 'block';
   document.getElementById('promo-result-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ── 미리보기 ── */
+let _preview_device = 'pc';
+let _preview_width_val = 1280;
+
+function open_preview() {
+  nav(document.querySelector('[data-p="preview"]'));
+  load_preview();
+}
+
+function reload_preview() { load_preview(); }
+
+function set_preview_width(device, w) {
+  _preview_device = device;
+  _preview_width_val = w;
+  ['pc','iphone','android'].forEach(d => {
+    const b = document.getElementById('pw-' + d);
+    if (b) { b.classList.toggle('btn-p', d === device); b.classList.toggle('btn', true); }
+  });
+  apply_preview_size();
+}
+
+function apply_preview_size() {
+  const isPc = _preview_device === 'pc';
+  const w = _preview_width_val;
+
+  const pcWrap = document.getElementById('preview-pc-wrap');
+  const mobileWrap = document.getElementById('preview-mobile-wrap');
+  const frameWrap = document.getElementById('preview-frame-wrap');
+
+  if (isPc) {
+    if (pcWrap) pcWrap.style.display = 'block';
+    if (mobileWrap) mobileWrap.style.display = 'none';
+  } else {
+    if (pcWrap) pcWrap.style.display = 'none';
+    if (mobileWrap) mobileWrap.style.display = 'flex';
+
+    const iframe = document.getElementById('preview-iframe');
+    const screen = document.getElementById('preview-screen');
+    if (!iframe || !screen) return;
+
+    const containerW = (frameWrap?.offsetWidth || 400) - 60;
+    const scale = Math.min(1, containerW / w);
+
+    iframe.style.width = w + 'px';
+    iframe.style.transform = 'scale(' + scale + ')';
+    iframe.style.transformOrigin = 'top left';
+
+    setTimeout(() => {
+      try {
+        const h = iframe.contentDocument?.body?.scrollHeight || 700;
+        iframe.style.height = Math.max(h, 400) + 'px';
+        screen.style.height = (Math.max(h, 400) * scale) + 'px';
+      } catch(e) {
+        iframe.style.height = '700px';
+        screen.style.height = (700 * scale) + 'px';
+      }
+    }, 400);
+  }
+}
+
+function load_preview() {
+  const html = document.getElementById('promo-out')?.textContent || '';
+  const empty = document.getElementById('preview-empty');
+  const frameWrap = document.getElementById('preview-frame-wrap');
+  if (!html.trim()) {
+    if (empty) empty.style.display = 'block';
+    if (frameWrap) frameWrap.style.display = 'none';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+  if (frameWrap) frameWrap.style.display = 'flex';
+
+  // PC iframe
+  const iframePC = document.getElementById('preview-iframe-pc');
+  if (iframePC) {
+    const docPC = iframePC.contentDocument || iframePC.contentWindow.document;
+    docPC.open(); docPC.write(html); docPC.close();
+  }
+  // 모바일 iframe
+  const iframe = document.getElementById('preview-iframe');
+  if (iframe) {
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open(); doc.write(html); doc.close();
+    iframe.onload = () => { apply_preview_size(); };
+  }
+
+  setTimeout(() => apply_preview_size(), 500);
+}
+
+function dl_preview_image() {
+  const html = document.getElementById('promo-out')?.textContent || '';
+  if (!html.trim()) { alert('먼저 기획전 탭에서 HTML을 생성해주세요.'); return; }
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '기획전_미리보기_' + new Date().toISOString().slice(0,10) + '.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  alert('HTML 파일로 저장했어요.\n브라우저에서 열면 실제 화면으로 확인하실 수 있어요!');
 }
 
 function gen_brand(folder, bg, color, heroUrl, platform) {
