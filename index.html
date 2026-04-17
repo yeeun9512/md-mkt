@@ -890,7 +890,7 @@ textarea{resize:vertical}
 <canvas id="resize-canvas" style="display:none"></canvas>
 
 <script>
-const APPS_URL = 'https://script.google.com/macros/s/AKfycbzc6vjan9yTYXfsobmPSjWRhZ8e-3LE4cJCZpvGz64396_f_ypycMi4XZ7b7OhVg8M/exec';
+const APPS_URL = 'https://script.google.com/macros/s/AKfycbxx_ifa-mSJTIcg_3keq9wyyftGvca-cwJCkWnYmxTs2HPcblVKYsc8zU2BKXdRi0Vg/exec';
 const LS = 'eong_md_v1';
 let DB = { tasks: [] };
 try { const s = localStorage.getItem(LS); if (s) DB = { ...DB, ...JSON.parse(s) }; } catch {}
@@ -1174,6 +1174,8 @@ async function auto_sync() {
 })();
 
 // 구글 시트에서 RD 누적 데이터 로드
+let annual_qty_from_sheet = 0; // RD_CMS에서 읽어온 연간 누적 판매수량
+
 async function load_gs_rd() {
   try {
     const r = await fetch(APPS_URL + '?action=get_rd');
@@ -1184,23 +1186,36 @@ async function load_gs_rd() {
     all_weeks_data = d.weeks;
     rd_weeks = Object.keys(all_weeks_data).sort((a,b) => a.localeCompare(b));
 
-    // 디버그: 광고비 확인
-    const latestW = rd_weeks[rd_weeks.length-1];
-    console.log('=== 구글 시트 데이터 확인 ===');
-    console.log('최신 주차:', latestW);
-    console.log('adCost:', all_weeks_data[latestW]?.adCost);
-    console.log('ad_brands:', all_weeks_data[latestW]?.ad_brands);
-    console.log('ad_brands 키 수:', Object.keys(all_weeks_data[latestW]?.ad_brands || {}).length);
-
     populate_week_selects();
     document.getElementById('analyze-btn').disabled = false;
     document.getElementById('order-status').textContent = '✓ 구글 시트 ' + rd_weeks.length + '주차 로드됨';
     document.getElementById('order-status').style.color = 'var(--green)';
+
+    // RD_CMS 기준 연간 누적 판매수량 로드
+    load_annual_qty();
   } catch(e) {
     console.log('RD 로드 실패:', e.message);
     document.getElementById('sync-txt').textContent = '시트 연결 실패';
     document.querySelector('.sdot').className = 'sdot sdot-err';
   }
+}
+
+async function load_annual_qty() {
+  try {
+    // 현재 연도 prefix 계산 (ex: 2026 → "26'")
+    const thisYear = String(new Date().getFullYear()).slice(2) + "'";
+    const r = await fetch(APPS_URL + '?action=get_annual_qty&year=' + encodeURIComponent(thisYear));
+    if (!r.ok) return;
+    const d = await r.json();
+    if (!d.ok) { console.log('annual_qty 오류:', d.error); return; }
+    annual_qty_from_sheet = d.qty || 0;
+    console.log('RD_CMS 연간 누적 판매수량:', annual_qty_from_sheet);
+    // 이미 analyze() 결과가 표시돼 있으면 업데이트
+    const el = document.getElementById('k-cum-qty');
+    if (el && el.textContent !== '-') {
+      el.textContent = annual_qty_from_sheet.toLocaleString() + '개';
+    }
+  } catch(e) { console.log('annual_qty 로드 실패:', e.message); }
 }
 
 /* ── DASHBOARD: 파일 파싱 ── */
@@ -1333,20 +1348,40 @@ function on_order_file(file) {
         const cost_total = origin + supply_cost + adCost;
         const profit_origin_base = rev - cost_total;
         const profit_prod_base   = rev - origin;
-        // 컬럼 순서: 번호(역순) 페이지 모드 주문번호 주문일 주문일시 입금일시 상품명 공란 수량
-        //            사용적립금 사용예치금 사용쿠폰명 쿠폰할인금액 판매가 공급가 원가 결제방법
-        //            주문상태 상품코드 참고상품명 대분류명 브랜드명 브랜드 월 주차 수량구분
-        //            매출액 예상입고가 상품원가 소모품+택배 광고 원가총액 이익(원가총액) 이익(상품원가) 쿠폰
+        // brand_db에서 구분(PB/위탁 등) 가져오기
+        const brand = v[21] || '';
+        const div = (brand_db && brand_db[brand]?.div) ? brand_db[brand].div : '';
+
+        // 컬럼 순서 (RD_CMS 헤더 36컬럼 기준):
+        // 번호(역순) 페이지모드 주문번호 주문일 주문일시 입금일시 상품명 공란 수량
+        // 사용적립금 사용예치금 사용쿠폰명 쿠폰할인금액 판매가 공급가 원가 결제방법
+        // 주문상태 상품코드 참고상품명 대분류명 브랜드명 브랜드
+        // 월 주차 수량 구분
+        // 매출액 예상입고가 상품원가 소모품+택배 광고 원가총액 이익(원가총액) 이익(상품원가) 쿠폰
         cmsRows.push([
-          v[0],v[1],v[2],v[3],v[4],v[5],v[6],v[7],v[8],   // 번호~공란~수량
-          v[9],v[10],v[11],v[12],v[13],v[14],v[15],v[16],  // 적립금~원가
-          v[17],v[18],v[19],v[20],v[21],                    // 결제~브랜드명
-          v[21],                                             // 브랜드 (=브랜드명)
-          month, week, qty, '',                              // 월 주차 수량구분
-          Math.round(rev), Math.round(supplyP/1.1), Math.round(origin), // 매출액 예상입고가 상품원가
-          Math.round(supply_cost), Math.round(adCost),      // 소모품+택배 광고
-          Math.round(cost_total), Math.round(profit_origin_base), // 원가총액 이익(원가총액)
-          Math.round(profit_prod_base), Math.round(coupon/1.1)    // 이익(상품원가) 쿠폰
+          v[0],                                              // 번호(역순)
+          v[1],                                              // 페이지모드 (모바일App 등 붙어있는 값)
+          v[2],                                              // 주문번호
+          v[3],                                              // 주문일
+          v[4],                                              // 주문일시
+          v[5],                                              // 입금일시
+          v[6],                                              // 상품명
+          '',                                                // 공란
+          v[8],                                              // 수량(원본)
+          v[9],v[10],v[11],v[12],                            // 사용적립금~쿠폰할인금액
+          v[13],v[14],v[15],                                 // 판매가 공급가 원가
+          v[16],v[17],v[18],v[19],v[20],v[21],              // 결제방법~브랜드명
+          v[22],                                             // 브랜드(한글)
+          month, week, qty, div,                             // 월 주차 수량 구분
+          Math.round(rev),                                   // 매출액 (VAT제외)
+          Math.round(supplyP / 1.1),                         // 예상입고가 (VAT제외)
+          Math.round(origin),                                // 상품원가 (VAT제외)
+          Math.round(supply_cost),                           // 소모품+택배 (VAT제외)
+          Math.round(adCost),                                // 광고 (VAT제외)
+          Math.round(cost_total),                            // 원가총액 (VAT제외)
+          Math.round(profit_origin_base),                    // 이익(원가총액 기준)
+          Math.round(profit_prod_base),                      // 이익(상품원가 기준)
+          Math.round(coupon / 1.1)                           // 쿠폰
         ]);
       }
       if (cmsRows.length) save_rd_cms_rows(cmsRows);
@@ -1768,12 +1803,20 @@ function on_ad_file(file) {
         const clicks  = (cols[11] || '').trim();
         const week    = get_week_from_date(dateCol.slice(0,10));
         const month   = dateCol ? dateCol.slice(0,7).replace('-','년 ').replace(/^(\d+)년 0?(\d+)$/,'$1년 $2월') : '';
-        const saDA    = campaignType.includes('쇼핑') ? 'SA' : 'DA';
-        // 컬럼 순서: 캠페인유형 캠페인 광고그룹 브랜드 종류 총비용(VAT포함) 총비용(VAT미포함) 날짜 모델명 클릭수 주차 월 날짜 SA/DA구분
+        // SA/DA 구분 (실제 시트 로직 기반)
+        const saDA = (campaignType === '브랜드검색/신제품검색' || campaignType === '쇼핑검색' || campaignType === '파워링크' || campaignType === '플레이스') ? 'SA'
+                   : (campaignType === '메타' || campaignType === '메타+구글' || campaignType === '구글') ? 'DA'
+                   : campaignType === '토스페이' ? '토스페이'
+                   : campaignType === '페이코' ? '페이코' : '';
+
+        // RD_광고비 컬럼 순서 (15컬럼, [12]는 빈칸):
+        // 캠페인유형 캠페인 광고그룹 브랜드 종류 총비용(VAT포함) 총비용(VAT미포함)
+        // 날짜(수식용) 모델명 클릭수 주차 월 [빈칸] 날짜(원본) SA/DA구분
         adRows.push([
           campaignType, campaign, adgroup, brand, div,
           Math.round(costVat), Math.round(costVat / 1.1),
-          dateCol, model, clicks, week, month, dateCol, saDA
+          '', model, clicks, week, month, '',   // [7]날짜는 시트에서 수식으로 계산, [12]빈칸
+          dateCol, saDA                          // [13]원본날짜, [14]SA/DA
         ]);
       });
       if (adRows.length) save_rd_ad_rows(adRows);
@@ -1984,7 +2027,9 @@ function analyze() {
   const weekShare = cumRev > 0 ? (d.revenue / cumRev * 100).toFixed(1) + '%' : '-';
 
   se('k-cum-rev').textContent    = fmt_money(cumRev) + '원';
-  se('k-cum-qty').textContent    = Math.round(cumQty) + '개';
+  // 연간 판매수량: RD_CMS에서 읽어온 값 우선, 없으면 RD_Weeks 합산
+  const displayCumQty = annual_qty_from_sheet > 0 ? annual_qty_from_sheet : Math.round(cumQty);
+  se('k-cum-qty').textContent    = displayCumQty.toLocaleString() + '개';
   se('k-cum-profit').textContent = fmt_money(cumProfit) + '원';
   se('k-week-share').textContent = weekShare;
 
