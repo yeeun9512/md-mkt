@@ -1334,7 +1334,9 @@ function on_order_file(file) {
         if (EXCLUDE.has(v[17] || '')) continue;
         const date  = (v[3] || '').slice(0, 10);
         const week  = get_week_from_date(date);
-        const month = date ? date.slice(0, 7).replace('-', '년 ').replace(/^(\d+)년 0?(\d+)$/, '$1년 $2월') : '';
+        // 월 형식: '01월', '02월' ... (기존 양식)
+        const monthNum = date ? date.slice(5, 7) : '';
+        const month = monthNum ? monthNum + '월' : '';
         const qty    = parseInt(v[8])  || 0;
         const saleP  = parseFloat(v[13]) || 0;
         const coupon = parseFloat(v[12]) || 0;
@@ -1347,41 +1349,46 @@ function on_order_file(file) {
         const cost_total = origin + supply_cost + adCost;
         const profit_origin_base = rev - cost_total;
         const profit_prod_base   = rev - origin;
-        // brand_db에서 브랜드 한글명, 구분(PB/위탁 등) 가져오기
-        const brand = v[21] || '';  // 영문 브랜드명 (ex: MASUNAGA)
+        // brand_db에서 브랜드 한글명, 구분 가져오기 (brand_db 미로드 시 빈값)
+        const brand    = v[21] || '';
         const brand_kr = (brand_db && brand_db[brand]?.brand_kr) ? brand_db[brand].brand_kr : '';
-        const div = (brand_db && brand_db[brand]?.div) ? brand_db[brand].div : '';
+        const div      = (brand_db && brand_db[brand]?.div)      ? brand_db[brand].div      : '';
 
-        // 컬럼 순서 (RD_CMS 헤더 36컬럼 기준):
-        // 번호(역순) 페이지모드 주문번호 주문일 주문일시 입금일시 상품명 공란 수량
-        // 사용적립금 사용예치금 사용쿠폰명 쿠폰할인금액 판매가 공급가 원가 결제방법
-        // 주문상태 상품코드 참고상품명 대분류명 브랜드명 브랜드(한글)
-        // 월 주차 수량 구분
-        // 매출액 예상입고가 상품원가 소모품+택배 광고 원가총액 이익(원가총액) 이익(상품원가) 쿠폰
+        // RD_CMS 컬럼 순서 (기존 양식 그대로):
+        // [0]번호(역순) [1]페이지모드 [2]주문번호 [3]주문일 [4]주문일시 [5]입금일시
+        // [6]상품명 [7]공란 [8]수량 [9]사용적립금 [10]사용예치금 [11]사용쿠폰명
+        // [12]쿠폰할인금액 [13]판매가 [14]공급가 [15]원가 [16]결제방법
+        // [17]주문상태 [18]상품코드 [19]참고상품명 [20]대분류명 [21]브랜드명 [22]브랜드(한글)
+        // [23]월 [24]주차 [25]수량 [26]구분
+        // [27]매출액 [28]예상입고가 [29]상품원가 [30]소모품+택배 [31]광고 [32]원가총액
+        // [33]이익(원가총액) [34]이익(상품원가) [35]쿠폰
         cmsRows.push([
-          v[0],                                              // 번호(역순)
-          v[1],                                              // 페이지모드
-          v[2],                                              // 주문번호
-          v[3],                                              // 주문일
-          v[4],                                              // 주문일시
-          v[5],                                              // 입금일시
-          v[6],                                              // 상품명
-          '',                                                // 공란
-          v[8],                                              // 수량(원본)
-          v[9], v[10], v[11], v[12],                         // 사용적립금~쿠폰할인금액
-          v[13], v[14], v[15],                               // 판매가 공급가 원가
-          v[16], v[17], v[18], v[19], v[20], v[21],         // 결제방법~브랜드명(영문)
-          brand_kr,                                          // 브랜드(한글) - brand_db에서 조회
-          month, week, qty, div,                             // 월 주차 수량 구분
-          Math.round(rev),                                   // 매출액 (VAT제외)
-          Math.round(supplyP / 1.1),                         // 예상입고가 (VAT제외)
-          Math.round(origin),                                // 상품원가 (VAT제외)
-          Math.round(supply_cost),                           // 소모품+택배 (VAT제외)
-          Math.round(adCost),                                // 광고 (VAT제외)
-          Math.round(cost_total),                            // 원가총액 (VAT제외)
-          Math.round(profit_origin_base),                    // 이익(원가총액 기준)
-          Math.round(profit_prod_base),                      // 이익(상품원가 기준)
-          Math.round(coupon / 1.1)                           // 쿠폰
+          v[0],                        // [0] 번호(역순)
+          v[1],                        // [1] 페이지모드
+          v[2],                        // [2] 주문번호
+          v[3],                        // [3] 주문일
+          v[4],                        // [4] 주문일시
+          v[5],                        // [5] 입금일시
+          v[6],                        // [6] 상품명
+          '',                          // [7] 공란
+          v[8],                        // [8] 수량(원본)
+          v[9], v[10], v[11], v[12],   // [9~12] 사용적립금~쿠폰할인금액
+          v[13], v[14], v[15],         // [13~15] 판매가 공급가 원가
+          v[16], v[17], v[18], v[19], v[20], v[21], // [16~21] 결제방법~브랜드명(영문)
+          brand_kr,                    // [22] 브랜드(한글)
+          month,                       // [23] 월 ('01월' 형식)
+          week,                        // [24] 주차
+          qty,                         // [25] 수량
+          div,                         // [26] 구분
+          (saleP - coupon) / 1.1,      // [27] 매출액 (VAT제외, 소수점 유지)
+          supplyP / 1.1,               // [28] 예상입고가 (VAT제외)
+          origin,                      // [29] 상품원가 (VAT제외)
+          supply_cost,                 // [30] 소모품+택배 (VAT제외)
+          adCost,                      // [31] 광고 (VAT제외)
+          cost_total,                  // [32] 원가총액 (VAT제외)
+          profit_origin_base,          // [33] 이익(원가총액 기준)
+          profit_prod_base,            // [34] 이익(상품원가 기준)
+          coupon / 1.1                 // [35] 쿠폰
         ]);
       }
       if (cmsRows.length) save_rd_cms_rows(cmsRows);
@@ -1809,9 +1816,8 @@ function on_ad_file(file) {
         // 날짜 "2026.04.14." → "2026-04-14" 변환 후 주차/월 계산
         const dateStr = dateRaw.replace(/\./g, '-').replace(/-$/, ''); // "2026-04-14"
         const week  = get_week_from_date(dateStr);
-        const month = dateStr.length >= 7
-          ? dateStr.slice(5, 7).replace(/^0/, '') + '월'
-          : '';
+        // 월 형식: '04월' (기존 양식, 0패딩 유지)
+        const month = dateStr.length >= 7 ? dateStr.slice(5, 7) + '월' : '';
 
         // SA/DA 구분
         const saDA = (campaignType === '브랜드검색/신제품검색' || campaignType === '쇼핑검색' || campaignType === '파워링크') ? 'SA'
