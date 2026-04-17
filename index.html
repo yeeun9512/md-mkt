@@ -345,7 +345,7 @@ textarea{resize:vertical}
             <input type="file" accept=".xlsx,.xls" onchange="on_cms_file(this.files[0])">
             <div class="dz-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1.5"/><line x1="8" y1="7" x2="8" y2="11"/><polyline points="6 9 8 7 10 9"/></svg></div>
             <div class="dz-title" style="font-size:13px">기준CMS.xlsx</div>
-            <div class="dz-sub" style="font-size:11px">브랜드 DB 업데이트 (광고비 매핑명 유지됨)</div>
+            <div class="dz-sub" style="font-size:11px">브랜드 DB 업데이트</div>
           </div>
           <div id="cms-status" style="font-size:11.5px;color:var(--muted);margin-top:5px;text-align:center"></div>
         </div>
@@ -1360,9 +1360,11 @@ async function on_cms_file(file) {
   const reader = new FileReader();
   reader.onload = async e => {
     try {
+      // XLSX 파싱 (xlsx.js 사용)
       const data = new Uint8Array(e.target.result);
       const wb = XLSX.read(data, { type: 'array' });
 
+      // 기준CMS 탭 또는 첫번째 시트
       const sheetName = wb.SheetNames.includes('기준DB') ? '기준DB' : wb.SheetNames[0];
       const ws = wb.Sheets[sheetName];
       const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
@@ -1370,6 +1372,7 @@ async function on_cms_file(file) {
       if (rows.length < 2) throw new Error('데이터 없음');
 
       const headers = rows[0];
+      // 컬럼 찾기
       const findCol = (keywords) => headers.findIndex(h => keywords.every(kw => String(h).includes(kw)));
       const C = {
         brand_en:  findCol(['브랜드']) >= 0 ? findCol(['브랜드']) : 3,
@@ -1380,6 +1383,7 @@ async function on_cms_file(file) {
         prod_code: headers.findIndex(h => String(h).includes('상품코드')),
         origin:    headers.findIndex(h => String(h).includes('원가')),
       };
+      // fallback
       if (C.brand_cms < 0) C.brand_cms = 4;
       if (C.brand_kr  < 0) C.brand_kr  = 6;
       if (C.div       < 0) C.div       = 7;
@@ -1387,9 +1391,8 @@ async function on_cms_file(file) {
       if (C.prod_code < 0) C.prod_code = 25;
       if (C.origin    < 0) C.origin    = 26;
 
-      // ★ brand_db를 초기화하지 않고, CMS 데이터로 업데이트만 함
-      // 기존에 브랜드관리 탭에서 등록한 ad_alias는 유지됨
-      prod_db = {};
+      brand_db = {};
+      prod_db  = {};
 
       rows.slice(1).forEach(row => {
         const brand_en  = String(row[C.brand_en]  || '').trim();
@@ -1400,16 +1403,10 @@ async function on_cms_file(file) {
         const prod_code = String(row[C.prod_code]  || '').trim();
         const origin    = parseFloat(row[C.origin]) || 0;
 
-        if (brand_cms) {
-          // 기존 항목이 있으면 ad_alias 유지하고 나머지만 업데이트
-          const existing = brand_db[brand_cms] || {};
-          brand_db[brand_cms] = {
-            brand_kr,
-            div,
-            cat,
-            ad_alias: existing.ad_alias || '', // ★ 기존 매핑명 유지
-            prod_count: 0,
-          };
+        if (brand_cms && !brand_db[brand_cms]) {
+          brand_db[brand_cms] = { brand_kr, div, cat, prod_count: 0 };
+        }
+        if (brand_cms && brand_db[brand_cms]) {
           brand_db[brand_cms].prod_count = (brand_db[brand_cms].prod_count || 0) + 1;
         }
         if (prod_code) {
@@ -1422,13 +1419,12 @@ async function on_cms_file(file) {
 
       document.getElementById('cms-status').textContent = `✓ ${brandCount}개 브랜드, ${prodCount}개 상품 로드됨`;
       document.getElementById('cms-status').style.color = 'var(--green)';
-      document.getElementById('brand-db-status').textContent = `브랜드 ${brandCount}개 (${file.name})`;
+      document.getElementById('brand-db-status').textContent = `브랜드 ${brandCount}개 · 상품 ${prodCount}개 (${file.name})`;
 
-      // 구글 시트 기준CMS 탭에 원본 저장
+      // 구글 시트에 저장
       await save_cms_to_gs(rows);
-      // 브랜드관리 탭도 시트에 반영 (ad_alias 포함)
-      await save_brand_db_to_gs();
 
+      // 브랜드 탭 업데이트
       render_brand_table();
     } catch(err) {
       document.getElementById('cms-status').textContent = '오류: ' + err.message;
@@ -1661,34 +1657,6 @@ async function load_cms_from_gs() {
 }
 
 
-// CSV의 광고그룹명 → RD 브랜드명으로 정규화
-// brand_db의 ad_alias, brand_kr, brand_cms 순으로 매칭
-function resolve_ad_brand(csvName) {
-  if (!csvName) return csvName;
-  const norm = s => String(s||'').replace(/[\s\-_·()（）]/g,'').toLowerCase();
-  const cn = norm(csvName);
-
-  // 1순위: ad_alias에 등록된 별칭과 일치
-  for (const [cms, info] of Object.entries(brand_db)) {
-    const aliases = [
-      ...(info.ad_alias ? info.ad_alias.split(',').map(s=>s.trim()) : []),
-      info.brand_kr || ''
-    ].filter(Boolean);
-    if (aliases.some(a => norm(a) === cn || norm(a).includes(cn) || cn.includes(norm(a)))) {
-      return cms; // RD 브랜드명(CMS키)으로 통일
-    }
-  }
-
-  // 2순위: brand_cms 자체와 일치
-  for (const cms of Object.keys(brand_db)) {
-    if (norm(cms) === cn) return cms;
-  }
-
-  // 매칭 실패 → 원본 그대로 (콘솔에 기록)
-  console.log(`[광고CSV 미매칭] "${csvName}" → brand_db에 매핑 없음. 브랜드관리 탭에서 광고비 매핑명 등록 필요`);
-  return csvName;
-}
-
 function on_ad_file(file) {
   if (!file) return;
   const reader = new FileReader();
@@ -1707,24 +1675,25 @@ function on_ad_file(file) {
         const cols = line.split(',');
         if (cols.length < 9) return;
         const campaignType = (cols[0] || '').trim();
-        const adgroup      = (cols[2] || '').trim();
-        const cost         = parseFloat(cols[8]) || 0;
+        const adgroup     = (cols[2] || '').trim();
+        const cost        = parseFloat(cols[8]) || 0;
         if (!cost) return;
+        // 플레이스 제외
         if (campaignType === '플레이스') return;
         totalCost += cost;
-
-        // 광고그룹 첫번째 _ 앞 → brand_db로 정규화
-        const rawBrand = adgroup.split('_')[0].trim();
-        const brand    = resolve_ad_brand(rawBrand); // ← 여기서 FAKEME 등으로 변환
+        // 광고그룹 첫번째 _ 앞이 브랜드명
+        const brand = adgroup.split('_')[0].trim();
         if (brand) ad_brand_from_csv[brand] = (ad_brand_from_csv[brand] || 0) + (cost / 1.1);
       });
     }
 
     ad_cost = totalCost / 1.1;
     document.getElementById('ad-status').textContent =
-      '✓ ' + file.name + ' | 광고비: ' + fmt_money(ad_cost) + '원 (' +
+      '✓ ' + file.name + ' | 플레이스 제외 광고비: ' + fmt_money(ad_cost) + '원 (' +
       Object.keys(ad_brand_from_csv).join(', ') + ')';
     document.getElementById('ad-status').style.color = 'var(--green)';
+
+    // CSV 업로드 완료 (분석 시작 버튼 클릭 필요)
   };
   reader.readAsText(file, 'utf-8');
 }
@@ -1920,8 +1889,11 @@ function analyze() {
   se('k-cost-rate').textContent = costRate;
 
   // 연누적 (cum_qty 사용, 2026-01-01부터)
-  const curYear = toW.slice(0, 3);
-  const cumWeeks = rd_weeks.filter(w => w.startsWith(curYear) && w <= toW);
+  const cumWeeks = rd_weeks.filter(w => {
+    const d = WEEK_DATE_MAP[w];
+    if (!d) return false;
+    return d[0].startsWith('2026') && w <= toW;
+  });
   const cumRev    = cumWeeks.reduce((s,w) => s + (all_weeks_data[w]?.revenue || 0), 0);
   const cumQty    = cumWeeks.reduce((s,w) => {
     const wd = all_weeks_data[w];
@@ -2027,11 +1999,10 @@ function render_brand_top10() {
 
   // 연누적 계산
   const toDate   = document.getElementById('date-to')?.value || '';
-  const curYearPrefix = toDate.startsWith('2026') ? "26'" : "25'";
   const cumWeeksAll = rd_weeks.filter(w => {
-    if (!w.startsWith(curYearPrefix)) return false;
     const wd_dates = WEEK_DATE_MAP[w];
-    return wd_dates && wd_dates[0] <= toDate;
+    if (!wd_dates) return false;
+    return wd_dates[0].startsWith(toDate.slice(0, 4)) && wd_dates[0] <= toDate;
   });
   // 전체 연누적 판매량 (cum_qty 기준)
   const cumTotalQty = cumWeeksAll.reduce((s,w) => {
@@ -2046,10 +2017,42 @@ function render_brand_top10() {
     return idx > 0 ? rd_weeks[idx - 1] : null;
   })();
 
-  // 광고비: CSV 파싱 시 이미 brand_db로 정규화된 키로 저장됨 → 직접 조회
+  // 광고비 매핑 — 3단계 매칭
+  // 1순위: brand_db의 ad_alias(매핑명) 목록과 일치
+  // 2순위: brand_db의 brand_kr(한글명) 일치
+  // 3순위: 정규화 문자열 포함 관계
+  const norm = s => String(s||'').replace(/[\s\-_·()（）]/g, '').toLowerCase();
+
   const getAdCost = name => {
-    const allAds = d.ad_brands || {};
-    return allAds[name] || 0;
+    const allAds = { ...(d.ad_brands || {}) };
+    if (!Object.keys(allAds).length) return 0;
+
+    const info = brand_db[name];
+    const krName = info?.brand_kr || '';
+    // 매핑명 목록: 직접 등록 alias + 한글명 + 영문명 자체
+    const aliasList = [
+      name,
+      krName,
+      ...(info?.ad_alias ? info.ad_alias.split(',').map(s=>s.trim()) : [])
+    ].filter(Boolean).map(norm);
+
+    let total = 0;
+    const matched = [];
+
+    for (const [adKey, cost] of Object.entries(allAds)) {
+      const adN = norm(adKey);
+      const hit = aliasList.some(a => a && (adN === a || adN.includes(a) || a.includes(adN)));
+      if (hit) { total += cost; matched.push(adKey); }
+    }
+
+    // 디버그: 매칭 결과 콘솔 출력 (광고비 있는 경우만)
+    if (Object.keys(allAds).length > 0 && total === 0 && name) {
+      console.log(`[광고비 미매칭] ${name} | 시도: [${aliasList.join(', ')}] | CSV키: [${Object.keys(allAds).join(', ')}]`);
+    } else if (total > 0) {
+      console.log(`[광고비 매칭] ${name} → ${matched.join(', ')} = ${Math.round(total).toLocaleString()}원`);
+    }
+
+    return total;
   };
 
 
