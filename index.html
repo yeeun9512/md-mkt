@@ -890,7 +890,7 @@ textarea{resize:vertical}
 <canvas id="resize-canvas" style="display:none"></canvas>
 
 <script>
-const APPS_URL = 'https://script.google.com/macros/s/AKfycbyK1tbKuRXkSFoaJPPZcUuHEF4dcfYbQFeuNh2jNQvf93FKOiEJp-EMR-T1pW9Ivw2H/exec';
+const APPS_URL = 'https://script.google.com/macros/s/AKfycbysLTf-7ovrZkUtCekrZ3kXLBY90i1ng3QAjwkDWa6Yd_u0fKoJTNs7xjCjCep9Vs5i/exec';
 const LS = 'eong_md_v1';
 let DB = { tasks: [] };
 try { const s = localStorage.getItem(LS); if (s) DB = { ...DB, ...JSON.parse(s) }; } catch {}
@@ -1175,6 +1175,8 @@ async function auto_sync() {
 
 // 구글 시트에서 RD 누적 데이터 로드
 let annual_qty_from_sheet = 0; // RD_CMS에서 읽어온 연간 누적 판매수량
+let annual_brand_qty = {};    // 브랜드별 연간 누적 판매수량 { 브랜드명: qty }
+let annual_total_qty = 0;     // 전체 연간 누적 판매수량
 
 async function load_gs_rd() {
   try {
@@ -1750,6 +1752,10 @@ function on_ad_file(file) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = e => {
+    // CSV 실제 구조 (1행=제목, 2행=헤더):
+    // cols[0]=캠페인유형, cols[1]=캠페인, cols[2]=광고그룹
+    // cols[3]=일별(날짜 "2026.04.14."), cols[4]=키워드(모델명), cols[5]=소재
+    // cols[6]=노출수, cols[7]=클릭수, cols[8]=총비용(VAT포함)
     const lines = e.target.result.split('\n').filter(l => l.trim());
     let headerIdx = -1;
     lines.forEach((line, i) => {
@@ -1764,13 +1770,11 @@ function on_ad_file(file) {
         const cols = line.split(',');
         if (cols.length < 9) return;
         const campaignType = (cols[0] || '').trim();
-        const adgroup     = (cols[2] || '').trim();
-        const cost        = parseFloat(cols[8]) || 0;
+        const adgroup      = (cols[2] || '').trim();
+        const cost         = parseFloat(cols[8]) || 0;
         if (!cost) return;
-        // 플레이스 제외
         if (campaignType === '플레이스') return;
         totalCost += cost;
-        // 광고그룹 첫번째 _ 앞이 브랜드명
         const brand = adgroup.split('_')[0].trim();
         if (brand) ad_brand_from_csv[brand] = (ad_brand_from_csv[brand] || 0) + (cost / 1.1);
       });
@@ -1782,7 +1786,9 @@ function on_ad_file(file) {
       Object.keys(ad_brand_from_csv).join(', ') + ')';
     document.getElementById('ad-status').style.color = 'var(--green)';
 
-    // RD_광고 시트에 행 단위로 append
+    // RD_광고비 시트에 행 단위로 append
+    // 헤더: 캠페인유형/캠페인/광고그룹/브랜드/종류/총비용(VAT포함)/총비용(VAT미포함)
+    //       날짜(수식)/모델명/클릭수/주차/월/[빈칸]/날짜(원본)/SA/DA구분
     if (headerIdx >= 0) {
       const adRows = [];
       lines.slice(headerIdx + 1).forEach(line => {
@@ -1791,30 +1797,44 @@ function on_ad_file(file) {
         const campaignType = (cols[0] || '').trim();
         const campaign     = (cols[1] || '').trim();
         const adgroup      = (cols[2] || '').trim();
+        const dateRaw      = (cols[3] || '').trim();  // "2026.04.14." 형식
+        const model        = (cols[4] || '').trim();  // 키워드
+        const clicks       = (cols[7] || '').trim();  // 클릭수
         const costVat      = parseFloat(cols[8]) || 0;
         if (!costVat) return;
         if (campaignType === '플레이스') return;
+
         const brand = adgroup.split('_')[0].trim();
-        const div   = '';  // 종류(SA/DA 등) - cols에서 추출 가능 시 조정
-        const dateCol = (cols[9] || '').trim();   // 날짜 컬럼 위치 (CSV 구조에 따라)
-        const model   = (cols[10] || '').trim();
-        const clicks  = (cols[11] || '').trim();
-        const week    = get_week_from_date(dateCol.slice(0,10));
-        const month   = dateCol ? dateCol.slice(0,7).replace('-','년 ').replace(/^(\d+)년 0?(\d+)$/,'$1년 $2월') : '';
-        // SA/DA 구분 (실제 시트 로직 기반)
-        const saDA = (campaignType === '브랜드검색/신제품검색' || campaignType === '쇼핑검색' || campaignType === '파워링크' || campaignType === '플레이스') ? 'SA'
+
+        // 날짜 "2026.04.14." → "2026-04-14" 변환 후 주차/월 계산
+        const dateStr = dateRaw.replace(/\./g, '-').replace(/-$/, ''); // "2026-04-14"
+        const week  = get_week_from_date(dateStr);
+        const month = dateStr.length >= 7
+          ? dateStr.slice(5, 7).replace(/^0/, '') + '월'
+          : '';
+
+        // SA/DA 구분
+        const saDA = (campaignType === '브랜드검색/신제품검색' || campaignType === '쇼핑검색' || campaignType === '파워링크') ? 'SA'
                    : (campaignType === '메타' || campaignType === '메타+구글' || campaignType === '구글') ? 'DA'
                    : campaignType === '토스페이' ? '토스페이'
                    : campaignType === '페이코' ? '페이코' : '';
 
-        // RD_광고비 컬럼 순서 (15컬럼, [12]는 빈칸):
-        // 캠페인유형 캠페인 광고그룹 브랜드 종류 총비용(VAT포함) 총비용(VAT미포함)
-        // 날짜(수식용) 모델명 클릭수 주차 월 [빈칸] 날짜(원본) SA/DA구분
         adRows.push([
-          campaignType, campaign, adgroup, brand, div,
-          Math.round(costVat), Math.round(costVat / 1.1),
-          '', model, clicks, week, month, '',   // [7]날짜는 시트에서 수식으로 계산, [12]빈칸
-          dateCol, saDA                          // [13]원본날짜, [14]SA/DA
+          campaignType,               // [0] 캠페인 유형
+          campaign,                   // [1] 캠페인
+          adgroup,                    // [2] 광고그룹
+          brand,                      // [3] 브랜드
+          '',                         // [4] 종류 (CSV에 없음)
+          Math.round(costVat),        // [5] 총비용 (VAT 포함)
+          Math.round(costVat / 1.1),  // [6] 총비용 (VAT 미포함)
+          '',                         // [7] 날짜 (시트에서 수식으로 계산)
+          model,                      // [8] 모델명 (키워드)
+          clicks,                     // [9] 클릭수
+          week,                       // [10] 주차
+          month,                      // [11] 월
+          '',                         // [12] 빈칸
+          dateRaw,                    // [13] 날짜 원본 ("2026.04.14.")
+          saDA                        // [14] SA/DA 구분
         ]);
       });
       if (adRows.length) save_rd_ad_rows(adRows);
@@ -2029,7 +2049,7 @@ function analyze() {
   se('k-cum-profit').textContent = fmt_money(cumProfit) + '원';
   se('k-week-share').textContent = weekShare;
 
-  // 연간 판매수량: RD_CMS에서 직접 fetch (가장 정확)
+  // 연간 판매수량: RD_CMS에서 직접 fetch — 전체 + 브랜드별 한번에
   (async () => {
     try {
       const thisYear = String(new Date().getFullYear()).slice(2) + "'";
@@ -2037,10 +2057,15 @@ function analyze() {
       const d2 = await r.json();
       if (d2.ok && d2.qty > 0) {
         document.getElementById('k-cum-qty').textContent = d2.qty.toLocaleString() + '개';
+        annual_brand_qty = d2.byBrand || {};  // 브랜드별 연누적 저장
+        annual_total_qty = d2.qty;
       } else {
-        // RD_CMS 데이터 없으면 RD_Weeks 합산으로 폴백
         document.getElementById('k-cum-qty').textContent = Math.round(cumQty).toLocaleString() + '개';
+        annual_brand_qty = {};
+        annual_total_qty = 0;
       }
+      // 브랜드 테이블 다시 렌더 (연누적 반영)
+      render_brand_top10();
     } catch(e) {
       document.getElementById('k-cum-qty').textContent = Math.round(cumQty).toLocaleString() + '개';
     }
@@ -2136,19 +2161,21 @@ function render_brand_top10() {
     return;
   }
 
-  // 연누적 계산
+  // 연누적 계산 — RD_CMS 기반 우선, 없으면 RD_Weeks 폴백
   const toDate   = document.getElementById('date-to')?.value || '';
-  const curYearPrefix = toDate.startsWith('2026') ? "26'" : "25'";
+  const curYearPrefix = toDate.slice(0,2) + "'";
   const cumWeeksAll = rd_weeks.filter(w => {
     if (!w.startsWith(curYearPrefix)) return false;
     const wd_dates = WEEK_DATE_MAP[w];
     return wd_dates && wd_dates[0] <= toDate;
   });
-  // 전체 연누적 판매량 (cum_qty 기준)
-  const cumTotalQty = cumWeeksAll.reduce((s,w) => {
-    const wd = all_weeks_data[w];
-    return s + (wd?.cum_qty !== undefined ? wd.cum_qty : wd?.qty || 0);
-  }, 0);
+  // 전체 연누적 (RD_CMS 우선)
+  const cumTotalQty = annual_total_qty > 0
+    ? annual_total_qty
+    : cumWeeksAll.reduce((s,w) => {
+        const wd = all_weeks_data[w];
+        return s + (wd?.cum_qty !== undefined ? wd.cum_qty : wd?.qty || 0);
+      }, 0);
 
   // 전주
   const periodWeeks = get_period_weeks();
@@ -2224,11 +2251,13 @@ function render_brand_top10() {
     const diffTxt = diff === null ? '-' : diff > 0 ? '▲' + diff : diff < 0 ? '▼' + Math.abs(diff) : '-';
     const diffColor = diff === null || diff === 0 ? 'var(--muted)' : diff > 0 ? 'var(--green)' : 'var(--red)';
 
-    // 연누적 (cum_qty)
-    const cumQtyB = cumWeeksAll.reduce((s,w) => {
-      const bData = all_weeks_data[w]?.brands?.[name];
-      return s + (bData?.cum_qty !== undefined ? bData.cum_qty : bData?.qty || 0);
-    }, 0);
+    // 연누적 (RD_CMS 기반 우선, 없으면 RD_Weeks 폴백)
+    const cumQtyB = annual_brand_qty[name] !== undefined
+      ? annual_brand_qty[name]
+      : cumWeeksAll.reduce((s,w) => {
+          const bData = all_weeks_data[w]?.brands?.[name];
+          return s + (bData?.cum_qty !== undefined ? bData.cum_qty : bData?.qty || 0);
+        }, 0);
     const cumPct = cumTotalQty > 0 ? (cumQtyB / cumTotalQty * 100).toFixed(1) + '%' : '-';
 
     // 광고비
