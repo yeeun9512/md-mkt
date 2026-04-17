@@ -890,7 +890,7 @@ textarea{resize:vertical}
 <canvas id="resize-canvas" style="display:none"></canvas>
 
 <script>
-const APPS_URL = 'https://script.google.com/macros/s/AKfycbxx_ifa-mSJTIcg_3keq9wyyftGvca-cwJCkWnYmxTs2HPcblVKYsc8zU2BKXdRi0Vg/exec';
+const APPS_URL = 'https://script.google.com/macros/s/AKfycbyK1tbKuRXkSFoaJPPZcUuHEF4dcfYbQFeuNh2jNQvf93FKOiEJp-EMR-T1pW9Ivw2H/exec';
 const LS = 'eong_md_v1';
 let DB = { tasks: [] };
 try { const s = localStorage.getItem(LS); if (s) DB = { ...DB, ...JSON.parse(s) }; } catch {}
@@ -1190,9 +1190,6 @@ async function load_gs_rd() {
     document.getElementById('analyze-btn').disabled = false;
     document.getElementById('order-status').textContent = '✓ 구글 시트 ' + rd_weeks.length + '주차 로드됨';
     document.getElementById('order-status').style.color = 'var(--green)';
-
-    // RD_CMS 기준 연간 누적 판매수량 로드
-    load_annual_qty();
   } catch(e) {
     console.log('RD 로드 실패:', e.message);
     document.getElementById('sync-txt').textContent = '시트 연결 실패';
@@ -1348,19 +1345,20 @@ function on_order_file(file) {
         const cost_total = origin + supply_cost + adCost;
         const profit_origin_base = rev - cost_total;
         const profit_prod_base   = rev - origin;
-        // brand_db에서 구분(PB/위탁 등) 가져오기
-        const brand = v[21] || '';
+        // brand_db에서 브랜드 한글명, 구분(PB/위탁 등) 가져오기
+        const brand = v[21] || '';  // 영문 브랜드명 (ex: MASUNAGA)
+        const brand_kr = (brand_db && brand_db[brand]?.brand_kr) ? brand_db[brand].brand_kr : '';
         const div = (brand_db && brand_db[brand]?.div) ? brand_db[brand].div : '';
 
         // 컬럼 순서 (RD_CMS 헤더 36컬럼 기준):
         // 번호(역순) 페이지모드 주문번호 주문일 주문일시 입금일시 상품명 공란 수량
         // 사용적립금 사용예치금 사용쿠폰명 쿠폰할인금액 판매가 공급가 원가 결제방법
-        // 주문상태 상품코드 참고상품명 대분류명 브랜드명 브랜드
+        // 주문상태 상품코드 참고상품명 대분류명 브랜드명 브랜드(한글)
         // 월 주차 수량 구분
         // 매출액 예상입고가 상품원가 소모품+택배 광고 원가총액 이익(원가총액) 이익(상품원가) 쿠폰
         cmsRows.push([
           v[0],                                              // 번호(역순)
-          v[1],                                              // 페이지모드 (모바일App 등 붙어있는 값)
+          v[1],                                              // 페이지모드
           v[2],                                              // 주문번호
           v[3],                                              // 주문일
           v[4],                                              // 주문일시
@@ -1368,10 +1366,10 @@ function on_order_file(file) {
           v[6],                                              // 상품명
           '',                                                // 공란
           v[8],                                              // 수량(원본)
-          v[9],v[10],v[11],v[12],                            // 사용적립금~쿠폰할인금액
-          v[13],v[14],v[15],                                 // 판매가 공급가 원가
-          v[16],v[17],v[18],v[19],v[20],v[21],              // 결제방법~브랜드명
-          v[22],                                             // 브랜드(한글)
+          v[9], v[10], v[11], v[12],                         // 사용적립금~쿠폰할인금액
+          v[13], v[14], v[15],                               // 판매가 공급가 원가
+          v[16], v[17], v[18], v[19], v[20], v[21],         // 결제방법~브랜드명(영문)
+          brand_kr,                                          // 브랜드(한글) - brand_db에서 조회
           month, week, qty, div,                             // 월 주차 수량 구분
           Math.round(rev),                                   // 매출액 (VAT제외)
           Math.round(supplyP / 1.1),                         // 예상입고가 (VAT제외)
@@ -2027,11 +2025,26 @@ function analyze() {
   const weekShare = cumRev > 0 ? (d.revenue / cumRev * 100).toFixed(1) + '%' : '-';
 
   se('k-cum-rev').textContent    = fmt_money(cumRev) + '원';
-  // 연간 판매수량: RD_CMS에서 읽어온 값 우선, 없으면 RD_Weeks 합산
-  const displayCumQty = annual_qty_from_sheet > 0 ? annual_qty_from_sheet : Math.round(cumQty);
-  se('k-cum-qty').textContent    = displayCumQty.toLocaleString() + '개';
+  se('k-cum-qty').textContent    = '집계 중...';
   se('k-cum-profit').textContent = fmt_money(cumProfit) + '원';
   se('k-week-share').textContent = weekShare;
+
+  // 연간 판매수량: RD_CMS에서 직접 fetch (가장 정확)
+  (async () => {
+    try {
+      const thisYear = String(new Date().getFullYear()).slice(2) + "'";
+      const r = await fetch(APPS_URL + '?action=get_annual_qty&year=' + encodeURIComponent(thisYear));
+      const d2 = await r.json();
+      if (d2.ok && d2.qty > 0) {
+        document.getElementById('k-cum-qty').textContent = d2.qty.toLocaleString() + '개';
+      } else {
+        // RD_CMS 데이터 없으면 RD_Weeks 합산으로 폴백
+        document.getElementById('k-cum-qty').textContent = Math.round(cumQty).toLocaleString() + '개';
+      }
+    } catch(e) {
+      document.getElementById('k-cum-qty').textContent = Math.round(cumQty).toLocaleString() + '개';
+    }
+  })();
 
   // 기간 표시
   const dfromVal = document.getElementById('date-from')?.value || '';
